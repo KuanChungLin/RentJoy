@@ -6,14 +6,14 @@
 <div class="main mx-auto d-flex flex-column bg-white mt-5 rounded">
     {{if or .IsPayfail .IsCreatefail}}
     <div class="pb-4  text-center">
-            <img src="/static/images/Icon_fail.png" class="mx-auto d-block py-4">
+        <img src="/static/images/Icon_fail.png" class="mx-auto d-block py-4">
         <h2>訂單付款失敗</h2>
         <p class="my-3 send">您的預約沒有成功</p>
         <p>請您再次前往場地頁進行預定，或是聯絡客服人員。</p>
     </div>
     {{else if .IsCheckMacValuefail}}
     <div class="pb-4  text-center">
-            <img src="/static/images/Icon_fail.png" class="mx-auto d-block py-4">
+        <img src="/static/images/Icon_fail.png" class="mx-auto d-block py-4">
         <h2>訂單付款資訊錯誤</h2>
         <p class="my-3 send">您的訂單將進行退款，約2 ~ 3工作天</p>
         <p>如有疑問，請連絡相關客服人員</p>
@@ -42,7 +42,7 @@
             <span>{{.Email}}</span>
         </p>
     </div>
-    
+    {{end}}
     <div class="text-center my-4">
         <a href="/Venue/VenuesPage?venueId={{.VenuesId}}" class="btn return-btn rounded-pill border">返回場地資訊</a>
     </div>

@@ -3,6 +3,7 @@ package template
 import (
 	"fmt"
 	"html/template"
+	"log"
 	"os"
 	"path/filepath"
 )
@@ -25,6 +26,7 @@ func NewManager() *Manager {
 func (m *Manager) InitTemplates() error {
 	// 定義基礎布局、頁面和 partial 的路徑
 	layoutFile := "../../public/html/layout.html"
+	pagesGlob := "../../public/html/pages/*.html"
 	partialsGlob := "../../public/html/partials/*.html"
 
 	// 檢查 layout 檔案是否存在
@@ -33,7 +35,7 @@ func (m *Manager) InitTemplates() error {
 	}
 
 	// 獲取所有頁面模板
-	pages, err := filepath.Glob("../../public/html/pages/*.html")
+	pages, err := filepath.Glob(pagesGlob)
 	if err != nil {
 		return err
 	}
@@ -53,19 +55,22 @@ func (m *Manager) InitTemplates() error {
 
 		t, err = t.ParseFiles(layoutFile)
 		if err != nil {
+			log.Printf("Parse layout File Error: %s", err)
+			return err
+		}
+
+		t, err = t.ParseFiles(page)
+		if err != nil {
+			log.Printf("Parse page File Error: %s", err)
 			return err
 		}
 
 		if len(partials) > 0 {
 			t, err = t.ParseFiles(partials...)
 			if err != nil {
+				log.Printf("Parse Partial File Error: %s", err)
 				return err
 			}
-		}
-
-		t, err = t.ParseFiles(page)
-		if err != nil {
-			return err
 		}
 
 		m.templates[name] = t
@@ -79,10 +84,12 @@ func (m *Manager) InitTemplates() error {
 		t := template.New(name).Funcs(m.funcMap)
 		t, err = t.ParseFiles(layoutFile)
 		if err != nil {
+			log.Printf("Parse layout File Error: %s", err)
 			return err
 		}
 		t, err = t.ParseFiles(partial)
 		if err != nil {
+			log.Printf("Parse Partial File Error: %s", err)
 			return err
 		}
 
