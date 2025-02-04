@@ -1,0 +1,137 @@
+{{define "css"}}
+    <link href="/static/css/searchpage.css" rel="stylesheet" />
+    <link href="/static/css/spinkit.min.css" rel="stylesheet" />
+{{end}}
+
+{{define "content"}}
+<div class="container pt-3">
+    <div class="row">
+        <form action="/SearchPage" method="get" id="searchNavbar" class="col-12 col-lg-3 rounded">
+            <ul>
+                <li class="mt-2">
+                    目的
+                    <div>
+                        <select name="ActivityId" class="form-select">
+                            <option value="">請選擇</option>
+                            {{range .ActivityList}}
+                                {{if eq $.VenueFilter.ActivityID .ID}}
+                                    <option value="{{.ID}}" selected>{{.ActivityName}}</option>
+                                {{else}}
+                                    <option value="{{.ID}}">{{.ActivityName}}</option>
+                                {{end}}
+                            {{end}}
+                        </select>
+                    </div>
+                </li>
+                <li class="mt-2">
+                    活動人數
+                    <div>
+                        <select name="NumberOfPeople" class="form-select">
+                            <option value="">請選擇</option>
+                            {{range .PeopleCountList}}
+                                {{if eq $.VenueFilter.NumberOfPeople .PeopleCount}}
+                                    <option value="{{.PeopleCount}}" selected>{{.PeopleCount}}</option>
+                                {{else}}
+                                    <option value="{{.PeopleCount}}">{{.PeopleCount}}</option>
+                                {{end}}
+                            {{end}}
+                        </select>
+                    </div>
+                </li>
+                <li class="mt-2">
+                    縣市
+                    <div>
+                        <select name="City" id="citySelect" class="form-select">
+                            <option value="">請選擇</option>
+                        </select>
+                    </div>
+                </li>
+                <li class="mt-2">
+                    地區
+                    <div>
+                        <select name="District" id="districtSelect" class="form-select">
+                            <option value="">請先選擇縣市</option>
+                        </select>
+                    </div>
+                </li>
+                <li class="mt-2">
+                    每小時 / 時段預算上限
+                    <div>
+                        <select name="MaxPrice" class="form-select">
+                            <option value="">請選擇</option>
+                            {{range .MaxPriceList}}
+                                {{if and $.VenueFilter.MaxPrice (eq $.VenueFilter.MaxPrice .)}}
+                                    <option value="{{.}}" selected>{{.}} NT$</option>
+                                {{else}}
+                                    <option value="{{.}}">{{.}} NT$</option>
+                                {{end}}
+                            {{end}}
+                        </select>
+                    </div>
+                </li>
+                <li class="mt-2">
+                    每小時 / 時段最低預算
+                    <div>
+                        <select name="MinPrice" class="form-select">
+                            <option value="">請選擇</option>
+                            {{range .MinPriceList}}
+                                {{if and $.VenueFilter.MinPrice (eq $.VenueFilter.MinPrice .)}}
+                                    <option value="{{.}}" selected>{{.}} NT$</option>
+                                {{else}}
+                                    <option value="{{.}}">{{.}} NT$</option>
+                                {{end}}
+                            {{end}}
+                        </select>
+                    </div>
+                </li>
+                <li class="mt-2">
+                    場地名稱搜尋
+                    <div>
+                        <input type="text" name="VenueName" value="{{.VenueFilter.VenueName}}" class="w-100 input-text form-control">
+                    </div>
+                </li>
+                <li class="mt-2">
+                    平日或假日？
+                    <label>
+                        <input name="DayType" type="checkbox" class="rent-day" value="平日" {{if eq .VenueFilter.DayType "平日"}}checked{{end}}>平日
+                    </label>
+                    <label>
+                        <input name="DayType" type="checkbox" class="rent-day" value="假日" {{if eq .VenueFilter.DayType "假日"}}checked{{end}}>假日
+                    </label>
+                </li>
+                <li class="mt-2">
+                    租用時段？
+                    <label>
+                        <input name="RentTime" type="checkbox" class="rent-time" value="上午" {{if eq .VenueFilter.RentTime "上午"}}checked{{end}}>上午
+                    </label>
+                    <label>
+                        <input name="RentTime" type="checkbox" class="rent-time" value="下午" {{if eq .VenueFilter.RentTime "下午"}}checked{{end}}>下午
+                    </label>
+                    <label>
+                        <input name="RentTime" type="checkbox" class="rent-time" value="晚上" {{if eq .VenueFilter.RentTime "晚上"}}checked{{end}}>晚上
+                    </label>
+                </li>
+            </ul>
+            <button type="submit" class="btn btn-search w-100 mt-2">
+                <img src="/static/images/search.svg" class="search-icon" />
+            </button>
+        </form>
+        <div id="searchResult" class="col-12 col-lg-9">
+            {{template "search_result_partial" .VenueInfos}}
+        </div>
+    </div>
+</div>
+<div id="search-params" 
+    data-city="{{.VenueFilter.City}}" 
+    data-district="{{.VenueFilter.District}}">
+</div>
+{{end}}
+
+{{define "js"}}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" 
+            crossorigin="anonymous">
+    </script>
+    <script src="/static/js/taiwancity.js"></script>
+    <script src="/static/js/searchpage.js"></script>
+{{end}}

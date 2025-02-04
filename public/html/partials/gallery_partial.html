@@ -1,0 +1,11 @@
+{{define "gallery_partial"}}
+{{range .}}
+<div class="gallery-single">
+    <a href="{{.GalleryLinkUrl}}">
+        <h3>{{.GalleryTitle}}</h3>
+        <img src="{{.GalleryImgUrl}}" alt="">
+        <p>查看方案</p>
+    </a>
+</div>
+{{end}}
+{{end}}

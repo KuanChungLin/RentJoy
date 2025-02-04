@@ -1,0 +1,512 @@
+/* header */
+#menu-switch,
+#nav-item-switch-1,
+#nav-item-switch-2 {
+    display: none;
+}
+
+header {
+    position: sticky;
+    z-index: 2;
+    top: -1px;
+    margin: auto;
+    background-color: #fff;
+    padding: 5px 10px;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0px 2.5px 5px 0px rgb(228, 228, 228);
+}
+
+header .logo-area {
+    display: flex;
+}
+
+.logo-area p span {
+    margin: 0 5px;
+}
+
+header .logo-image {
+    width: 160px;
+}
+
+header .logo-image img {
+    width: 100%;
+    vertical-align: bottom;
+}
+
+.nav {
+    background-color: #fff;
+}
+
+.nav a {
+    color: #4a4a4a;
+    display: block;
+    padding: 10px 20px;
+}
+
+.nav .sub-menu {
+    display: none;
+}
+
+.nav .sub-menu a {
+    display: block;
+    padding: 20px;
+    margin: 0;
+}
+
+.nav .sub-menu p {
+    display: inline;
+    color: #53a385;
+}
+
+.nav .menu-input-item {
+    display: none;
+}
+
+.nav .icon-arrow {
+    display: none;
+}
+
+.nav-menu .faq {
+    position: absolute;
+    display: none;
+    width: 600px;
+    top: 80%;
+    right: 5%;
+}
+
+.faq-content {
+    margin-top: 20px;
+    box-shadow: 0px 0px 2px 0px #4a4a4a;
+    border-radius: 5px;
+}
+
+.faq .goto-qa {
+    padding: 20px 0px 20px 10px;
+    border-bottom: 1px solid #d1d1d1;
+    background-color: #f6f6f6;
+}
+
+.faq .goto-qa a {
+    width: 160px;
+    padding: 10px 10px 10px 10px;
+}
+
+.faq .goto-qa a:after {
+    content: "➤";
+    display: inline-block;
+    width: 11px;
+    height: 18px;
+    margin: 0 0 -4px 5px;
+}
+
+.faq .qa-wrap {
+    overflow-y: scroll;
+    max-height: 500px;
+    background: #f6f6f6;
+}
+
+.faq h4 {
+    margin: 30px 20px;
+}
+
+.faq a {
+    display: inline;
+    padding: 0px;
+    color: #4a4a4a;
+}
+
+.faq article {
+    margin: 0 0 20px 0;
+}
+
+.faq details {
+    border-bottom: 1px solid #d1d1d1;
+    padding: 0 10px 10px 20px;
+}
+
+.faq summary {
+    margin: 16px 0 5px 0;
+    cursor: pointer;
+}
+
+.faq summary::before {
+    content: '';
+    display: inline-block;
+    background-image: url(../images/question_icon.png);
+    vertical-align: middle;
+    width: 18px;
+    height: 18px;
+    background-repeat: no-repeat;
+}
+
+.faq summary p {
+    width: 90%;
+    display: inline-block;
+    line-height: 1.5em;
+    vertical-align: top;
+}
+
+/* ------------------------------------------ */
+/* modal */
+
+.login-modal .modal-dialog,
+.signup-modal .modal-dialog,
+.signup-detail-modal .modal-dialog,
+.forgetpassword-modal .modal-dialog {
+    width: 60%;
+    margin: 30px auto;
+}
+
+.forgetpassword-modal .modal-dialog {
+    margin: 60px auto;
+}
+
+.modal-content {
+    padding: 40px 30px 35px 30px;
+}
+
+.btn-close {
+    top: 2%;
+    right: 2%;
+    padding: 18px;
+}
+
+.modal-header {
+    display: block;
+    border-bottom: none;
+    padding: 0;
+    margin: 5px 0 15px 0;
+    text-align: center;
+}
+
+.modal-title {
+    font-size: 32px;
+}
+
+.modal-header img {
+    margin-bottom: 20px;
+}
+
+.modal-title,
+.input-group,
+.row {
+    margin-bottom: 10px;
+}
+
+.modal-text .register {
+    color: #53a385;
+    border-bottom: 1px solid;
+}
+
+.google-login,
+.facebook-login {
+    display: flex;
+    border-radius: 25px;
+    padding: 6px 20px;
+    border: 1px solid gray;
+    margin-bottom: 20px;
+    cursor: pointer; 
+}
+
+.google-login p,
+.facebook-login p {
+    text-align: center;
+    flex-grow: 1;
+    vertical-align: bottom;
+    margin-bottom: 0;
+    align-self: center;
+    color: #4a4a4a;
+}
+
+.email-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #9b9b9b;
+    padding: 15px 0;
+}
+
+.email-text::before,
+.email-text::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #D8D8D8;
+}
+
+.email-text::before {
+    margin-right: 25px;
+}
+
+.email-text::after {
+    margin-left: 25px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group input {
+    border-radius: 5px;
+    height: 46px;
+    border: 1px solid #9b9b9b;
+    padding: 6px 12px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.input-group input::placeholder {
+    color: #9b9b9b;
+    font-size: 18px;
+}
+
+.remember {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.remember .checkbox-area input[type="checkbox"] {
+    cursor: pointer;
+    transform: scale(1.5);
+}
+
+.remember .checkbox-area label {
+    cursor: pointer;
+    text-align: center;
+    padding-left: 10px;
+}
+
+.remember a,
+.modal-footer-content a {
+    color: #53a385;
+}
+
+.login-btn,
+.forgetpassword-btn,
+.signup-btn,
+.signup-detail-btn {
+    width: 100%;
+    background-color: #53a385;
+    color: #fff;
+    padding: 15px 60px;
+    border-radius: 25px;
+    border: 1px solid #53a385;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.modal-footer-login {
+    padding-top: 20px;
+}
+
+.modal-footer-content {
+    margin-left: 20px;
+}
+
+
+/* ------------------------------------------ */
+/* footer */
+footer {
+    margin: auto;
+    height: 260px;
+    background-color: #211407;
+    font-size: 13px;
+    color: #fff;
+    padding-top: 10px;
+}
+
+.footer-container {
+    margin-top: 20px;
+}
+
+.footer-container .statement {
+    text-align: center;
+    font-size: 10px;
+    color: #e0e0e0;
+}
+
+.footer-row {
+    margin: 30px auto;
+    display: flex;
+    justify-content: center;
+}
+
+.footer-row .content {
+    margin: 0 30px;
+    padding-bottom: 30px;
+}
+
+.footer-row img {
+    vertical-align: top;
+}
+
+.footer-row li {
+    margin-top: 5px;
+}
+
+.footer-row a {
+    color: #9e9e9e;
+}
+
+.footer-row img {
+    width: 120px;
+}
+
+.link-list {
+    display: flex;
+}
+
+@media screen and (max-width: 462px) {
+    footer .content:first-of-type {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 820px) {
+
+    .login-modal .modal-dialog,
+    .signup-modal .modal-dialog,
+    .signup-detail-modal .modal-dialog,
+    .forgetpassword-modal .modal-dialog {
+        width: 80%;
+        margin: 28px auto;
+    }
+
+    footer {
+        height: auto;
+    }
+
+    .footer-row {
+        flex-wrap: wrap;
+    }
+}
+
+@media screen and (max-width:1023px) {
+
+    /* header */
+    .logo-area p {
+        display: none;
+    }
+
+    .hamburger {
+        width: 40px;
+        height: 40px;
+        border-radius: 5px;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        align-self: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .hamburger span {
+        width: 80%;
+        height: 2px;
+        margin: 3px;
+        background-color: #4a4a4a;
+    }
+
+    #menu-switch:checked + header {
+        box-shadow: 0px 0px 0px 0px;
+    }
+
+    #menu-switch:checked + header .hamburger span:first-child {
+        display: none;
+    }
+
+    #menu-switch:checked + header .hamburger span:nth-child(2) {
+        position: absolute;
+        inset: 0;
+        margin: auto;
+        rotate: 45deg;
+    }
+
+    #menu-switch:checked + header .hamburger span:nth-child(3) {
+        position: absolute;
+        inset: 0;
+        margin: auto;
+        rotate: -45deg;
+    }
+
+    .nav {
+        width: 100%;
+        position: absolute;
+        top: 100%;
+        left: -100%;
+        opacity: 0;
+        transition: opacity .5s;
+    }
+
+    #menu-switch:checked + header .nav {
+        opacity: 1;
+        left: 0;
+        box-shadow: 0px 2.5px 5px 0px rgb(228, 228, 228);
+    }
+
+    .nav a {
+        display: block;
+        flex-grow: 1;
+    }
+
+    .nav .nav-menu {
+        width: 100%;
+    }
+
+    .nav .nav-menu li {
+        display: flex;
+        flex-wrap: wrap;
+        text-align: center;
+        padding: 10px 0px;
+    }
+
+    .nav .sub-menu {
+        display: block;
+        width: 100%;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+
+    /* header */
+    .logo-area p {
+        padding-left: 10px;
+        align-self: center;
+        color: #9f9f9f;
+    }
+
+    .hamburger {
+        display: none;
+    }
+
+    .nav {
+        align-self: center;
+        margin-right: 50px;
+    }
+
+    .nav .nav-menu {
+        display: flex;
+    }
+
+    .nav .sub-menu {
+        top: 70px;
+        width: 144px;
+        position: absolute;
+        background-color: #fff;
+        box-shadow: 0px 0px 2px 0px #4a4a4a;
+        border-radius: 5px;
+    }
+
+    .nav .sub-menu li {
+        border-bottom: 2px solid #ededed;
+    }
+
+    .faq-btn:hover .faq {
+        display: block;
+    }
+}

@@ -1,0 +1,11 @@
+{{define "exhibit_description_site_partial"}}
+<a href="{{.SiteLinkUrl}}" class="normal-type">
+    <article class="site-card">
+        <div class="site-img">
+            <img src="{{.SiteImgUrl}}" alt="">
+            <div class="site-tag">{{.SiteLocation}} • {{.CapaCity}} 人</div>
+            <div class="site-quotation">{{.Price}} / {{.PerTime}}</div>
+        </div>
+    </article>
+</a>
+{{end}}

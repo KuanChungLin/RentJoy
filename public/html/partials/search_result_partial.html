@@ -1,0 +1,54 @@
+{{define "css"}}{{end}}
+{{define "search_result_partial"}}
+{{if eq (len .) 0}}
+        <p style="font-size:35px" class="d-block text-center">找不到符合的搜尋結果</p>
+    {{else}}
+        {{range .}}
+            <div class="search-product rounded">
+                <a href="/Venue/VenuePage?venueId={{.VenueID}}" class="product-imga">
+                    <img src="{{.VenueImgUrl}}" class="product-img">
+                </a>
+                <div class="product-info-group">
+                    <a href="/Venue/VenuePage?venueId={{.VenueID}}" class="product-name">
+                        <h3>{{.VenueName}}</h3>
+                    </a>
+                    <div class="product-spec-group mb-3">
+                        <div class="product-spec">
+                            <div class="mb5">
+                                <span class="product-icon">
+                                    <img src="/static/images/house.png">
+                                    {{.VenueOwner}}
+                                </span>
+                            </div>
+                            <div class="mb5">
+                                <span class="product-icon">
+                                    <img src="/static/images/marker.png">
+                                    {{.VenueCity}} {{.VenueDistrict}}
+                                </span>
+                                <span class="product-icon">
+                                    <img src="/static/images/person.png">
+                                    {{.NumberOfPeople}} 人
+                                </span>
+                            </div>
+                        </div>
+                        <div class="product-price">
+                            <a href="/Venue/VenuePage?venueId={{.VenueID}}">
+                                <button type="button" class="btn btn-price">{{.VenuePrice}}</button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="product-tags">
+                        <span class="product-icon">
+                            <img src="/static/images/tags.png">
+                            {{range .ActivityTags}}
+                                <a href="/SearchPage?ActivityID={{.ID}}">{{.ActivityName}}</a>
+                                <b>/</b>
+                            {{end}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        {{end}}
+    {{end}}
+{{end}}
+{{define "js"}}{{end}}

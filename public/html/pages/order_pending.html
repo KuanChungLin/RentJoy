@@ -1,0 +1,52 @@
+{{define "css"}}
+    <link href="/static/css/order_pending.css" rel="stylesheet" />
+{{end}}
+
+{{define "content"}}
+<div class="main mx-auto d-flex flex-column bg-white mt-5 rounded">
+    {{if or .IsPayfail .IsCreatefail}}
+    <div class="pb-4  text-center">
+            <img src="/static/images/Icon_fail.png" class="mx-auto d-block py-4">
+        <h2>訂單付款失敗</h2>
+        <p class="my-3 send">您的預約沒有成功</p>
+        <p>請您再次前往場地頁進行預定，或是聯絡客服人員。</p>
+    </div>
+    {{else if .IsCheckMacValuefail}}
+    <div class="pb-4  text-center">
+            <img src="/static/images/Icon_fail.png" class="mx-auto d-block py-4">
+        <h2>訂單付款資訊錯誤</h2>
+        <p class="my-3 send">您的訂單將進行退款，約2 ~ 3工作天</p>
+        <p>如有疑問，請連絡相關客服人員</p>
+    </div>
+    {{else}}
+    <div class="pb-4  text-center">
+        <img src="/static/images/loading.svg" class="mx-auto d-block py-4">
+        <h2>等待場地審核</h2>
+        <p class="my-3 send">您的預約已送出</p>
+        <p>場地正在審核你的申請，通常需要幾分鐘到幾個小時的時間</p>
+        <p>預約資訊與審核結果會發送至</p>
+        <p>{{.Email}}</p>
+        <p class="mt-4">您也可以隨時<a action="/OrderReserved" class=" order-state">查詢訂單狀況</a>。</p>
+    </div>
+    <div class="p-4 order-detail mx-auto">
+        <p>
+            <span class="detail-title">訂單編號</span>
+            <span>{{.OrderId}}</span>
+        </p>
+        <p>
+            <span class="detail-title">電話</span>
+            <span>{{.Phone}}</span>
+        </p>
+        <p>
+            <span class="detail-title">Email</span>
+            <span>{{.Email}}</span>
+        </p>
+    </div>
+    
+    <div class="text-center my-4">
+        <a href="/Venue/VenuesPage?venueId={{.VenuesId}}" class="btn return-btn rounded-pill border">返回場地資訊</a>
+    </div>
+</div>
+{{end}}
+
+{{define "js"}}{{end}}

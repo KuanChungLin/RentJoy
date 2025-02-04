@@ -1,0 +1,82 @@
+{{define "css"}}{{end}}
+{{define "content"}}
+<div class="signup-detail-modal">
+    <div class="modal-dialog">
+        <div class="modal-content" id="signup-detail">
+            <div class="modal-header d-flex flex-column justify-content-center">
+                <img src="/static/images/registerIcon.svg" alt="">
+                <h5 class="modal-title" id="example-modal-label">註冊帳戶</h5>
+            </div>
+            <form class="modal-body" id="signinForm" action="/SignUpDetail" method="post">
+                <div class="row">
+                    <label class="form-label">電子郵件信箱</label>
+                </div>
+                <div class="row">
+                    <div class="flex-nowrap">
+                        <input name="Account" type="email"
+                               class="form-control col-12 email" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <span class="col-6">姓氏</span>
+                    <span class="col-6">名</span>
+                </div>
+                <div class="row">
+                    <div class="left flex-nowrap col-6">
+                        <input name="LastName" type="text"
+                               class="form-control lastname" required>
+                    </div>
+                    <div class="right flex-nowrap col-6">
+                        <input name="FirstName" type="text" class="form-control firstname" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <span class="col-12">手機號碼</span>
+                </div>
+                <div class="row">
+                    <div class="right flex-nowrap col-12">
+                        <input name="Phone" type="text" class="form-control phonenumber" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <span class="col-12">密碼</span>
+                </div>
+                <div class="row">
+                    <div class="flex-nowrap col-12">
+                        <input name="Password" type="password"
+                               class="form-control signup-password" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <span class="col-12">再次輸入密碼</span>
+                </div>
+                <div class="row">
+                    <div class="flex-nowrap col-12">
+                        <input name="PasswordConfirm" type="password" class="form-control col-12 signup-password-confirm" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="wrap col-12">
+                        <input class="form-check-input" type="checkbox">
+                        <label class="form-check-label" for="IsAgree">
+                            我已閱讀並同意
+                        </label>
+                        <a href="/UserRules">服務條款</a>
+                    </div>
+                </div>
+                {{if .AccountErrorMessage}}
+                    <span class="error-message text-danger m-2">{{.AccountErrorMessage}}</span>
+                {{end}}
+                <div class="modal-footer-signupdetail">
+                    <span class="error-message text-danger"></span>
+                    <button type="submit" class="signup-detail-btn">註冊</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}
+
+{{define "js"}}
+    <script src="/static/js/signup_detail.js"></script>
+{{end}}

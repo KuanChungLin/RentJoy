@@ -1,0 +1,397 @@
+{{define "css"}}
+    <link href="/static/css/recommended.css" rel="stylesheet"/>
+    <link href="/static/css/venuepage.css" rel="stylesheet"/> 
+{{end}}
+
+{{define "content"}}
+<div id="overlay"></div>
+<!-- container -->
+<div class="container pt-3">
+    <div class="row">
+        <div class="col-12">
+            <div class="product-img-group mb-4">
+                <div class="img-main">
+                    <img class="product-img pointer" src="{{index .ImgUrls 0}}">
+                </div>
+                <div class="img-sec">
+                    <img class="product-img img50 pointer" src="{{index .ImgUrls 1}}">
+                    <img class="product-img img50 pointer" src="{{index .ImgUrls 2}}">
+                </div>
+            </div>
+            <div id="imgCarousel" class="rounded-2">
+                <div class="img-carousel-close d-flex ">
+                    <img id="carouselClose" src="/static/images/close.svg" class="ms-auto mb-2 pointer">
+                </div>
+                <div id="carouselExampleIndicators" class="carousel slide" aria-modal="true">
+                    <div class="carousel-indicators">
+                        {{range $i, $_ := .ImgUrls}}
+                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{$i}}"
+                            class="{{if eq $i 0}}active{{end}}" aria-current="{{eq $i 0}}" aria-label="Slide {{add $i 1}}"></button>
+                        {{end}}
+                    </div>
+                    <div class="carousel-inner">
+                        {{range $i, $url := .ImgUrls}}
+                            <div class="carousel-item {{if eq $i 0}}active{{end}}">
+                            <img src="{{$url}}" class="d-block w-100" alt="...">
+                            </div>
+                        {{end}}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                            data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                            data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="product-content color4a">
+            <h2>@Model.Name </h2>
+            <div class="location border-bottom my-4">
+                <p class="me-3  pb-2">台灣 > {{.City}} > {{.District}} </p>
+                <p><img class="me-1" src="/static/images/location.svg">{{.Address}}</p>
+            </div>
+            <div class="place-info d-flex text-center border-bottom my-4 pb-3">
+                <div class="place-info-item mx-4">
+                    <img src="/static/images/people.svg" class="mb-2">
+                    <p>可容納 {{.NumberOfPeople}} 人</p>
+                </div>
+                <div class="place-info-item me-4">
+                    <img src="/static/images/area.svg" class="mb-2">
+                    <p>面積 {{.SpaceSize}} 坪</p>
+                </div>
+            </div>
+            <h5 class="ps-3 mb-3">設備與服務</h5>
+            <div class="device-service ps-3 mb-3">
+                {{range $i, $device := .VenueDevice}}
+                {{if lt $i 6}}
+                    <div class="device-item col-4 mb-2">
+                        <img src="/static/images/check.svg">
+                        {{$device.DeviceName}}
+                    </div>
+                {{end}}
+                {{end}}
+            </div>
+            {{if gt (len .VenueDevice) 6}}
+                <button id="deviceModalOpen" class="rounded-5 px-3 py-2 mb-4">顯示全部設備與服務</button>
+            {{end}}
+            <h5 class=" pt-4 border-top bg-white mb-0 ps-3">預約狀況</h5>
+            <div class="calender-group d-flex bg-white pb-2">
+                <div class="mt-4 calender body-calender">
+                    <div class="my-1 text-center calender-header">
+                        <div class="control-btn-group d-flex major-header">
+                            <div id="lBtn1" class="last-month-btn"></div>
+                            <h2 class="date-title">月份</h2>
+                            <div id="rBtn1" class="next-month-btn"></div>
+                        </div>
+                    </div>
+                    <section class="calendar-area">
+                        <div class="row row-cols-7 weekday-area">
+                            <div class="col">日</div>
+                            <div class="col">一</div>
+                            <div class="col">二</div>
+                            <div class="col">三</div>
+                            <div class="col">四</div>
+                            <div class="col">五</div>
+                            <div class="col">六</div>
+                        </div>
+                        <div class="row row-cols-7 date-area1 g-0 curr-date-group">
+                        </div>
+                    </section>
+                </div>
+                <div class="vertical-line none1024"></div>
+                <div class="mt-4 calender none1024 body-calender">
+                    <div class="my-1 text-center calender-header">
+                        <div class="control-btn-group d-flex ">
+                            <div id="lBtn2" class="last-month-btn"></div>
+                            <h2 class="date-title2">月份</h2>
+                            <div id="rBtn2" class="next-month-btn"></div>
+                        </div>
+                    </div>
+                    <section class="calendar-area">
+                        <div class="row row-cols-7 weekday-area">
+                            <div class="col">日</div>
+                            <div class="col">一</div>
+                            <div class="col">二</div>
+                            <div class="col">三</div>
+                            <div class="col">四</div>
+                            <div class="col">五</div>
+                            <div class="col">六</div>
+                        </div>
+                        <div class="row row-cols-7 date-area2 g-0 next-date-group">
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div class="clender-maker pt-2 pb-4 bg-white ">部分預訂</div>
+            <!-- 評價區 -->
+            <div class="mt-4 ps-3 pb-5">
+                <p class="comment-title">{{.CommentAverage}} / 5 &nbsp;&nbsp; {{len .VenueComment}} 則評價</p>
+                {{range $i, $comment := .VenueComment}}
+                {{if lt $i 3}}
+                    <div class="mt-4">
+                        <p class="comment-name">{{$comment.UserName}}</p>
+                        <p class="comment-date">{{$comment.CommentYear}} 年 {{$comment.CommentMonth}} 月 {{$comment.CommentDay}} 日</p>
+                        <p class="comment-text">{{$comment.CommentTxt}}</p>
+                    </div>
+                {{end}}
+                {{end}}
+                {{if gt (len .VenueComment) 3}}
+                    <button type="button" class="btn rounded-pill mt-4 px-3" data-bs-toggle="modal" data-bs-target="#commentModal">更多評價</button>
+                {{end}}
+            </div>
+
+            <div class="rule-block border-top pt-4 pb-3 ps-3">
+                <h5 class="mb-3">場地規範</h5>
+                {{range .VenueRules}}
+                    <p>{{.}}</p>
+                {{end}}
+            </div>
+            <div class="location-group ps-3 pb-4 border-top">
+                <div class="location-txt">
+                    <div class="location-block pt-4">
+                        <h5 class="mb-3">位置資訊</h5>
+                        <p>台灣 {{.City}} {{.District}}<br>{{.Address}}</p>
+                    </div>
+                    <div class="location-block pt-4">
+                        <h5 class="mb-3">交通資訊</h5>
+                        <p>{{.TrafficInfo.MRTInfo}}</p>
+                        <p>{{.TrafficInfo.BusInfo}}</p>
+                        <p>{{.TrafficInfo.ParkInfo}}</p>
+                    </div>
+                </div>
+                <div id="map" class="mt-4">
+                    <iframe 
+                            width="100%"
+                            height="300"
+                            frameborder="0" style="border:0"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDuHxDIBQZcswTGie_H1fzfD_iHRsfIsbA&q=@Model.Lat,@Model.Lng&center=@Model.Lat,@Model.Lng"
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
+            <h5 class="pt-4 ps-3 border-top">管理者資訊</h5>
+            <div class="owner ps-3 pt-4 d-flex">
+                <img src={{.OwnerInfo.ImgUrl}} class="rounded-circle">
+                <div class="ms-4">
+                    <h5>{{.OwnerInfo.Name}}</h5>
+                    {{with .OwnerInfo.JoinTime}}
+                        <p>{{.Year}} 年 {{printf "%02d" .Month}} 月 {{printf "%02d" .Day}} 日 加入 RentJoy</p>
+                    {{end}}
+                </div>
+            </div>
+            <div class="pay-related ps-3 mt-4 border-top">
+                <div class="payment-info pt-4">
+                    <h5 class="mb-3">付款方式</h5>
+                    <p>信用卡付款<br><span>由第三方支付「綠界科技Ecpay」提供</span></p>
+                </div>
+                <div class="cancel-info pt-4">
+                    <h5 class="mb-3">退訂政策</h5>
+                    <p>{{.UnsubscribeRule}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="product-price col-4 color4a ps-3">
+            <div class="bg-white">
+                <div class="price-info py-3">
+                    {{if ne .HrPriceRange "尚未設定價格"}}
+                        <div class="hr-price px-3">
+                        <p>每小時 <img src="/static/images/question.svg" class="q-img"></p>
+                        <p>{{.HrPriceRange}}</p>
+                        </div>
+                    {{end}}
+
+                    {{if ne .TimeslotPriceRange "尚未設定價格"}}
+                        <div class="time-slot-price px-3">
+                        <p>每時段 <img src="/static/images/question.svg" class="q-img"></p>
+                        <p>{{.TimeslotPriceRange}}</p>
+                        </div>
+                    {{end}}
+
+                </div>
+                <div id="selectDate" class="date-select p-3 border border-top-0">
+                    請選擇日期
+                </div>
+                <div class="border reserved-calender body-calender pb-3 ">
+                    <div class="mt-4 calender">
+                        <div class="my-1 text-center calender-header">
+                            <div class="control-btn-group d-flex justify-content-between px-1">
+                                <div id="lBtn3"></div>
+                                <h2 class="date-title3">月份</h2>
+                                <div id="rBtn3"></div>
+                            </div>
+                        </div>
+                        <section class="calendar-area">
+                            <div class="row row-cols-7 weekday-area g-1">
+                                <div class="col">日</div>
+                                <div class="col">一</div>
+                                <div class="col">二</div>
+                                <div class="col">三</div>
+                                <div class="col">四</div>
+                                <div class="col">五</div>
+                                <div class="col">六</div>
+                            </div>
+                            <div class="row row-cols-7 date-area3 g-1 mx-auto curr-date-group">
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <div class="product-price-details border border-top-0 p-3">
+                    
+                </div>
+                <div class="reserved p-3">
+                    <a action="ReservedPage" class="btn rounded-pill disable">前往預訂</a>
+                </div>
+            </div>
+        </div>
+        <div class="recommend-may-like mt-4 color4a">
+            <p class="may-like-title">您可能會喜歡的其他場地</p>
+            {{template "recommended_partial" .Recommended}}
+        </div>
+        <div class="product-price-footer bottom-0 end-0 start-0 border-top p-3">
+            <div class="price-footer-info d-flex flex-column  justify-content-center">
+                {{if ne .TimeSlotPriceRange "尚未設定價格"}}
+                    <p class="mb-0">{{.HrPriceRange}}<span>小時 (TWD)</span></p>
+                {{else}} 
+                    <p class="mb-0">{{.TimeSlotPriceRange}}<span>時段 (TWD)</span></p>
+                {{end}}
+            </div>
+            <div class=" ms-auto mt-auto mb-auto">
+                <a href="" class="btn rounded-pill price-footer-btn" data-bs-toggle="modal"
+                data-bs-target="#footerCalenderModal">前往預訂</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 設備modal -->
+<div id="deviceModal" aria-modal="true" class="p-4 rounded-2">
+    <div class="device-modal-header d-flex">
+        <h5 class="m-3">設備</h5>
+        <img id="deviceModalClose" class="ms-auto" src="/static/images/close.svg">
+    </div>
+    <div class="device-modal-body">
+        {{range .VenueDevice}}
+            <div class="device-item d-flex">
+            <img src="/static/images/check.svg">
+            <div>
+                <p>{{.DeviceName}} ({{.DeviceQuantity}})</p>
+                <small>{{.DeviceRemark}}</small>
+            </div>
+            </div>
+        {{end}}
+        <hr>
+        <h5>不提供設備</h5>
+        <div class="not-provided d-flex flex-wrap">
+            {{range .VenueNotIncludedDevice}}
+                <p>{{.}}</p>
+            {{end}}
+        </div>
+    </div>
+</div>
+
+<!-- 評價modal -->
+<div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class=" d-flex ps-3 mb-0 justify-content-between">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">評價</h1>
+                <button type="button" class="btn-close p-0" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-0">
+                {{range .VenueComment}}
+                    <div class="mt-4">
+                    <p class="comment-name">{{.UserName}}</p>
+                    <p class="comment-date">{{.CommentTime.Year}} 年 {{.CommentTime.Month}} 月 {{.CommentTime.Day}} 日</p>
+                    <p class="comment-text">{{.CommentTxt}}</p>
+                    </div>
+                {{end}}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- footerCalenderModal -->
+<div class="modal fade" id="footerCalenderModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header d-flex">
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="footer-product-price color4a ">
+                    <div class="bg-white">
+                        <div class="price-info py-3">
+                            {{if ne .HrPriceRange "尚未設定價格"}}
+                                <div class="hr-price px-3">
+                                <p>每小時 <img src="/static/images/question.svg" class="q-img"></p>
+                                <p>{{.HrPriceRange}}</p>
+                                </div>
+                            {{end}}
+                            {{if ne .TimeslotPriceRange "尚未設定價格"}}
+                                <div class="time-slot-price px-3">
+                                <p>每時段 <img src="/static/images/question.svg" class="q-img"></p>
+                                <p>{{.TimeslotPriceRange}}</p>
+                                </div>
+                            {{end}}
+                        </div>
+                        <div id="footerSelectDate" class="date-select p-3  border border-top-0">
+                            請選擇日期
+                        </div>
+                        <div class="border footer-reserved-calender pb-3">
+                            <div class="mt-4 calender">
+                                <div class="my-1 text-center calender-header">
+                                    <div class="control-btn-group d-flex justify-content-between">
+                                        <div id="lBtn4"></div>
+                                        <h2 class="date-title4">月份</h2>
+                                        <div id="rBtn4"></div>
+                                    </div>
+                                </div>
+                                <section class="calendar-area">
+                                    <div class="row row-cols-7 weekday-area g-1">
+                                        <div class="col">日</div>
+                                        <div class="col">一</div>
+                                        <div class="col">二</div>
+                                        <div class="col">三</div>
+                                        <div class="col">四</div>
+                                        <div class="col">五</div>
+                                        <div class="col">六</div>
+                                    </div>
+                                    <div class="row row-cols-7 date-area4 g-1 ">
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                        <div class="product-price-details border border-top-0 p-3">
+                        </div>
+                        <div class="reserved p-3">
+                            <a action="ReservedPage" class="btn rounded-pill disable">前往預訂</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="venue-data" 
+    data-reservedDdate="{{.ReservedDate}}"
+    data-openDayOfWeek="{{.OpenDayOfWeek}}"
+    data-minRentHours="{{.MinRentHours}}"
+    data-venueId="{{.VenueId}}"
+    data-venueAddress="{{.VenueAddress}}"
+    >
+</div>
+{{end}}
+
+{{define "js"}}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script src="/static/js/venuepage.js"></script>
+{{end}}

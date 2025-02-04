@@ -1,0 +1,144 @@
+body {
+    background-color: #fff;
+    color:#4a4a4a;
+}
+
+footer {
+    display: none;
+}
+
+.account-container {
+    width: 940px;
+    margin: 0 auto;
+    padding-top: 30px;
+}
+
+.account-title {
+    display: flex;
+    margin-bottom: 30px;
+}
+
+.account-title img {
+    margin-right: 15px;
+}
+
+.account-title h2 {
+    align-self: center;
+    font-size: 24px;
+}
+
+.account-nav {
+    display: flex;
+    /* margin-bottom: 30px; */
+    padding-bottom: 11px;
+    border-bottom: 1px solid #d8d8d8;
+}
+
+.account-nav a {
+    color: #4a4a4a;
+    font-weight: 600;
+    margin-right: 20px;
+    padding-bottom: 11px;
+}
+
+.account-nav .select-item a {
+    color: #000;
+    border-bottom: 2px solid;
+}
+
+.account-info {
+    width: 300px;
+    margin-bottom: 30px;
+}
+
+.account-info .info-item {
+    padding: 30px 0;
+    border-bottom: 1px solid #d8d8d8;
+}
+
+.account-info .info-item:last-of-type {
+    border-bottom: 0;
+}
+
+.account-info .subtitle,
+.account-info .info-item-title {
+    margin-bottom: 10px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.account-info .value-detail {
+    display: flex;
+    justify-content: space-between;
+}
+
+.account-info .value-edit {
+    padding: 5px;
+    border: 1px solid #d8d8d8;
+    border-radius: 50%;
+}
+
+.account-info .value-edit:hover {
+    cursor: pointer;
+    background-color: #53a385;
+}
+
+.account-info .value-edit:hover>path {
+    fill: white;
+}
+
+.account-info .info-item-input {
+    display: none;
+}
+
+.account-info input {
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #9b9b9b;
+    padding: 10px 0 10px 15px;
+    height: 45px;
+    margin-bottom: 15px;
+}
+
+.account-info .button-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.account-info button {
+    width: 40%;
+    height: 45px;
+    border-radius: 22.5px;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.account-info .cancel {
+    background-color: #9b9b9b;
+}
+
+.account-info .submit {
+    background-color: #53a385;
+}
+
+.account-info .create-phone {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.account-info .create-text{
+    color: #f96f48;
+    margin-right: 10px;
+}
+
+@media screen and (max-width : 1025px) {
+    .account-container {
+        width: 70%;
+    }
+
+    .account-info {
+        width: 100%;
+    }
+}

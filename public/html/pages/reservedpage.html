@@ -1,0 +1,220 @@
+{{define "css"}}
+    <link href="/static/css/spinkit.min.css" rel="stylesheet" />
+    <link href="/static/css/reservedpage.css" rel="stylesheet" />
+{{end}}
+{{define "content"}}
+<div class="wrapper w-100 d-flex">
+    <form id="form" action="/CreateOrder" method="POST" class="left">
+        <div class="step1">
+            <div class="row d-flex justify-content-between">
+                <div class="col-6 back-btn">
+                    <div id="backToProduct" class="d-inline-block"></div>
+                </div>
+                <p class="col-6 step-title">第 1 步 / 共 2 步</p>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="progress rounded-pill" role="progressbar" aria-label="Basic example"
+                    aria-valuenow="1" 
+                    aria-valuemin="0" 
+                    aria-valuemax="2">
+                        <div class="progress-bar rounded-end-pill" style="width: 50%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class=" pt-2 use-group">
+                        <div class="use-space">
+                            <p>
+                                你將如何使用空間
+                                <span class="required">*</span>
+                            </p>
+                            <div class="pt-2">
+                                <select name="Activity" class="form-select w-75">
+                                    <option value="" selected disabled>使用目的</option>
+                                    {{range .ReservedActivity}}
+                                        <option value="{{.Id}}">{{.ActivityName}}</option>
+                                    {{end}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="use-people">
+                            <p>
+                                使用人數
+                                <span class="required">*</span>
+                            </p>
+                            <div class="d-flex pt-2">
+                                <input name="UserCount" type="number" class="form-control" min="1" value="1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-3">
+                        <p>備註</p>
+                        <textarea name="Message" class="form-control mt-3" rows="3"
+                                placeholder="您可以留言或詢問場地主。例：可否提供折疊椅或投影機、寵物可否進入等等。"></textarea>
+                    </div>
+                    <div class="pt-4 pb-5 border-bottom">
+                        <label for="confirmCheck">
+                            <input type="checkbox" name="agree-rule" id="confirmCheck">
+                            <div class="checkmark"></div>
+                            <span>我已詳閱並同意</span>
+                            <a href="/OrderRules" target="_blank">使用及取消規範</a>
+                        </label>
+                    </div>
+                    <div class="row pt-4 next-step pb-3">
+                        <div class="col-6 pc-next-step">
+                            <p>
+                                您還不會被收費<br>
+                                <span class="required">*必填</span>
+                            </p>
+                        </div>
+                        <div class="col-6 fixed-next-step mobile">
+                            <div class="mb-2">$ {{.Amount}}</div>
+                            <p>
+                                <span class="modal-btn" data-bs-toggle="modal"
+                                data-bs-target="#productDetails">詳情</span>
+                            </p>
+                        </div>
+                        <div class="col-6 btn-next-step">
+                            <input id="nextStepBtn" value="下一步" class="btn border rounded-pill px-4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step2">
+            <div class="row">
+                <div class="col-6 back-btn">
+                    <div id="backToStep1" class="d-inline-block"></div>
+                </div>
+                <p class="col-6 step-title">第 2 步 / 共 2 步</p>
+            </div>
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="50"
+                    aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div>
+                        <p class="mb-2">聯絡人資料</p>
+                        <p class="required">*必填</p>
+                        <div class="row d-flex justify-content-between">
+                            <div class="col-6 pe-2">
+                                <p class="fs13">
+                                    聯絡人姓
+                                    <span class="required">*</span>
+                                </p>
+                                <input name="LastName" type="text" class="form-control w-75">
+                            </div>
+                            <div class="w-auto">
+                                <p class="fs13">
+                                    名
+                                    <span class="required">*</span>
+                                </p>
+                                <input name="FirstName" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-between">
+                            <div class="w-100">
+                                <p class="fs13">
+                                    手機號碼
+                                    <span class="required">*</span>
+                                </p>
+                                <input name="Phone" type="tel" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-5">
+                            <p class="fs13">
+                                Email
+                                <span class="required">*</span>
+                            </p>
+                            <input name="Email" type="email" class="form-control" placeholder="example@email.com">
+                        </div>
+                    </div>
+                    <div class="row border-top submit-reserved">
+                        <div class="pt-3 mobile-flex justify-content-between mb-3 fixed-final-step">
+                            <p>
+                                總計
+                                <span class="fs13">(TWD)</span>
+                                <span class="modal-btn fs13" data-bs-toggle="modal"
+                                      data-bs-target="#productDetails">詳情</span>
+                            </p>
+                            <p>$ {{.Amount}}</p>
+                        </div>
+                        <button id="submitBtn" type="button" class="btn rounded-pill border submit-reserved-btn w-100">送出預定</button>
+                    </div>
+                    <input name="VenueId" value={{.VenuesId}} type="hidden">
+                    <input name="TimeDetails" value=@timeDetailCookieJson type="hidden">
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="right">
+        <img src={{.VenuesImgUrl}} alt="">
+        <div class="mt-4 pb-4">
+            <h2>{{.Name}}</h2>
+            <p class="address">{{.Address}}</p>
+        </div>
+        <div class="border-top py-4">
+            <p>{{.Date}}</p>
+        </div>
+        <div class="border-top py-4">
+            {{range .OrderDetails}}
+                <div class="d-flex justify-content-between mb-1">
+                    <p>{{.TimeDetail}}</p>
+                    <p>$ {{.Price}}</p>
+                </div>
+            {{end}}
+            <div class="d-flex justify-content-between align-items-end">
+                <b>總計<span class="fs12">(TWD)</span></b>
+                <p class="total-price">$ {{.Amount}}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- productInfoModal -->
+<div class="modal fade" id="productDetails" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content p-2 mx-auto">
+            <div class="modal-header mb-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-0 d-flex mx-auto">
+                <div class="info-modal d-flex flex-column">
+                    <img class="mx-auto" src={{.VenuesImgUrl}} alt="">
+                    <div class="mt-4 pb-4">
+                        <h2>{{.Name}}</h2>
+                        <p class="address">{{.Address}}</p>
+                    </div>
+                    <div class="border-top py-4">
+                        <p>{{.Date}}</p>
+                    </div>
+                    <div class="border-top pt-4">
+                        {{range .OrderDetails}}
+                            <div class="d-flex justify-content-between mb-1">
+                                <p>{{.TimeDetail}}</p>
+                                <p>$ {{.Price}}</p>
+                            </div>
+                        {{end}}
+                        <div class="d-flex justify-content-between align-items-end">
+                            <b>總計<span class="fs12">(TWD)</span></b>
+                            <p class="total-price">$ {{.Amount}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}
+{{define "js"}}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="/static/js/reservedpage.js" asp-append-version="true"></script>
+{{end}}

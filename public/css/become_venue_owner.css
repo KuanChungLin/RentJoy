@@ -1,0 +1,159 @@
+/* --------------------- */
+/* banner */
+
+.banner-wrap {
+    background-image: url(../images/bannerimg.jpg);
+    background-position: center;
+    height: 330px;
+    color: #fff;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.banner-wrap p {
+    margin-top: 5px;
+}
+
+.banner-wrap .orangeRoundBtn {
+    display: block;
+    width: 120px;
+    background-color: #ff6700;
+    color: #fff;
+    padding: 8px;
+    border-radius: 20px;
+    margin-top: 20px;
+    align-self: center;
+}
+
+/* --------------------- */
+/* features */
+
+.features {
+    background-color: #fff;
+    padding: 20px;
+}
+
+.features-container {
+    max-width: 1320px;
+    margin: 0 auto;
+}
+
+.features-row {
+    display: flex;
+    justify-content: center;
+}
+
+.feature-item {
+    display: inline-block;
+    width: 25%;
+    max-width: 180px;
+    vertical-align: top;
+    margin: 0 5%;
+    text-align: center;
+}
+
+.feature-icon {
+    padding: 10px 0;
+    border-bottom: 1px solid #d1d3d4;
+}
+
+.feature-icon img {
+    width: 80px;
+    height: auto;
+}
+
+.feature-text h3 {
+    color: #335c66;
+    font-size: 24px;
+    margin-top: 15px;
+}
+
+.feature-text p {
+    color: #58595b;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* --------------------- */
+/* faq */
+
+.faq-view {
+    width: 100%;
+    background-color: #f0f0f0;
+    color: #6d6e71;
+    padding: 20px 0;
+}
+
+.faq-view details {
+    padding: 0 20px 10px 20px;
+}
+
+.faq-view h4 {
+    margin-top: 0;
+}
+
+.faq-view .qa-wrap {
+    width: 960px;
+    margin: auto;
+    background-color: #f0f0f0;
+    overflow: visible;
+    max-height: none;
+}
+
+.faq-view .qa-title {
+    text-align: center;
+    color: #335c66;
+    margin-bottom: 50px;
+}
+
+.faq-view summary::before {
+    content: '';
+    display: inline-block;
+    background-image: url(../images/question_icon.png);
+    vertical-align: middle;
+    width: 18px;
+    height: 18px;
+    background-repeat: no-repeat;
+
+}
+
+/* --------------------- */
+/* slogan */
+
+.slogan {
+    background-color: #15b59e;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px 0 60px;
+    color: #fff;
+}
+
+.slogan .orangeRoundBtn {
+    display: block;
+    width: 140px;
+    font-size: 1.3em;
+    background-color: #ff6700;
+    color: #fff;
+    padding: 8px;
+    border-radius: 20px;
+    margin-top: 30px;
+    align-self: center;
+}
+
+@media screen and (max-width: 1023px) {
+    /* faq */
+    .faq-view .qa-wrap {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    /* faq */
+    .faq-view summary p {
+        width: 80%;
+    }
+}

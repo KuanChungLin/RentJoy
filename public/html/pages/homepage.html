@@ -1,0 +1,106 @@
+{{define "css"}}
+    <link href="/static/css/homepage.css" rel="stylesheet" />
+{{end}}
+
+{{define "content"}}
+<section class="carousel">
+    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active" data-bs-interval="4000">
+                <img src="/static/images/slide_01.jpg" class="d-block" alt="...">
+                <h2 class="carousel-title">
+                    RentJoy 租借趣
+                    <br>
+                    尋找您的獨特場地體驗
+                    <span class="carousel-tag">豐富活動，隨處可見，閒置空間不浪費</span>
+                </h2>
+            </div>
+            <div class="carousel-item" data-bs-interval="4000">
+                <img src="/static/images/slide_02.jpg" class="d-block" alt="...">
+                <h2 class="carousel-title">
+                    RentJoy 租借趣
+                    <br>
+                    讓大眾發現您的場地之美
+                    <span class="carousel-tag">豐富活動，隨處可見，閒置空間不浪費</span>
+                </h2>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="select-group">
+    <form class="select-wrap" action="/SearchPage" method="get">
+        <div class="select-area">
+            <select id="activity_select" class="form-select" aria-label="" name="ActivityID">
+                <option style="display:none;" disabled="" selected="">活動性質</option>
+                <option value="" disabled class="disabled">--活動性質--</option>
+                {{range .ActivityList}}
+                <option value="{{.ID}}" >{{.ActivityName}}</option>
+                {{end}}
+            </select>
+        </div>
+        <div class="select-area">
+            <select id="citySelect" class="form-select" aria-label="" name="City">
+                <option style="display:none;" disabled="" selected="">地點</option>
+                <option value="" disabled class="disabled">--地點--</option>
+            </select>
+        </div>
+        <div class="select-area">
+            <select id="people_select" class="form-select" aria-label="" name="NumberOfPeople">
+                <option style="display:none;" disabled="" selected="">活動人數</option>
+                <option value="" disabled class="disabled">--活動人數--</option>
+                {{range .PeopleCountList}}
+                <option value="{{.PeopleCount}}">{{.PeopleCount}}</option>
+                {{end}}
+            </select>
+        </div>
+        <button class="btn-orange" type="submit">找場地</button>
+    </form>
+</section>
+
+<section class="gallery">
+    <div class="gallery-leftbtn">❮</div>
+    <div class="gallery-clipper">
+        <div class="gallery-area">
+            {{template "gallery_partial" .GalleryList}}
+        </div>
+    </div>
+    <div class="gallery-rightbtn">❯</div>
+</section>
+
+<section class="site-exhibit">
+    <div class="exhibit-wrap">
+        <div class="exhibit-title">
+            <img src="/static/images/site.jpeg" alt="">
+            <h3>精選場地</h3>
+        </div>
+        <div class="exhibit-content">
+            {{template "exhibit_partial" .ExhibitList}}
+        </div>
+    </div>
+</section>
+
+{{template "exhibit_description_partial" .ExhibitDescriptionList}}
+
+<section class="select-single">
+    <div class="select-title">
+        <h2>1000多個類型場地，立即瀏覽</h2>
+    </div>
+    <div class="select-wrap">
+        <form class="select-area" asp-controller="Search" asp-action="SearchPage" method="get">
+            <select id="activity_select" class="form-select" aria-label="" name="ActivityId">
+                <option style="display:none;" disabled="" selected="">活動性質</option>
+                <option value="" disabled class="disabled">--活動性質--</option>
+                {{range .ActivityList}}
+                <option value="{{.ID}}">{{.ActivityName}}</option>
+                {{end}}
+            </select>
+            <button class="btn-orange" type="submit">瀏覽場地</button>
+        </form>
+    </div>
+</section>
+{{end}}
+
+{{define "js"}}
+    <script src="/static/js/homepage.js"></script>
+{{end}}

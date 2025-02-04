@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rentjoy-app
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./public:/app/public
+      - ./configs:/app/configs
+    environment:
+      - TZ=Asia/Taipei
+      - GO_ENV=development
+    restart: unless-stopped
+    networks:
+      - rentjoy-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+networks:
+  rentjoy-network:
+    driver: bridge

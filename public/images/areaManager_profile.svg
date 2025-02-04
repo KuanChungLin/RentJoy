@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100" height="100" viewBox="0 0 100 100">
+    <defs>
+        <path id="prefix__a" d="M0 0.739L100 0.739 100 100.739 0 100.739z"/>
+        <path id="prefix__c" d="M0 0.739L100 0.739 100 100.739 0 100.739z"/>
+        <path id="prefix__e" d="M49.999.739C22.386.739 0 23.125 0 50.738c0 27.615 22.386 50.001 49.999 50.001 27.615 0 50.001-22.386 50.001-50.001C100 23.125 77.614.739 49.999.739z"/>
+        <path id="prefix__g" d="M49.999.739C22.386.739 0 23.125 0 50.738c0 27.615 22.386 50.001 49.999 50.001 27.615 0 50.001-22.386 50.001-50.001"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g transform="translate(0 -1) translate(0 .261)">
+            <mask id="prefix__b" fill="#fff">
+                <use xlink:href="#prefix__a"/>
+            </mask>
+            <path fill="#95BFAF" d="M100 50.739c0 27.614-22.386 50-50 50s-50-22.386-50-50 22.386-50 50-50 50 22.386 50 50" mask="url(#prefix__b)"/>
+            <g>
+                <mask id="prefix__d" fill="#fff">
+                    <use xlink:href="#prefix__c"/>
+                </mask>
+                <path fill="#D1D3D4" d="M100 50.739c0 27.614-22.386 50-50 50s-50-22.386-50-50 22.386-50 50-50 50 22.386 50 50" mask="url(#prefix__d)"/>
+            </g>
+        </g>
+        <g transform="translate(0 -1) translate(0 .261)">
+            <mask id="prefix__f" fill="#fff">
+                <use xlink:href="#prefix__e"/>
+            </mask>
+            <path stroke="#F1F2F2" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M67.95 41.734c0 9.914-8.036 17.95-17.95 17.95-9.913 0-17.95-8.036-17.95-17.95s8.037-17.95 17.95-17.95c9.914 0 17.95 8.036 17.95 17.95z" mask="url(#prefix__f)"/>
+            <g>
+                <mask id="prefix__h" fill="#fff">
+                    <use xlink:href="#prefix__g"/>
+                </mask>
+                <path stroke="#F1F2F2" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M71.488 78.477v24.535c0 11.867-9.62 21.488-21.488 21.488-11.867 0-21.49-9.621-21.49-21.488v-21.84c0-11.867 9.623-21.488 21.49-21.488" mask="url(#prefix__h)"/>
+            </g>
+        </g>
+    </g>
+</svg>

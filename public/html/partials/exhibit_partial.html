@@ -1,0 +1,12 @@
+{{define "exhibit_partial"}}
+{{range .}}
+<a href="{{.SiteLinkUrl}}" class="small-type">
+    <article class="site-card ">
+        <div class="site-img">
+            <img src="{{.SiteImgUrl}}" alt="">
+        </div>
+        <h3>{{.ExhibitName}}</h3>
+    </article>
+</a>
+{{end}}
+{{end}}

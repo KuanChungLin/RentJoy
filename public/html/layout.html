@@ -1,0 +1,428 @@
+{{define "layout"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RentJoy.Web</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/images/rentjoysmalllogo.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/css/reset.css">
+    <link rel="stylesheet" href="/static/css/header_footer.css" asp-append-version="true">
+    {{template "css" .}}
+</head>
+<body>
+    <!-- header -->
+    {{if .IsLoggedIn}}
+        <input type="checkbox" id="menu-switch">
+        <header>
+            <div class="logo-area">
+                <h1 class="logo-image">
+                    <a href="/">
+                        <img src="/static/images/RentJoy_Logo.jpeg" alt="">
+                    </a>
+                </h1>
+                <p>
+                    租借趣
+                    <span>|</span>
+                    享受租借場地的樂趣
+                </p>
+            </div>
+            <label for="menu-switch" class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+            <nav class="nav">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="/SearchPage">找場地</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/">我的預訂</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#">場地管理</a>
+                        <ul class="sub-menu">
+                            <li>
+                                <a href="/">
+                                    預訂單
+                                    <p class="count"></p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/">我的場地</a>
+                            </li>
+                            <li>
+                                <a href="/">
+                                    聯絡單
+                                    <p class="count"></p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item faq-btn">
+                        <a href="#">常見問答</a>
+                        <section class="faq">
+                            <section class="faq-content">
+                                <div class="goto-qa">
+                                    <a href="/Faq" class="faq-bottom-link">前往常見問答</a>
+                                </div>
+                                <div class="qa-wrap">
+                                    <article>
+                                        <h4>我是活動主：尋找場地</h4>
+                                        <details>
+                                            <summary>
+                                                <p>使用 RentJoy 要付錢嗎？</p>
+                                            </summary>
+                                            <p>使用 RentJoy 來「查找場地」、「篩選」、「預約」都是完全免費，所有功能都不需要支付任何費用。</p>
+                                        </details>
+                                        <details>
+                                            <summary>
+                                                <p>要怎麼使用可以快速找到適合的場地？</p>
+                                            </summary>
+                                            <p>
+                                                RentJoy
+                                                上刊登的場地數量非常多，建議使用篩選功能來排除不適合您活動的場地。平台上有「活動性質」、「活動人數」、「地點」、「預算」以及「時間」等多種條件可同時篩選。
+                                            </p>
+                                        </details>
+                                        <details>
+                                            <summary>
+                                                <p>平台上的資訊都是真的嗎？價格會不會比較貴？</p>
+                                            </summary>
+                                            <p>
+                                                RentJoy 嚴格要求所有合作的場地商家，提供資訊務必要正確且透明，RentJoy 也會逐一審核平台上所刊載的資訊，不會有不實價格或比較貴的情況發生。
+                                            </p>
+                                        </details>
+                                        <details>
+                                            <summary>
+                                                <p>我在線上預約了場地，就代表預約成功了嗎？</p>
+                                            </summary>
+                                            <p>
+                                                透過 RentJoy 的系統線上付款預約場地，RentJoy
+                                                會立即將預約資訊傳送給場地主，但場地主仍保有是否要出租場地的權力。一般而言，場地主會在一天內回覆您的預約是否成功，如果場地主在訂單成立後 48
+                                                小時內未回覆，訂單會自動取消，並且不會有任何款項產生。
+                                            </p>
+                                        </details>
+                                        <details>
+                                            <summary>
+                                                <p>我在線上預約了場地，要怎麼索取場租發票？</p>
+                                            </summary>
+                                            <p>
+                                                由於 RentJoy 上所刊登的場地皆為場地主各自營運，因此場租發票的部分，需要請您與各場地索取。
+                                                您可以在「線上預訂」後，從預訂表單中的「備註」，直接向場地主聯絡。
+                                            </p>
+                                        </details>
+                                        <details>
+                                            <summary>
+                                                <p>RentJoy 的服務這麼方便，那你們靠什麼賺錢？</p>
+                                            </summary>
+                                            <p>
+                                                RentJoy 不會向使用者收取任何費用，但會向場地主收取像是手續費、廣告費等等的費用來維持並增進 RentJoy
+                                                的服務與功能，提供大家更好的找場地體驗。如果您喜歡 RentJoy 的服務，也想給我們一點幫助，請向您的親朋好友推薦
+                                                RentJoy，就是對我們最大的支持與鼓勵了！
+                                            </p>
+                                        </details>
+                                    </article>
+                                    <article>
+                                        <h4>我是場地主：刊登場地</h4>
+                                        <details>
+                                            <summary>
+                                                <p>我想要在 RentJoy 刊登場地，請問我該怎麼做呢？</p>
+                                            </summary>
+                                            <p>
+                                                請點選「登入」或「註冊」按鍵，填寫 email 或透過 Facebook、Google 也可以註冊成為場地主喔。在此感謝您的加入，您的支持是
+                                                RentJoy 最大的動力。
+                                            </p>
+                                        </details>
+                                        <details>
+                                            <summary>
+                                                <p>刊登場地需要付費嗎？</p>
+                                            </summary>
+                                            <p>
+                                                在 RentJoy 刊登場地資訊是免費的，您只需申請成為 RentJoy
+                                                的會員，登入「場地管理」後台後，點選「新增空間」，依步驟所示輸入您的場地資料即可送出刊登申請。
+                                            </p>
+                                        </details>
+                                        <details>
+                                            <summary>
+                                                <p>資料撰寫完成後，系統顯示需要審核通過才能上架，是怎麼回事呢？</p>
+                                            </summary>
+                                            <p>
+                                                在您輸入完資料之後，RentJoy
+                                                的服務人員會審核您的場地資料，查看是否有缺漏或是錯誤的地方，審核無誤後就會自動開通上線。一般而言，審核需要七至十個工作天，如果審核後發現資料內容有誤，會寄發通知至您的<a href="#">場地後台</a>，請再依照指示修正您的場地資訊。
+                                            </p>
+                                        </details>
+                                        <details>
+                                            <summary>
+                                                <p>我的場地在很後面，排序怎麼決定的？有什麼辦法可以排前面一點嗎？</p>
+                                            </summary>
+                                            <p>RentJoy 會精算使用者的點擊率、瀏覽時間、預訂率、成交率、資料完整度及客戶評價等等資料，做為排序的參考依據。</p>
+                                        </details>
+                                        <details>
+                                            <summary>
+                                                <p>成交服務費怎麼收？怎麼判斷是從 RentJoy 來的呢？</p>
+                                            </summary>
+                                            <p>
+                                                客人點選「線上預訂」下訂場地，在預訂過程中會先透過藍新金流預授權信用卡，並於場地主接受訂單後扣款。RentJoy 每月會將上個月份的場租費用總結，扣掉
+                                                15% 成交服務費後，將剩餘款項匯入您的帳戶。
+                                            </p>
+                                        </details>
+                                    </article>
+                                </div>
+                            </section>
+                        </section>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#">我的帳號</a>
+                        <ul class="sub-menu">
+                            <li>
+                                <a href="/Account">個人資料</a>
+                            </li>
+                            <li>
+                                <a href="/Logout">登出</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+    {{else}}
+        <input type="checkbox" id="menu-switch">
+        <header>
+            <div class="logo-area">
+                <h1 class="logo-image">
+                    <a href="/">
+                        <img src="/static/images/RentJoy_Logo.jpeg" alt="">
+                    </a>
+                </h1>
+                <p>
+                    租借趣
+                    <span>|</span>
+                    享受租借場地的樂趣
+                </p>
+            </div>
+            <label for="menu-switch" class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+            <nav class="nav">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="/SearchPage">找場地</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/BecomeVenueOwner">成為場地主</a>
+                    </li>
+                    <li class="nav-item faq-btn">
+                        <a href="#">常見問答</a>
+                        <section class="faq">
+                            <section class="faq-content">
+                                <div class="goto-qa">
+                                    <a href="/Faq" class="faq-bottom-link">前往常見問答</a>
+                                </div>
+                                <div class="qa-wrap">
+                                    <article>
+                                        <h4>我是活動主：尋找場地</h4>
+                                        <details>
+                                            <summary>
+                                                <p>使用 RentJoy 要付錢嗎？</p>
+                                            </summary>
+                                            <p>使用 RentJoy 來「查找場地」、「篩選」、「預約」都是完全免費，所有功能都不需要支付任何費用。</p>
+                                        </details>
+                                        <details>
+                                            <summary>
+                                                <p>要怎麼使用可以快速找到適合的場地？</p>
+                                            </summary>
+                                            <p>RentJoy
+                                                上刊登的場地數量非常多，建議使用篩選功能來排除不適合您活動的場地。平台上有「活動性質」、「活動人數」、「地點」、「預算」以及「時間」等多種條件可同時篩選。
+                                            </p>
+                                        </details>
+                                        <details>
+                                            <summary>
+                                                <p>平台上的資訊都是真的嗎？價格會不會比較貴？</p>
+                                            </summary>
+                                            <p>RentJoy 嚴格要求所有合作的場地商家，提供資訊務必要正確且透明，RentJoy 也會逐一審核平台上所刊載的資訊，不會有不實價格或比較貴的情況發生。
+                                            </p>
+                                        </details>
+                                        <details>
+                                            <summary>
+                                                <p>我在線上預約了場地，就代表預約成功了嗎？</p>
+                                            </summary>
+                                            <p>透過 RentJoy 的系統線上付款預約場地，RentJoy
+                                                會立即將預約資訊傳送給場地主，但場地主仍保有是否要出租場地的權力。一般而言，場地主會在一天內回覆您的預約是否成功，如果場地主在訂單成立後 48
+                                                小時內未回覆，訂單會自動取消，並且不會有任何款項產生。</p>
+                                        </details>
+                                        <details>
+                                            <summary>
+                                                <p>我在線上預約了場地，要怎麼索取場租發票？</p>
+                                            </summary>
+                                            <p>由於 RentJoy 上所刊登的場地皆為場地主各自營運，因此場租發票的部分，需要請您與各場地索取。
+                                                您可以在「線上預訂」後，從預訂表單中的「備註」，直接向場地主聯絡。</p>
+                                        </details>
+                                        <details>
+                                            <summary>
+                                                <p>RentJoy 的服務這麼方便，那你們靠什麼賺錢？</p>
+                                            </summary>
+                                            <p>RentJoy 不會向使用者收取任何費用，但會向場地主收取像是手續費、廣告費等等的費用來維持並增進 RentJoy
+                                                的服務與功能，提供大家更好的找場地體驗。如果您喜歡 RentJoy 的服務，也想給我們一點幫助，請向您的親朋好友推薦
+                                                RentJoy，就是對我們最大的支持與鼓勵了！</p>
+                                        </details>
+                                    </article>
+                                    <article>
+                                        <h4>我是場地主：刊登場地</h4>
+                                        <details>
+                                            <summary>
+                                                <p>我想要在 RentJoy 刊登場地，請問我該怎麼做呢？</p>
+                                            </summary>
+                                            <p>請點選「登入」或「註冊」按鍵，填寫 email 或透過 Facebook、Google 也可以註冊成為場地主喔。在此感謝您的加入，您的支持是
+                                                RentJoy 最大的動力。
+                                            </p>
+                                        </details>
+                                        <details>
+                                            <summary>
+                                                <p>刊登場地需要付費嗎？</p>
+                                            </summary>
+                                            <p>在 RentJoy 刊登場地資訊是免費的，您只需申請成為 RentJoy
+                                                的會員，登入「場地管理」後台後，點選「新增空間」，依步驟所示輸入您的場地資料即可送出刊登申請。</p>
+                                        </details>
+                                        <details>
+                                            <summary>
+                                                <p>資料撰寫完成後，系統顯示需要審核通過才能上架，是怎麼回事呢？</p>
+                                            </summary>
+                                            <p>在您輸入完資料之後，RentJoy
+                                                的服務人員會審核您的場地資料，查看是否有缺漏或是錯誤的地方，審核無誤後就會自動開通上線。一般而言，審核需要七至十個工作天，如果審核後發現資料內容有誤，會寄發通知至您的<a
+                                                    href="#">場地後台</a>，請再依照指示修正您的場地資訊。
+                                            </p>
+                                        </details>
+                                        <details>
+                                            <summary>
+                                                <p>我的場地在很後面，排序怎麼決定的？有什麼辦法可以排前面一點嗎？</p>
+                                            </summary>
+                                            <p>RentJoy 會精算使用者的點擊率、瀏覽時間、預訂率、成交率、資料完整度及客戶評價等等資料，做為排序的參考依據。</p>
+                                        </details>
+                                        <details>
+                                            <summary>
+                                                <p>成交服務費怎麼收？怎麼判斷是從 RentJoy 來的呢？</p>
+                                            </summary>
+                                            <p>客人點選「線上預訂」下訂場地，在預訂過程中會先透過藍新金流預授權信用卡，並於場地主接受訂單後扣款。RentJoy 每月會將上個月份的場租費用總結，扣掉
+                                                15% 成交服務費後，將剩餘款項匯入您的帳戶。</p>
+                                        </details>
+                                    </article>
+                                </div>
+                            </section>
+                        </section>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/SignUp">註冊</a>
+                    </li>
+                    <li class="nav-item">
+                        <a name="LoginJump" href="/Login">登入</a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+    {{end}}
+    
+    <!-- header end -->
+
+    <!-- main -->
+    <main>
+        {{template "content" .PageData}}
+    </main>
+
+    <!-- footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-row">
+                <div class="content">
+                    <h3>
+                        <img src="/static/images/RentJoy_GrayLogo.jpeg" alt="">
+                    </h3>
+                </div>
+                <div class="content">
+                    <h3>
+                        場地內容
+                    </h3>
+                    <ul class="content-list">
+                        <li>
+                            <a href="/SearchPage">找場地</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="content">
+                    <h3>
+                        合作提案
+                    </h3>
+                    <ul class="content-list">
+                        <li>
+                            <a href="">刊場地</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="content">
+                    <h3>
+                        網站條款
+                    </h3>
+                    <ul class="content-list">
+                        <li>
+                            <a href="/UserRules">使用者條款</a>
+                        </li>
+                        <li>
+                            <a href="/Policy">隱私權保護條款</a>
+                        </li>
+                        <li>
+                            <a href="/OrderRules">線上預訂條約</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="content">
+                    <h3>
+                        聯絡我們
+                    </h3>
+                    <ul class="content-list link-list">
+                        <li>
+                            <a href="#" class="facebook">
+                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30"
+                                     viewBox="0 0 30 30">
+                                    <path d="M12,27V15H8v-4h4V8.852C12,4.785,13.981,3,17.361,3c1.619,0,2.475,0.12,2.88,0.175V7h-2.305C16.501,7,16,7.757,16,9.291V11 h4.205l-0.571,4H16v12H12z"
+                                          fill="#d3d3d3"></path>
+                                </svg>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="instagram">
+                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30"
+                                     viewBox="0 0 24 24">
+                                    <path d="M 8 3 C 5.243 3 3 5.243 3 8 L 3 16 C 3 18.757 5.243 21 8 21 L 16 21 C 18.757 21 21 18.757 21 16 L 21 8 C 21 5.243 18.757 3 16 3 L 8 3 z M 8 5 L 16 5 C 17.654 5 19 6.346 19 8 L 19 16 C 19 17.654 17.654 19 16 19 L 8 19 C 6.346 19 5 17.654 5 16 L 5 8 C 5 6.346 6.346 5 8 5 z M 17 6 A 1 1 0 0 0 16 7 A 1 1 0 0 0 17 8 A 1 1 0 0 0 18 7 A 1 1 0 0 0 17 6 z M 12 7 C 9.243 7 7 9.243 7 12 C 7 14.757 9.243 17 12 17 C 14.757 17 17 14.757 17 12 C 17 9.243 14.757 7 12 7 z M 12 9 C 13.654 9 15 10.346 15 12 C 15 13.654 13.654 15 12 15 C 10.346 15 9 13.654 9 12 C 9 10.346 10.346 9 12 9 z"
+                                          fill="#d3d3d3"></path>
+                                </svg>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="statement">
+                <p>本網站的所有資訊均由用戶提供，如有觸犯您的知識版權，請聯繫我們，我們會於接到投訴後即時處理。</p>
+                <p>© RentJoy 租借趣 2024 All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.2/dist/sweetalert.min.js"></script>
+    <!-- vue3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    {{if .IsLoggedIn}}
+        <script src="/static/js/header_footer_Login.js"></script>
+    {{end}}
+    {{template "js" .}}
+
+    
+</body>
+</html>
+{{end}}

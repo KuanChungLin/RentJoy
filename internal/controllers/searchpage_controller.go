@@ -1,0 +1,131 @@
+package controllers
+
+import (
+	"encoding/json"
+	"html/template"
+	"log"
+	"net/http"
+	"rentjoy/internal/dto/searchpage"
+	interfaces "rentjoy/internal/interfaces/services"
+	"rentjoy/pkg/helper"
+)
+
+type SearchPageController struct {
+	BaseController
+	searchService interfaces.SearchPageService
+}
+
+func NewSearchPageController(searchService interfaces.SearchPageService, templates map[string]*template.Template) *SearchPageController {
+	return &SearchPageController{
+		BaseController: NewBaseController(templates),
+		searchService:  searchService,
+	}
+}
+
+func (c *SearchPageController) SearchPage(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// 解析表單
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "無法解析表單數據", http.StatusBadRequest)
+		return
+	}
+
+	activityID, err := helper.StrToUint(r.FormValue("ActivityId"))
+	if err != nil {
+		log.Printf("無法解析 Error: %s", err)
+		return
+	}
+
+	maxPrice, err := helper.StrToInt(r.FormValue("MaxPrice"))
+	if err != nil {
+		log.Printf("無法解析 Error: %s", err)
+		return
+	}
+
+	minPrice, err := helper.StrToInt(r.FormValue("MinPrice"))
+	if err != nil {
+		log.Printf("無法解析 Error: %s", err)
+		return
+	}
+
+	request := searchpage.VenueFilter{
+		ActivityID:     activityID,
+		NumberOfPeople: r.FormValue("NumberOfPeople"),
+		City:           r.FormValue("City"),
+		District:       r.FormValue("District"),
+		MaxPrice:       maxPrice,
+		MinPrice:       minPrice,
+		VenueName:      r.FormValue("VenueName"),
+		DayType:        r.FormValue("DayType"),
+		RentTime:       r.FormValue("RentTime"),
+	}
+
+	vm := c.searchService.GetSearchPage(request)
+
+	c.RenderTemplate(w, r, "searchpage", vm)
+}
+
+func (c *SearchPageController) SearchPageLoading(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Received request URL: %s", r.URL.String())
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// 解析表單
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "無法解析表單數據", http.StatusBadRequest)
+		return
+	}
+
+	activityID, err := helper.StrToUint(r.FormValue("ActivityId"))
+	if err != nil {
+		log.Printf("無法解析 Error: %s", err)
+		return
+	}
+
+	maxPrice, err := helper.StrToInt(r.FormValue("MaxPrice"))
+	if err != nil {
+		log.Printf("無法解析 Error: %s", err)
+		return
+	}
+
+	minPrice, err := helper.StrToInt(r.FormValue("MinPrice"))
+	if err != nil {
+		log.Printf("無法解析 Error: %s", err)
+		return
+	}
+
+	page, err := helper.StrToInt(r.FormValue("Page"))
+	if err != nil {
+		log.Printf("無法解析 Error: %s", err)
+		return
+	}
+
+	request := searchpage.VenueFilter{
+		ActivityID:     activityID,
+		NumberOfPeople: r.FormValue("NumberOfPeople"),
+		City:           r.FormValue("City"),
+		District:       r.FormValue("District"),
+		MaxPrice:       maxPrice,
+		MinPrice:       minPrice,
+		VenueName:      r.FormValue("VenueName"),
+		DayType:        r.FormValue("DayType"),
+		RentTime:       r.FormValue("RentTime"),
+		Page:           page,
+	}
+
+	venueInfos := c.searchService.GetVenueInfos(request)
+
+	response := searchpage.VenuePartialResponse{
+		VenueInfos: venueInfos,
+		EndOfData:  len(venueInfos) == 0,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+}

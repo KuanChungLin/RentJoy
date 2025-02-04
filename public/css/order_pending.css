@@ -1,0 +1,46 @@
+footer{
+    display: none;
+}
+.main{
+    width: 90%;
+    max-width: 500px;
+}
+.container{
+    color: #4a4a4a;
+}
+
+h2{
+    font-size: 25px;
+}
+.send,.detail-title{
+    color: #9b9b9b;
+}
+
+.order-state{
+    color: #53a385;
+    text-decoration: underline;
+    line-height: 1.5;
+}
+.order-state:hover{
+    color: #00774b;
+}
+
+.order-detail{
+    width: 90%;
+    background-color: #ebebeb;
+}
+.detail-title{
+    display: inline-block;
+    width: 65px;
+    margin-right: 40px;
+}
+
+.return-btn{
+    width: 90%;
+    color: white;
+    background-color: #F08646;
+}
+.return-btn:hover{
+    background-color: #FFA042;
+    color: white;
+}

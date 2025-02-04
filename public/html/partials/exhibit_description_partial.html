@@ -1,0 +1,17 @@
+{{define "exhibit_description_partial"}}
+{{range .}}
+<section class="site-exhibit">
+    <div class="exhibit-wrap">
+        <div class="exhibit-title">
+            <h2>{{.ExhibitTitle}}</h2>
+            <p>{{.Description}}</p>
+        </div>
+        <div class="exhibit-content">
+            {{range .Exhibits}}
+            {{template "exhibit_description_site_partial" .}}
+            {{end}}
+        </div>
+    </div>
+</section>
+{{end}}
+{{end}}

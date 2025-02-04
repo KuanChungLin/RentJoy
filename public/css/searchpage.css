@@ -1,0 +1,253 @@
+/* -------searchNavbar------------- */
+#searchNavbar {
+    background-color: white;
+    padding: 18px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    align-self: flex-start;
+}
+
+.btn-search {
+    height: 33.5px;
+    background-color: #F08646;
+}
+
+.btn-search:hover {
+    background-color: #FFA042;
+}
+.btn-search .search-icon{
+    width:19px;
+    height:19px;
+    vertical-align:baseline;
+}
+#searchNavbar li {
+    color: #666666;
+}
+
+#searchNavbar select {
+    color: #F08646;
+    appearance: none;
+    background: url(../images/arrow_icon.png) no-repeat calc(100% - 10px) center;
+    background-size: 10px 9px;
+    font-size: 14px;
+    background-color: #f4f5f2;
+}
+
+#searchNavbar section option {
+    background-color: white;
+}
+
+
+svg {
+    display: block;
+    width: 16px;
+    height: 16px;
+    margin: auto;
+}
+
+/* -------searchResult------------- */
+.search-product {
+    display: flex;
+    background-color: white;
+    margin: 0 0 20px 0;
+    border-radius: 2px;
+}
+
+.product-imga {
+    width: 35%;
+    height: 250px;
+    display: inline-block;
+}
+
+.product-img {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    object-fit: cover;
+}
+
+.product-info-group {
+    width: 65%;
+    box-sizing: border-box;
+    display: inline-block;
+    padding: 10px 20px;
+}
+
+.product-info-group h3 {
+    font-size: 22px;
+    color: #565a5c;
+    line-height: 24px;
+    margin: 15px 0 7px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.product-info-group .product-name:hover {
+    text-decoration: underline;
+    color: #5D5C5C;
+}
+
+.product-spec-group {
+    display: flex;
+}
+
+.product-spec {
+    width: 60%;
+    margin-right: 5px;
+}
+
+.product-icon {
+    font-size: 14px;
+    line-height: 20px;
+    color: #8a4705;
+    vertical-align: middle;
+}
+
+.product-icon img {
+    width: 20px;
+    margin-right: 10px;
+    vertical-align: text-bottom;
+}
+
+.mb5 {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+
+
+.btn-price {
+    background-color: #F08646;
+    color: white;
+    margin-left: 10px;
+}
+
+.btn-price:hover {
+    background-color: #FFA042;
+    color: white;
+}
+
+.product-icon a {
+    color: #8a4705;
+}
+
+.product-icon a:hover {
+    color: #FF9C38;
+}
+
+/* -------page------------- */
+.pages-area {
+    display: flex;
+    justify-content: flex-end;
+
+}
+
+.pagination {
+    --bs-pagination-padding-x: 0.62rem;
+}
+
+.pagination li a,
+.pagination li a:hover {
+    color: #F08646;
+    font-size: 14px;
+}
+
+/*----------------loading----------------------*/
+.spinner {
+    margin: 10px auto;
+    width: auto;
+    height: 60px;
+    text-align: center;
+    font-size: 10px;
+}
+
+    .spinner > div {
+        margin-right:3px;
+        background-color: #F08646;
+        height: 100%;
+        width: 20px;
+        display: inline-block;
+        -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
+        animation: sk-stretchdelay 1.2s infinite ease-in-out;
+    }
+
+    .spinner .rect2 {
+        -webkit-animation-delay: -1.1s;
+        animation-delay: -1.1s;
+    }
+
+    .spinner .rect3 {
+        -webkit-animation-delay: -1.0s;
+        animation-delay: -1.0s;
+    }
+
+    .spinner .rect4 {
+        -webkit-animation-delay: -0.9s;
+        animation-delay: -0.9s;
+    }
+
+    .spinner .rect5 {
+        -webkit-animation-delay: -0.8s;
+        animation-delay: -0.8s;
+    }
+
+@-webkit-keyframes sk-stretchdelay {
+    0%, 40%, 100% {
+        -webkit-transform: scaleY(0.4)
+    }
+
+    20% {
+        -webkit-transform: scaleY(1.0)
+    }
+}
+
+@keyframes sk-stretchdelay {
+    0%, 40%, 100% {
+        transform: scaleY(0.4);
+        -webkit-transform: scaleY(0.4);
+    }
+
+    20% {
+        transform: scaleY(1.0);
+        -webkit-transform: scaleY(1.0);
+    }
+}
+
+
+
+/* --------------RWD----------- */
+@media screen and (min-width:1400px) {
+    .container {
+        max-width: 1140px;
+    }
+}
+
+@media screen and (max-width:768px) {
+    .product-imga{
+        width: 100%;
+    }
+    .search-product {
+        flex-direction: column;
+    }
+    .product-info-group {
+        width: 100%;
+        padding: 0 20px;
+    }
+    .product-spec,.product-tags{
+        margin-bottom: 10px;
+    }
+    .mb5 {
+        display: flex;
+        flex-direction: column;
+    }
+    .btn-price {
+        margin-left: 0;
+    }
+}
+
+@media screen and (max-width:375px){
+    .product-spec-group {
+        flex-direction: column;
+    }
+}
