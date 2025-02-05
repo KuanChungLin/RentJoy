@@ -38,7 +38,7 @@ func (c *BaseController) RenderTemplate(w http.ResponseWriter, r *http.Request, 
 		PageData:   data,
 	}
 
-	// 從 Cookie 讀取 token
+	// 從 Cookie 讀取 token 判斷登入狀態
 	cookie, err := r.Cookie("token")
 	if err == nil {
 		// 驗證 token
