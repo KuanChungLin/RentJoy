@@ -2,6 +2,7 @@ package venuepage
 
 import "rentjoy/internal/dto/homepage"
 
+// 預定頁
 type ReservedPage struct {
 	VenueId          string              `json:"venueId"`
 	VenueImgUrl      string              `json:"venueImgUrl"`

@@ -30,6 +30,8 @@ type VenueInformationRepository interface {
 	FindExhibits() ([]models.VenueInformation, error)
 	FindExhibitDESC() ([]models.ActivityType, map[uint][]models.VenueInformation, error)
 	FindSearchPageInfos(filter searchpage.VenueFilter) ([]models.VenueInformation, error)
+	FindVenuePageByID(venueID int) (*models.VenueInformation, error)
+	FindRecommended() ([]models.VenueInformation, error)
 }
 
 type MemberRepository interface {
@@ -47,4 +49,9 @@ type FacebookRepository interface {
 
 type GoogleRepository interface {
 	Repository[models.GoogleThirdPartyLogin]
+}
+
+type DeviceItemRepository interface {
+	Repository[models.DeviceItem]
+	GetAllDeviceItemNames() ([]string, error)
 }

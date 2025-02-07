@@ -8,7 +8,7 @@ import (
 
 type Order struct {
 	ID              uint            `gorm:"primaryKey;column:Id"`
-	Status          uint            `gorm:"column:OrderStatus"`
+	Status          int             `gorm:"column:OrderStatus"`
 	VenueID         uint            `gorm:"column:VenueId"`
 	ActivityTypeID  uint            `gorm:"column:OrderForActivityType"`
 	FirstName       string          `gorm:"column:SubscriberFirstName"`

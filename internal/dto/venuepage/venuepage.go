@@ -1,7 +1,7 @@
 package venuepage
 
 type VenuePage struct {
-	VenueID                 uint           `json:"venueId"`
+	VenueID                 uint          `json:"venueId"`
 	ImgUrls                 []string      `json:"imgUrls"`
 	Name                    string        `json:"name"`
 	City                    string        `json:"city"`
@@ -48,7 +48,9 @@ type TrafficInfo struct {
 }
 
 type OwnerInfo struct {
-	ImgUrl   string `json:"imgUrl"`
-	Name     string `json:"name"`
-	JoinTime string `json:"joinTime"`
+	ImgUrl    string `json:"imgUrl"`
+	Name      string `json:"name"`
+	JoinYear  string `json:"joinYear"`
+	JoinMonth string `json:"joinMonth"`
+	JoinDay   string `json:"joinDay"`
 }

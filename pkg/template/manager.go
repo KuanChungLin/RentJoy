@@ -1,6 +1,7 @@
 package template
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
@@ -16,6 +17,13 @@ type Manager struct {
 func NewManager() *Manager {
 	funcMap := template.FuncMap{
 		"add": func(a, b int) int { return a + b },
+		"json": func(v interface{}) template.JS {
+			b, err := json.Marshal(v)
+			if err != nil {
+				return template.JS("null")
+			}
+			return template.JS(b)
+		},
 	}
 	return &Manager{
 		templates: make(map[string]*template.Template),

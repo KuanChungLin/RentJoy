@@ -2,10 +2,10 @@
 {{define "recommended_partial"}}
 <div class="may-like-product mt-4">
     {{range .}}
-        <a href="{{.VenuesUrl}}" class="card border-0 col-lg-3 col-6 d-flex flex-column color4a">
+        <a href="{{.VenueUrl}}" class="card border-0 col-lg-3 col-6 d-flex flex-column color4a">
         <img src="{{.ImgUrl}}" class="card-img-top mb-3">
         <p class="card-text px-3">{{.Name}}</p>
-        <p class="card-text mt-auto ps-3 py-2">${{.VenuesPrice}}</p>
+        <p class="card-text mt-auto ps-3 py-2">${{.VenuePrice}}</p>
         </a>
     {{end}}
 </div>

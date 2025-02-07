@@ -1,4 +1,3 @@
-
 const lastMonthBtn = document.querySelectorAll(".last-month-btn");
 const reservedLastMonthBtn = document.querySelector("#lBtn3");
 const footerReservedLastMonthBtn = document.querySelector("#lBtn4");
@@ -7,12 +6,11 @@ const reservedNextMonthBtn = document.querySelector("#rBtn3");
 const footerReservedNextMonthBtn = document.querySelector("#rBtn4");
 const dateInput = document.querySelector("#selectDate");
 const venueData = $('#venue-data');
-const reservedDate = venueData.data('reservedDdate');
+const reservedDate = venueData.data('reservedDate');
 const openDayOfWeek = venueData.data('openDayOfWeek');
 const minRentHours = venueData.data('minRentHours');
 const venue_Id = venueData.data('venueId');
 
-console.log(reservedDate, openDayOfWeek, minRentHours, venue_Id)
 
 const today = new Date();
 let currentYear;

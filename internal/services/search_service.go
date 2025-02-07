@@ -30,6 +30,7 @@ func NewSearchService(db *gorm.DB) serviceInterfaces.SearchPageService {
 	}
 }
 
+// 取得搜尋頁資料
 func (s *SearchService) GetSearchPage(filter searchpage.VenueFilter) searchpage.SearchPage {
 	return searchpage.SearchPage{
 		ActivityList:    s.GetActivities(),
@@ -41,6 +42,7 @@ func (s *SearchService) GetSearchPage(filter searchpage.VenueFilter) searchpage.
 	}
 }
 
+// 取得場地活動搜尋欄位
 func (s *SearchService) GetActivities() []homepage.Activity {
 	ranges, err := s.activityTypeRepo.FindAll()
 	if err != nil {
@@ -58,6 +60,7 @@ func (s *SearchService) GetActivities() []homepage.Activity {
 	return activityTypeList
 }
 
+// 取得場地人數搜尋欄位
 func (s *SearchService) GetPeopleCounts() []homepage.PeopleCount {
 	ranges, err := s.participantRangeRepo.FindAll()
 	if err != nil {
@@ -75,6 +78,7 @@ func (s *SearchService) GetPeopleCounts() []homepage.PeopleCount {
 	return PeopleCountList
 }
 
+// 取得價格搜尋欄位
 func (s *SearchService) GetSearchPrice() []int {
 	ranges, err := s.budgetRepo.FindAll()
 	if err != nil {
@@ -90,6 +94,7 @@ func (s *SearchService) GetSearchPrice() []int {
 	return priceList
 }
 
+// 取得場地資訊
 func (s *SearchService) GetVenueInfos(filter searchpage.VenueFilter) []searchpage.VenueInfo {
 	ranges, err := s.venueInformationRepo.FindSearchPageInfos(filter)
 

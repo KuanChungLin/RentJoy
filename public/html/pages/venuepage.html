@@ -50,7 +50,7 @@
             </div>
         </div>
         <div class="product-content color4a">
-            <h2>@Model.Name </h2>
+            <h2>{{.Name}}</h2>
             <div class="location border-bottom my-4">
                 <p class="me-3  pb-2">台灣 > {{.City}} > {{.District}} </p>
                 <p><img class="me-1" src="/static/images/location.svg">{{.Address}}</p>
@@ -67,7 +67,7 @@
             </div>
             <h5 class="ps-3 mb-3">設備與服務</h5>
             <div class="device-service ps-3 mb-3">
-                {{range $i, $device := .VenueDevice}}
+                {{range $i, $device := .VenueDevices}}
                 {{if lt $i 6}}
                     <div class="device-item col-4 mb-2">
                         <img src="/static/images/check.svg">
@@ -76,7 +76,7 @@
                 {{end}}
                 {{end}}
             </div>
-            {{if gt (len .VenueDevice) 6}}
+            {{if gt (len .VenueDevices) 6}}
                 <button id="deviceModalOpen" class="rounded-5 px-3 py-2 mb-4">顯示全部設備與服務</button>
             {{end}}
             <h5 class=" pt-4 border-top bg-white mb-0 ps-3">預約狀況</h5>
@@ -170,7 +170,7 @@
                             height="300"
                             frameborder="0" style="border:0"
                             referrerpolicy="no-referrer-when-downgrade"
-                            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDuHxDIBQZcswTGie_H1fzfD_iHRsfIsbA&q=@Model.Lat,@Model.Lng&center=@Model.Lat,@Model.Lng"
+                            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBtkaJPm_MTFjM9qRTNpQ6zGnxDoBHytxE&q={{if and .Lat .Lng}}{{.Lat}},{{.Lng}}{{else}}台灣{{end}}&center={{if and .Lat .Lng}}{{.Lat}},{{.Lng}}{{else}}23.5,121.5{{end}}"
                             allowfullscreen>
                     </iframe>
                 </div>
@@ -181,9 +181,7 @@
                 <img src={{.OwnerInfo.ImgUrl}} class="rounded-circle">
                 <div class="ms-4">
                     <h5>{{.OwnerInfo.Name}}</h5>
-                    {{with .OwnerInfo.JoinTime}}
-                        <p>{{.Year}} 年 {{printf "%02d" .Month}} 月 {{printf "%02d" .Day}} 日 加入 RentJoy</p>
-                    {{end}}
+                        <p>{{.OwnerInfo.JoinYear}} 年 {{.OwnerInfo.JoinMonth}} 月 {{.OwnerInfo.JoinDay}} 日 加入 RentJoy</p>
                 </div>
             </div>
             <div class="pay-related ps-3 mt-4 border-top">
@@ -207,10 +205,10 @@
                         </div>
                     {{end}}
 
-                    {{if ne .TimeslotPriceRange "尚未設定價格"}}
+                    {{if ne .TimeSlotPriceRange "尚未設定價格"}}
                         <div class="time-slot-price px-3">
                         <p>每時段 <img src="/static/images/question.svg" class="q-img"></p>
-                        <p>{{.TimeslotPriceRange}}</p>
+                        <p>{{.TimeSlotPriceRange}}</p>
                         </div>
                     {{end}}
 
@@ -278,7 +276,7 @@
         <img id="deviceModalClose" class="ms-auto" src="/static/images/close.svg">
     </div>
     <div class="device-modal-body">
-        {{range .VenueDevice}}
+        {{range .VenueDevices}}
             <div class="device-item d-flex">
             <img src="/static/images/check.svg">
             <div>
@@ -290,7 +288,7 @@
         <hr>
         <h5>不提供設備</h5>
         <div class="not-provided d-flex flex-wrap">
-            {{range .VenueNotIncludedDevice}}
+            {{range .VenueNotIncludedDevices}}
                 <p>{{.}}</p>
             {{end}}
         </div>
@@ -335,10 +333,10 @@
                                 <p>{{.HrPriceRange}}</p>
                                 </div>
                             {{end}}
-                            {{if ne .TimeslotPriceRange "尚未設定價格"}}
+                            {{if ne .TimeSlotPriceRange "尚未設定價格"}}
                                 <div class="time-slot-price px-3">
                                 <p>每時段 <img src="/static/images/question.svg" class="q-img"></p>
-                                <p>{{.TimeslotPriceRange}}</p>
+                                <p>{{.TimeSlotPriceRange}}</p>
                                 </div>
                             {{end}}
                         </div>
@@ -381,12 +379,11 @@
     </div>
 </div>
 <div id="venue-data" 
-    data-reservedDdate="{{.ReservedDate}}"
-    data-openDayOfWeek="{{.OpenDayOfWeek}}"
-    data-minRentHours="{{.MinRentHours}}"
-    data-venueId="{{.VenueId}}"
-    data-venueAddress="{{.VenueAddress}}"
-    >
+    data-reserved-date='{{if .ReservedDate}}{{json .ReservedDate}}{{else}}[]{{end}}'
+    data-open-day-of-week='{{if .OpenDayOfWeek}}{{json .OpenDayOfWeek}}{{else}}[]{{end}}'
+    data-min-rent-hours='{{if .MinRentHours}}{{json .MinRentHours}}{{else}}0{{end}}'
+    data-venue-id='{{if .VenueID}}{{json .VenueID}}{{else}}0{{end}}'
+    data-venue-address='{{if .Address}}{{json .Address}}{{else}}""{{end}}'>
 </div>
 {{end}}
 

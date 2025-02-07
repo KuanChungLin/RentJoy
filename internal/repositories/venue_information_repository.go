@@ -130,3 +130,37 @@ func (r *VenueInformationRepository) FindSearchPageInfos(filter searchpage.Venue
 
 	return venues, nil
 }
+
+func (r *VenueInformationRepository) FindVenuePageByID(venueID int) (*models.VenueInformation, error) {
+	var venue models.VenueInformation
+
+	err := r.DB.Where("Id = ?", venueID).
+		Preload("Imgs").
+		Preload("Devices.DeviceItem").
+		Preload("Orders.VenueEvaluate").
+		Preload("Orders.Details").
+		Preload("Management").
+		Preload("BillingRates.RateType").
+		First(&venue).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &venue, nil
+}
+
+func (r *VenueInformationRepository) FindRecommended() ([]models.VenueInformation, error) {
+	var venues []models.VenueInformation
+
+	err := r.DB.Where("AvgEvaluateRate >= ?", 3).
+		Preload("Imgs", "Sort = ?", 0).
+		Preload("BillingRates.RateType").
+		Find(&venues).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return venues, nil
+}

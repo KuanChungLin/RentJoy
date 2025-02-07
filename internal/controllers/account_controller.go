@@ -325,6 +325,7 @@ func (c *AccountController) UpdateName(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/Account", http.StatusSeeOther)
 }
 
+// 更新Email
 func (c *AccountController) UpdateEmail(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -356,6 +357,7 @@ func (c *AccountController) UpdateEmail(w http.ResponseWriter, r *http.Request) 
 	http.Redirect(w, r, "/Account", http.StatusSeeOther)
 }
 
+// 更新手機
 func (c *AccountController) UpdatePhone(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -387,6 +389,7 @@ func (c *AccountController) UpdatePhone(w http.ResponseWriter, r *http.Request) 
 	http.Redirect(w, r, "/Account", http.StatusSeeOther)
 }
 
+// 更新密碼
 func (c *AccountController) UpdatePassword(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)

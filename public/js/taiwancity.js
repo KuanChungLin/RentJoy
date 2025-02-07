@@ -2,6 +2,7 @@ $(document).ready(function () {
     const searchParams = $('#search-params');
     const selectedCity = searchParams.data('city');
     const selectedDistrict = searchParams.data('district');
+    console.log(searchParams)
     console.log(selectedCity)
     console.log(selectedDistrict)
 

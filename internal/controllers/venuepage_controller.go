@@ -20,22 +20,46 @@ func NewVenuePageController(venueService interfaces.VenuePageService, templates 
 	}
 }
 
+// 場地資訊頁
 func (c *VenuePageController) VenuePage(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	if err := r.ParseForm(); err != nil {
-		http.Error(w, "無法解析表單數據", http.StatusBadRequest)
-		return
+	var venueID int
+	var err error
+
+	// 檢查 Query String
+	if queryID := r.URL.Query().Get("venueId"); queryID != "" {
+		venueID, err = helper.StrToInt(queryID)
+		if err != nil {
+			log.Printf("Query String 解析錯誤: %s", err)
+			http.Redirect(w, r, "/error", http.StatusSeeOther)
+			return
+		}
+	} else {
+		// 檢查 Form
+		if err := r.ParseForm(); err != nil {
+			http.Error(w, "無法解析表單數據", http.StatusBadRequest)
+			return
+		}
+
+		if formID := r.FormValue("venueId"); formID != "" {
+			venueID, err = helper.StrToInt(formID)
+			if err != nil {
+				log.Printf("Form 解析錯誤: %s", err)
+				// TODO
+				// http.Redirect(w, r, "/error", http.StatusSeeOther)
+				return
+			}
+		}
 	}
 
-	venueID, err := helper.StrToInt(r.FormValue("VenueId"))
-	if err != nil {
-		log.Printf("無法解析 Error: %s", err)
-		// TODO
-		// http.Redirect(w, r, "/error", http.StatusSeeOther)
+	// 驗證 venueID
+	if venueID <= 0 {
+		log.Printf("無效的 venueID: %d", venueID)
+		http.Redirect(w, r, "/error", http.StatusSeeOther)
 		return
 	}
 

@@ -11,7 +11,7 @@ type VenueInformation struct {
 	UnsubscribeRule string    `gorm:"column:UnsubscribeRule"`
 	Address         string    `gorm:"column:VenueAddress"`
 	Latitude        string    `gorm:"column:Latitude"`
-	Status          uint      `gorm:"column:Status"`
+	Status          int       `gorm:"column:Status"`
 	City            string    `gorm:"column:City"`
 	District        string    `gorm:"column:District"`
 	MRTInfo         string    `gorm:"column:MRTInfo"`
@@ -21,7 +21,7 @@ type VenueInformation struct {
 	SpaceSize       int       `gorm:"column:SpaceSize"`
 	CreatedAt       time.Time `gorm:"column:CreateAt"`
 	UpdatedAt       time.Time `gorm:"column:EditAt"`
-	EvaluateRate    uint      `gorm:"column:AvgEvaluateRate"`
+	EvaluateRate    float32   `gorm:"column:AvgEvaluateRate"`
 	Longitude       string    `gorm:"column:Longitude"`
 	OwnerID         uint      `gorm:"column:VenueOwnerId"`
 
