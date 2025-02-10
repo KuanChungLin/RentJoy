@@ -645,7 +645,7 @@ function getVenueAvailableTime(targetDate, showPrice,showPriceFooter) {
         //console.log(new Date(`${dateYearMonth}-${$(this).text()}`).toISOString());
         //console.log(new Date(`${dateYearMonth}-${$(this).text().padStart(2, 0)}`).toISOString());
         $.ajax({
-            url: '/Venues/GetAllAvailableTime',
+            url: '/Venue/GetAvailableTime',
             data: {
                 selectDay: new Date((`${dateYearMonth}-${$(this).text().padStart(2, 0)}`)).toJSON(),
                 venueId: venue_Id
@@ -653,7 +653,6 @@ function getVenueAvailableTime(targetDate, showPrice,showPriceFooter) {
             dataType: 'json',
             type: 'GET',
             success: function (data) {
-                //console.log(data);
                 //成功就渲染畫面
                 if (data.length === 0) {
                     let newPerGroup = `
@@ -670,34 +669,41 @@ function getVenueAvailableTime(targetDate, showPrice,showPriceFooter) {
                 }
                 else if (data[0].rateTypeId == "1") {
                     let newStartItem = '';
-                    let newEndItem = '';
                     let i = 0;
                     startTimeData = [];
                     data.forEach(item => {
-                        let minRentMintues = minRentHours * 60;//startMinutes + minRentMintues -30
-                        let relateTimes = (minRentMintues - 30); //最小小時+中間選走時段與開始時間的關係(畫陣列)
+                        // 將 HH:MM 格式轉換為分鐘數
+                        let [startHours, startMinutes] = item.startTime.split(':').map(Number);
+                        let startTotalMinutes = startHours * 60 + startMinutes;
+                        
+                        let minRentMintues = minRentHours * 60;
+                        let relateTimes = (minRentMintues - 30);
                         let compareindex = i + relateTimes / 30;
+                        
                         if (compareindex >= data.length) {
                             compareindex = data.length - 1;
                         }
-                        let compareStartTime = new Date(data[compareindex].startTime);
-                        let compareStartTimeMintues = compareStartTime.getHours() * 60 + compareStartTime.getMinutes();
-                        let start = new Date(item.startTime);
-                        let end = new Date(item.endTime);
-                        let startMinutes = start.getHours() * 60 + start.getMinutes();
-                        let startTimeStrToData = (start.getHours() < 10 ? "0" : "") + start.getHours() + ":" + (start.getMinutes() < 10 ? "0" : "") + start.getMinutes();
-                        startTimeData.push(startTimeStrToData);
-                        if (startMinutes + relateTimes == compareStartTimeMintues ) {
-                            // 將 item 的開始時間和結束時間格式化為 "HH:MM" 的格式
-                            let startTimeStr = (start.getHours() < 10 ? "0" : "") + start.getHours() + ":" + (start.getMinutes() < 10 ? "0" : "") + start.getMinutes();
-                            let totalMinutes = startMinutes + minRentMintues;
+
+                        // 取得比較用的時間
+                        let [compareHours, compareMinutes] = data[compareindex].startTime.split(':').map(Number);
+                        let compareStartTimeMintues = compareHours * 60 + compareMinutes;
+
+                        startTimeData.push(item.startTime);
+
+                        if (startTotalMinutes + relateTimes == compareStartTimeMintues) {
+                            let totalMinutes = startTotalMinutes + minRentMintues;
                             let endTimeStr = `${Math.floor(totalMinutes / 60).toString().padStart(2, '0')}:${(totalMinutes % 60).toString().padStart(2, '0')}`;
+                            
                             newStartItem += `<li>
-                                <button class="dropdown-item start-hour-time" type="button" data-type-id=${item.Type} data-min-hour=${item.MinHour} data-hour-price=${item.price}>${startTimeStr}</button>
+                                <button class="dropdown-item start-hour-time" 
+                                        type="button" 
+                                        data-type-id=${item.rateTypeId} 
+                                        data-min-hour=${minRentHours} 
+                                        data-hour-price=${item.price}>${item.startTime}</button>
                             </li>`;
                         }
                         i++;
-                    })
+                    });
 
                     let newHourGroup = `<div class="time border border-top-0 p-2">
                     <div class="dropdown d-flex start-time">
@@ -706,7 +712,7 @@ function getVenueAvailableTime(targetDate, showPrice,showPriceFooter) {
                             開始時間
                         </button>
                         <ul class="dropdown-menu start-menu">
-                           ${newStartItem}
+                            ${newStartItem}
                         </ul>
                     </div>
                     <div class="arrow">→</div>
@@ -742,16 +748,12 @@ function getVenueAvailableTime(targetDate, showPrice,showPriceFooter) {
                 else if (data[0].rateTypeId == "2") {
                     let newItem = '';
                     data.forEach(item => {
-                        let start = new Date(item.startTime);
-                        let end = new Date(item.endTime);
-
-                        // 將 item 的開始時間和結束時間格式化為 "HH:MM" 的格式
-                        let startTimeStr = ("0" + start.getHours()).slice(-2) + ":" + ("0" + start.getMinutes()).slice(-2);
-                        let endTimeStr = ("0" + end.getHours()).slice(-2) + ":" + ("0" + end.getMinutes()).slice(-2);
+                        let start = item.startTime
+                        let end = item.endTime
 
                         newItem += `
                             <div class="btn btn-outline-secondary rounded-pill my-2 d-flex  select-time" data-bill-id=${item.billingRateId}>
-                                ${startTimeStr} - ${endTimeStr}
+                                ${start} - ${end}
                                 <span class="border-start px-2 ms-auto select-price">$${item.price}</span>
                             </div>
                         `;

@@ -1,11 +1,14 @@
 package controllers
 
 import (
+	"encoding/json"
 	"html/template"
 	"log"
 	"net/http"
 	interfaces "rentjoy/internal/interfaces/services"
 	"rentjoy/pkg/helper"
+	"strconv"
+	"time"
 )
 
 type VenuePageController struct {
@@ -74,4 +77,46 @@ func (c *VenuePageController) VenuePage(w http.ResponseWriter, r *http.Request) 
 	vm := c.venueService.GetVenuePage(venueID)
 
 	c.RenderTemplate(w, r, "venuepage", vm)
+}
+
+// 取得場地空缺時間
+func (c *VenuePageController) GetAvailableTime(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	selectDayStr := r.URL.Query().Get("selectDay")
+	venueIDStr := r.URL.Query().Get("venueId")
+
+	// 解析時間
+	selectDay, err := time.Parse(time.RFC3339, selectDayStr)
+	if err != nil {
+		log.Printf("日期解析錯誤: %v", err)
+		http.Error(w, "無法解析日期", http.StatusBadRequest)
+		return
+	}
+
+	// 解析 venueId
+	venueID, err := strconv.Atoi(venueIDStr)
+	if err != nil {
+		log.Printf("ID解析錯誤: %v", err)
+		http.Error(w, "無效的場地ID", http.StatusBadRequest)
+		return
+	}
+
+	data, err := c.venueService.GetAvailableTime(selectDay, venueID)
+	if err != nil {
+		log.Printf("取得開放預約時間錯誤: %s", err)
+		http.Error(w, "服務器錯誤", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	if err := json.NewEncoder(w).Encode(data); err != nil {
+		log.Printf("JSON編碼錯誤: %v", err)
+		http.Error(w, "服務器錯誤", http.StatusInternalServerError)
+		return
+	}
 }

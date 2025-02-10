@@ -27,6 +27,14 @@ type VenuePage struct {
 	MinRentHours            float32       `json:"minRentHours"`
 }
 
+type AvailableTime struct {
+	StartTime     string `json:"startTime"`
+	EndTime       string `json:"endTime"`
+	Price         string `json:"price"`
+	BillingRateID string `json:"billingRateId"`
+	RateTypeID    string `json:"rateTypeId"`
+}
+
 type VenueDevice struct {
 	DeviceName     string `json:"deviceName"`
 	DeviceQuantity int    `json:"deviceQuantity"`

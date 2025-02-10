@@ -73,6 +73,7 @@ func main() {
 	http.HandleFunc("/SearchPage", searchpageController.SearchPage)
 	http.HandleFunc("/SearchPageLoading", searchpageController.SearchPageLoading)
 	http.HandleFunc("/Venue/VenuePage", venuepageController.VenuePage)
+	http.HandleFunc("/Venue/GetAvailableTime", venuepageController.GetAvailableTime)
 
 	log.Println("伺服器運行中：https://localhost:8080")
 	log.Fatal(http.ListenAndServeTLS(":8080", "../../cert.pem", "../../key.pem", nil))

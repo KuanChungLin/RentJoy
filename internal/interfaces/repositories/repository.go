@@ -3,6 +3,7 @@ package interfaces
 import (
 	"rentjoy/internal/dto/searchpage"
 	"rentjoy/internal/models"
+	"time"
 )
 
 type Repository[T any] interface {
@@ -54,4 +55,14 @@ type GoogleRepository interface {
 type DeviceItemRepository interface {
 	Repository[models.DeviceItem]
 	GetAllDeviceItemNames() ([]string, error)
+}
+
+type BillingRateRepository interface {
+	Repository[models.BillingRate]
+	FindAvailableTimes(venueID int, dayOfWeek time.Weekday) ([]models.BillingRate, error)
+}
+
+type OrderRepository interface {
+	Repository[models.Order]
+	FindConflictingOrders(venueID int, date time.Time) ([]models.Order, error)
 }

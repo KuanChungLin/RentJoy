@@ -187,3 +187,35 @@ func GetMinRentHours(rates []models.BillingRate) float32 {
 	}
 	return 0
 }
+
+// 檢查日期是否有效 (從後天開始預約場地)
+func IsDateValid(date time.Time) bool {
+	now := time.Now()
+	minValidDate := now.Add(24 * time.Hour)
+	return date.After(minValidDate)
+}
+
+// 標準化時間，只保留時分秒
+func NormalizeTime(t time.Time) time.Time {
+	return time.Date(0, 1, 1, t.Hour(), t.Minute(), 0, 0, t.Location())
+}
+
+// 檢查時間是否衝突
+func IsTimeConflict(start, end time.Time, orders []models.Order) bool {
+	normalizedStart := NormalizeTime(start)
+	normalizedEnd := NormalizeTime(end)
+
+	for _, order := range orders {
+		for _, detail := range order.Details {
+			orderStart := NormalizeTime(detail.StartTime)
+			orderEnd := NormalizeTime(detail.EndTime)
+
+			if normalizedStart.Equal(orderStart) ||
+				(normalizedStart.After(orderStart) && normalizedStart.Before(orderEnd)) ||
+				(normalizedEnd.After(orderStart) && normalizedEnd.Before(orderEnd)) {
+				return true
+			}
+		}
+	}
+	return false
+}
