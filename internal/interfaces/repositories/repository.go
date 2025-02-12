@@ -60,9 +60,15 @@ type DeviceItemRepository interface {
 type BillingRateRepository interface {
 	Repository[models.BillingRate]
 	FindAvailableTimes(venueID int, dayOfWeek time.Weekday) ([]models.BillingRate, error)
+	FindByReserved(venueID uint, rateTypeID uint, weekDay int) (*models.BillingRate, error)
 }
 
 type OrderRepository interface {
 	Repository[models.Order]
 	FindConflictingOrders(venueID int, date time.Time) ([]models.Order, error)
+}
+
+type VenueImgRepository interface {
+	Repository[models.VenueImg]
+	FindFirstBySort(venueID uint, sort int) (*models.VenueImg, error)
 }

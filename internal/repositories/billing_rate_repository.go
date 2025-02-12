@@ -27,3 +27,12 @@ func (r *BillingRateRepository) FindAvailableTimes(venueID int, dayOfWeek time.W
 
 	return rates, err
 }
+
+func (r *BillingRateRepository) FindByReserved(venueID uint, rateTypeID uint, weekDay int) (*models.BillingRate, error) {
+	var rate models.BillingRate
+
+	err := r.DB.Where("VenueId = ? AND RateTypeId = ? AND DayOfWeek = ?", venueID, rateTypeID, weekDay).
+		First(&rate).Error
+
+	return &rate, err
+}

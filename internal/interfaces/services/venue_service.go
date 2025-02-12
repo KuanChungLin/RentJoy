@@ -7,7 +7,7 @@ import (
 
 type VenuePageService interface {
 	GetVenuePage(venueId int) venuepage.VenuePage
-	GetReservedPage() venuepage.ReservedPage
+	GetReservedPage(detail *venuepage.ReservedDetail) (venuepage.ReservedPage, error)
 	GetOrderPendingPage(orderInfo map[string]string) venuepage.OrderPending
 	GetAvailableTime(selectDay time.Time, venueID int) ([]venuepage.AvailableTime, error)
 }

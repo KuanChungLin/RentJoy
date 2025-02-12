@@ -5,6 +5,8 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"net/url"
+	"rentjoy/internal/dto/venuepage"
 	interfaces "rentjoy/internal/interfaces/services"
 	"rentjoy/pkg/helper"
 	"strconv"
@@ -119,4 +121,45 @@ func (c *VenuePageController) GetAvailableTime(w http.ResponseWriter, r *http.Re
 		http.Error(w, "服務器錯誤", http.StatusInternalServerError)
 		return
 	}
+}
+
+// 預定場地頁面
+func (c *VenuePageController) ReservedPage(w http.ResponseWriter, r *http.Request) {
+	// 檢查 Ｃookie 是否存在
+	cookie, err := r.Cookie("TimeDetailCookie")
+	if err == http.ErrNoCookie {
+		log.Printf("TimeDetailCookie Not Exist Error: %s", err)
+		http.Redirect(w, r, "/Error", http.StatusSeeOther)
+		return
+	}
+
+	// URL 解碼
+	decodedValue, err := url.QueryUnescape(cookie.Value)
+	if err != nil {
+		log.Printf("Cookie decode error: %s", err)
+		// http.Redirect(w, r, "/Error", http.StatusSeeOther)
+		return
+	}
+
+	// 解析取得 Cookie 資料
+	var timeDetail venuepage.ReservedDetail
+	if err := json.Unmarshal([]byte(decodedValue), &timeDetail); err != nil {
+		log.Printf("JSON Unmarshal Error: %s", err)
+		// http.Redirect(w, r, "/Error", http.StatusSeeOther)
+		return
+	}
+
+	vm, err := c.venueService.GetReservedPage(&timeDetail)
+	if err != nil {
+		http.Redirect(w, r, "/Error", http.StatusSeeOther)
+		return
+	}
+
+	// 刪除 Cookie
+	http.SetCookie(w, &http.Cookie{
+		Name:   "TimeDetailCookie",
+		MaxAge: -1,
+	})
+
+	c.RenderTemplate(w, r, "reservedpage", vm)
 }

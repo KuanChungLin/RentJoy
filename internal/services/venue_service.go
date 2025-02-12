@@ -22,6 +22,9 @@ type VenueService struct {
 	recommendedService   serviceInterfaces.RecommendedService
 	billingRateRepo      repoInterfaces.BillingRateRepository
 	orderRepo            repoInterfaces.OrderRepository
+	activityRepo         repoInterfaces.ActivityTypeRepository
+	venueImgRepo         repoInterfaces.VenueImgRepository
+	priceService         serviceInterfaces.PriceSerice
 }
 
 func NewVenueService(db *gorm.DB) serviceInterfaces.VenuePageService {
@@ -32,6 +35,9 @@ func NewVenueService(db *gorm.DB) serviceInterfaces.VenuePageService {
 		recommendedService:   NewRecommendedService(db),
 		billingRateRepo:      repositories.NewBillingRateRepository(db),
 		orderRepo:            repositories.NewOrderRepository(db),
+		activityRepo:         repositories.NewActivityTypeRepository(db),
+		venueImgRepo:         repositories.NewVenueImgRepository(db),
+		priceService:         NewPriceService(db),
 	}
 }
 
@@ -114,8 +120,93 @@ func (s *VenueService) GetVenuePage(venueID int) venuepage.VenuePage {
 	}
 }
 
-func (s *VenueService) GetReservedPage() venuepage.ReservedPage {
-	return venuepage.ReservedPage{}
+func (s *VenueService) GetReservedPage(detail *venuepage.ReservedDetail) (venuepage.ReservedPage, error) {
+	venue, err := s.venueInformationRepo.FindByID(uint(detail.VenueID))
+	if err != nil {
+		log.Printf("Find Venue By Id Error: %s", err)
+		return venuepage.ReservedPage{}, err
+	}
+
+	var timeDetails []venuepage.TimeDetail
+
+	if detail.StartTime == "" {
+		// 處理時段制
+		for _, id := range detail.TimeSlotIds {
+			intID, err := strconv.Atoi(id)
+			if err != nil {
+				return venuepage.ReservedPage{}, err
+			}
+			rate, err := s.billingRateRepo.FindByID(uint(intID))
+			if err != nil {
+				return venuepage.ReservedPage{}, err
+			}
+
+			price, err := s.priceService.CalculatePeriodPrice(intID)
+			if err != nil {
+				return venuepage.ReservedPage{}, err
+			}
+
+			timeDetails = append(timeDetails, venuepage.TimeDetail{
+				TimeRange: fmt.Sprintf("時段 %02d:%02d - %02d:%02d",
+					rate.StartTime.Hour(), rate.StartTime.Minute(),
+					rate.EndTime.Hour(), rate.EndTime.Minute()),
+				Price: strconv.Itoa(price),
+			})
+		}
+	} else {
+		// 解析時間
+		startTime, _ := time.Parse(time.RFC3339, detail.StartTime)
+		endTime, _ := time.Parse(time.RFC3339, detail.EndTime)
+
+		// 處理小時制
+		timeRange := ""
+		if endTime.Hour() == 23 && endTime.Minute() == 59 {
+			timeRange = fmt.Sprintf("小時 %02d:%02d - 24:00",
+				startTime.Hour(), startTime.Minute())
+		} else {
+			timeRange = fmt.Sprintf("小時 %02d:%02d - %02d:%02d",
+				startTime.Hour(), startTime.Minute(),
+				endTime.Hour(), endTime.Minute())
+		}
+
+		price, err := s.priceService.CalculateTimePrices(detail)
+		if err != nil {
+			return venuepage.ReservedPage{}, err
+		}
+
+		timeDetails = append(timeDetails, venuepage.TimeDetail{
+			TimeRange: timeRange,
+			Price:     strconv.Itoa(price),
+		})
+	}
+
+	// 解析預訂日期
+	reservedDay, _ := time.Parse(time.RFC3339, detail.ReservedDay)
+	weekday := helper.GetDayOfWeekInChinese(reservedDay)
+	dateStr := fmt.Sprintf("%d 年 %d 月 %d 日 %s",
+		reservedDay.Year(), reservedDay.Month(), reservedDay.Day(), weekday)
+
+	// 取得活動類型
+	activities, err := s.activityRepo.FindAll()
+	if err != nil {
+		return venuepage.ReservedPage{}, err
+	}
+
+	// 取得場地圖片
+	img, err := s.venueImgRepo.FindFirstBySort(venue.ID, 0)
+	if err != nil {
+		return venuepage.ReservedPage{}, err
+	}
+
+	return venuepage.ReservedPage{
+		VenueID:            strconv.Itoa(detail.VenueID),
+		VenueImgUrl:        img.VenueImgPath,
+		Name:               venue.Name,
+		Address:            venue.City + venue.District + venue.Address,
+		Date:               dateStr,
+		ReservedActivities: helper.ACTModelToDTO(activities),
+		TimeDetails:        timeDetails,
+	}, nil
 }
 
 func (s *VenueService) GetOrderPendingPage(orderInfo map[string]string) venuepage.OrderPending {

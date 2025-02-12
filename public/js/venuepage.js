@@ -616,7 +616,7 @@ function saveTimePriceToCookie(father) {
         let timeDetailsDataCookie = new TimeDetailCookie(timeSlotIds, startTime, endTime, reservedDay, venue_Id);
         let DataCookie = JSON.stringify(timeDetailsDataCookie);
 
-        Cookies.set("TimeDetailCookie", DataCookie, { expires: 60 * 60, path: '/Venues' });
+        Cookies.set("TimeDetailCookie", DataCookie, { expires: 60 * 60, path: '/Venue' });
     }
 }
 function clearAllSelectedAndDetails(targetDate) {

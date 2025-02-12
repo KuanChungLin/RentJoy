@@ -219,3 +219,25 @@ func IsTimeConflict(start, end time.Time, orders []models.Order) bool {
 	}
 	return false
 }
+
+// 將星期從數字轉換成中文
+func GetDayOfWeekInChinese(date time.Time) string {
+	switch date.Weekday() {
+	case time.Sunday:
+		return "星期日"
+	case time.Monday:
+		return "星期一"
+	case time.Tuesday:
+		return "星期二"
+	case time.Wednesday:
+		return "星期三"
+	case time.Thursday:
+		return "星期四"
+	case time.Friday:
+		return "星期五"
+	case time.Saturday:
+		return "星期六"
+	default:
+		return ""
+	}
+}

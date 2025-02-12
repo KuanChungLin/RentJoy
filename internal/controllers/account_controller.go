@@ -218,7 +218,7 @@ func (c *AccountController) FacebookCallback(w http.ResponseWriter, r *http.Requ
 	})
 
 	// 重定向到首頁或帳戶頁面
-	http.Redirect(w, r, "/Account", http.StatusSeeOther)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 // 導向 Google 第三方介面
@@ -253,7 +253,7 @@ func (c *AccountController) GoogleCallback(w http.ResponseWriter, r *http.Reques
 	})
 
 	// 重定向到首頁或帳戶頁面
-	http.Redirect(w, r, "/Account", http.StatusSeeOther)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 // 登出處理
