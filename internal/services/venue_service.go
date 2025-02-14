@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"rentjoy/internal/dto/venuepage"
@@ -75,7 +76,7 @@ func (s *VenueService) GetVenuePage(venueID int) venuepage.VenuePage {
 	for i := 0; i < 2; i++ {
 		select {
 		case err := <-errorChan:
-			log.Printf("Error: %s", err)
+			log.Printf("Goroutine Error: %s", err)
 			return venuepage.VenuePage{}
 		case venue = <-venueChan:
 		case devices = <-devicesChan:
@@ -120,15 +121,69 @@ func (s *VenueService) GetVenuePage(venueID int) venuepage.VenuePage {
 	}
 }
 
+// 取得預定場地頁資料
 func (s *VenueService) GetReservedPage(detail *venuepage.ReservedDetail) (venuepage.ReservedPage, error) {
-	venue, err := s.venueInformationRepo.FindByID(uint(detail.VenueID))
-	if err != nil {
-		log.Printf("Find Venue By Id Error: %s", err)
-		return venuepage.ReservedPage{}, err
+	// 建立 channels
+	venueChan := make(chan *models.VenueInformation)
+	imgChan := make(chan *models.VenueImg)
+	activitiesChan := make(chan []models.ActivityType)
+	errorChan := make(chan error, 3)
+
+	// 並行查詢場地資訊
+	go func() {
+		venue, err := s.venueInformationRepo.FindByID(uint(detail.VenueID))
+		if err != nil {
+			errorChan <- err
+			return
+		}
+		venueChan <- venue
+	}()
+
+	// 並行查詢圖片
+	go func() {
+		img, err := s.venueImgRepo.FindFirstBySort(uint(detail.VenueID), 0)
+		if err != nil {
+			errorChan <- err
+			return
+		}
+		imgChan <- img
+	}()
+
+	// 並行查詢活動類型
+	go func() {
+		activities, err := s.activityRepo.FindAll()
+		if err != nil {
+			errorChan <- err
+			return
+		}
+		activitiesChan <- activities
+	}()
+
+	// 接收結果
+	var venueResult *models.VenueInformation
+	var imgResult *models.VenueImg
+	var activitiesResult []models.ActivityType
+
+	for i := 0; i < 3; i++ {
+		select {
+		case err := <-errorChan:
+			log.Printf("ErrorL %s", err)
+		case venueResult = <-venueChan:
+		case imgResult = <-imgChan:
+		case activitiesResult = <-activitiesChan:
+		case <-time.After(30 * time.Second):
+			return venuepage.ReservedPage{}, errors.New("timeout getting data")
+		}
+	}
+
+	if venueResult == nil || imgResult == nil || activitiesResult == nil {
+		return venuepage.ReservedPage{}, errors.New("failed to get all required data")
 	}
 
 	var timeDetails []venuepage.TimeDetail
+	var amount int
 
+	// 處理預訂時間
 	if detail.StartTime == "" {
 		// 處理時段制
 		for _, id := range detail.TimeSlotIds {
@@ -145,6 +200,8 @@ func (s *VenueService) GetReservedPage(detail *venuepage.ReservedDetail) (venuep
 			if err != nil {
 				return venuepage.ReservedPage{}, err
 			}
+
+			amount += price
 
 			timeDetails = append(timeDetails, venuepage.TimeDetail{
 				TimeRange: fmt.Sprintf("時段 %02d:%02d - %02d:%02d",
@@ -174,6 +231,8 @@ func (s *VenueService) GetReservedPage(detail *venuepage.ReservedDetail) (venuep
 			return venuepage.ReservedPage{}, err
 		}
 
+		amount += price
+
 		timeDetails = append(timeDetails, venuepage.TimeDetail{
 			TimeRange: timeRange,
 			Price:     strconv.Itoa(price),
@@ -186,25 +245,14 @@ func (s *VenueService) GetReservedPage(detail *venuepage.ReservedDetail) (venuep
 	dateStr := fmt.Sprintf("%d 年 %d 月 %d 日 %s",
 		reservedDay.Year(), reservedDay.Month(), reservedDay.Day(), weekday)
 
-	// 取得活動類型
-	activities, err := s.activityRepo.FindAll()
-	if err != nil {
-		return venuepage.ReservedPage{}, err
-	}
-
-	// 取得場地圖片
-	img, err := s.venueImgRepo.FindFirstBySort(venue.ID, 0)
-	if err != nil {
-		return venuepage.ReservedPage{}, err
-	}
-
 	return venuepage.ReservedPage{
 		VenueID:            strconv.Itoa(detail.VenueID),
-		VenueImgUrl:        img.VenueImgPath,
-		Name:               venue.Name,
-		Address:            venue.City + venue.District + venue.Address,
+		VenueImgUrl:        imgResult.VenueImgPath,
+		Name:               venueResult.Name,
+		Address:            venueResult.City + venueResult.District + venueResult.Address,
 		Date:               dateStr,
-		ReservedActivities: helper.ACTModelToDTO(activities),
+		ReservedActivities: helper.ACTModelToDTO(activitiesResult),
+		Amount:             strconv.Itoa(amount),
 		TimeDetails:        timeDetails,
 	}, nil
 }
@@ -215,29 +263,54 @@ func (s *VenueService) GetOrderPendingPage(orderInfo map[string]string) venuepag
 
 // 取得場地開放預訂時間
 func (s *VenueService) GetAvailableTime(selectDay time.Time, venueID int) ([]venuepage.AvailableTime, error) {
+	ratesChan := make(chan []models.BillingRate)
+	ordersChan := make(chan []models.Order)
+	errorChan := make(chan error, 2)
+
 	// 檢查日期是否有效
 	if !helper.IsDateValid(selectDay) {
 		return nil, fmt.Errorf("invalid date")
 	}
 
-	// 取得計費規則
-	rates, err := s.billingRateRepo.FindAvailableTimes(venueID, selectDay.Weekday())
-	if err != nil {
-		log.Printf("AvailableTimes Get Error: %s", err)
-		return nil, err
-	}
+	// 並行查詢計費規則
+	go func() {
+		rates, err := s.billingRateRepo.FindAvailableTimes(venueID, selectDay.Weekday())
+		if err != nil {
+			errorChan <- err
+			return
+		}
+		ratesChan <- rates
+	}()
 
-	// 獲取場地訂單
-	orders, err := s.orderRepo.FindConflictingOrders(venueID, selectDay)
-	if err != nil {
-		log.Printf("ConflictingOrders Get Error: %s", err)
-		return nil, err
+	// 並行查詢場地訂單
+	go func() {
+		orders, err := s.orderRepo.FindConflictingOrders(venueID, selectDay)
+		if err != nil {
+			errorChan <- err
+			return
+		}
+		ordersChan <- orders
+	}()
+
+	var ratesResult []models.BillingRate
+	var ordersResult []models.Order
+
+	for i := 0; i < 2; i++ {
+		select {
+		case err := <-errorChan:
+			log.Printf("Goroutine Error: %s", err)
+			return nil, err
+		case ratesResult = <-ratesChan:
+		case ordersResult = <-ordersChan:
+		case <-time.After(30 * time.Second):
+			return nil, errors.New("timeout getting data")
+		}
 	}
 
 	// 處理可用時間
-	availableTimes := s.processAvailableTime(rates, orders)
+	availableTimes := s.processAvailableTime(ratesResult, ordersResult)
 
-	return availableTimes, err
+	return availableTimes, nil
 }
 
 // 處理可用時間
