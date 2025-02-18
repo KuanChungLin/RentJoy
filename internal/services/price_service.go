@@ -13,17 +13,18 @@ import (
 	"gorm.io/gorm"
 )
 
-type PriceSerice struct {
+type PriceService struct {
 	billingRateRepo repoInterfaces.BillingRateRepository
 }
 
-func NewPriceService(db *gorm.DB) serviceInterfaces.PriceSerice {
-	return &PriceSerice{
+func NewPriceService(db *gorm.DB) serviceInterfaces.PriceService {
+	return &PriceService{
 		billingRateRepo: repositories.NewBillingRateRepository(db),
 	}
 }
 
-func (s *PriceSerice) CalculatePeriodPrice(id int) (int, error) {
+// 透過 Id 取得場地時段定價
+func (s *PriceService) CalculatePeriodPrice(id int) (int, error) {
 	rate, err := s.billingRateRepo.FindByID(uint(id))
 	if err != nil {
 		log.Printf("Get Rate By Id Error: %s", err)
@@ -35,7 +36,8 @@ func (s *PriceSerice) CalculatePeriodPrice(id int) (int, error) {
 	return price, nil
 }
 
-func (s *PriceSerice) CalculateTimePrices(detail *venuepage.ReservedDetail) (int, error) {
+// 透過預訂資料取得價碼
+func (s *PriceService) CalculateTimePrices(detail *venuepage.ReservedDetail) (int, error) {
 	// 解析日期字串為 time.Time
 	reservedDay, err := time.Parse(time.RFC3339, detail.ReservedDay)
 	if err != nil {

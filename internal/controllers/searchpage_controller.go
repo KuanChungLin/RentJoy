@@ -8,6 +8,7 @@ import (
 	"rentjoy/internal/dto/searchpage"
 	interfaces "rentjoy/internal/interfaces/services"
 	"rentjoy/pkg/helper"
+	"strconv"
 )
 
 type SearchPageController struct {
@@ -22,6 +23,7 @@ func NewSearchPageController(searchService interfaces.SearchPageService, templat
 	}
 }
 
+// 搜尋頁
 func (c *SearchPageController) SearchPage(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -40,13 +42,13 @@ func (c *SearchPageController) SearchPage(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	maxPrice, err := helper.StrToInt(r.FormValue("MaxPrice"))
+	maxPrice, err := strconv.Atoi(r.FormValue("MaxPrice"))
 	if err != nil {
 		log.Printf("無法解析 Error: %s", err)
 		return
 	}
 
-	minPrice, err := helper.StrToInt(r.FormValue("MinPrice"))
+	minPrice, err := strconv.Atoi(r.FormValue("MinPrice"))
 	if err != nil {
 		log.Printf("無法解析 Error: %s", err)
 		return
@@ -69,6 +71,7 @@ func (c *SearchPageController) SearchPage(w http.ResponseWriter, r *http.Request
 	c.RenderTemplate(w, r, "searchpage", vm)
 }
 
+// 滾軸下拉刷新資料
 func (c *SearchPageController) SearchPageLoading(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Received request URL: %s", r.URL.String())
 	if r.Method != http.MethodGet {
@@ -88,19 +91,19 @@ func (c *SearchPageController) SearchPageLoading(w http.ResponseWriter, r *http.
 		return
 	}
 
-	maxPrice, err := helper.StrToInt(r.FormValue("MaxPrice"))
+	maxPrice, err := strconv.Atoi(r.FormValue("MaxPrice"))
 	if err != nil {
 		log.Printf("無法解析 Error: %s", err)
 		return
 	}
 
-	minPrice, err := helper.StrToInt(r.FormValue("MinPrice"))
+	minPrice, err := strconv.Atoi(r.FormValue("MinPrice"))
 	if err != nil {
 		log.Printf("無法解析 Error: %s", err)
 		return
 	}
 
-	page, err := helper.StrToInt(r.FormValue("Page"))
+	page, err := strconv.Atoi(r.FormValue("Page"))
 	if err != nil {
 		log.Printf("無法解析 Error: %s", err)
 		return

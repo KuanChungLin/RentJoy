@@ -55,20 +55,6 @@ func StrToUint(str string) (uint, error) {
 	return uint(num), nil
 }
 
-// string 轉 int
-func StrToInt(str string) (int, error) {
-	if str == "" {
-		return 0, nil
-	}
-
-	num, err := strconv.ParseInt(str, 10, 32)
-	if err != nil {
-		return 0, err
-	}
-
-	return int(num), nil
-}
-
 // decimal 轉 int
 func DecimalToIntRounded(d decimal.Decimal) int {
 	return int(d.Round(0).IntPart())

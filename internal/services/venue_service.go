@@ -25,7 +25,7 @@ type VenueService struct {
 	orderRepo            repoInterfaces.OrderRepository
 	activityRepo         repoInterfaces.ActivityTypeRepository
 	venueImgRepo         repoInterfaces.VenueImgRepository
-	priceService         serviceInterfaces.PriceSerice
+	priceService         serviceInterfaces.PriceService
 }
 
 func NewVenueService(db *gorm.DB) serviceInterfaces.VenuePageService {

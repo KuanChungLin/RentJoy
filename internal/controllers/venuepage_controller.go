@@ -8,7 +8,6 @@ import (
 	"net/url"
 	"rentjoy/internal/dto/venuepage"
 	interfaces "rentjoy/internal/interfaces/services"
-	"rentjoy/pkg/helper"
 	"strconv"
 	"time"
 )
@@ -37,7 +36,7 @@ func (c *VenuePageController) VenuePage(w http.ResponseWriter, r *http.Request) 
 
 	// 檢查 Query String
 	if queryID := r.URL.Query().Get("venueId"); queryID != "" {
-		venueID, err = helper.StrToInt(queryID)
+		venueID, err = strconv.Atoi(queryID)
 		if err != nil {
 			log.Printf("Query String 解析錯誤: %s", err)
 			http.Redirect(w, r, "/error", http.StatusSeeOther)
@@ -51,7 +50,7 @@ func (c *VenuePageController) VenuePage(w http.ResponseWriter, r *http.Request) 
 		}
 
 		if formID := r.FormValue("venueId"); formID != "" {
-			venueID, err = helper.StrToInt(formID)
+			venueID, err = strconv.Atoi(formID)
 			if err != nil {
 				log.Printf("Form 解析錯誤: %s", err)
 				// TODO
@@ -154,6 +153,8 @@ func (c *VenuePageController) ReservedPage(w http.ResponseWriter, r *http.Reques
 		http.Redirect(w, r, "/Error", http.StatusSeeOther)
 		return
 	}
+
+	vm.ReservedDetailCookie = decodedValue
 
 	// 刪除 Cookie
 	http.SetCookie(w, &http.Cookie{
