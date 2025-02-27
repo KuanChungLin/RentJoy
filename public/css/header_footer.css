@@ -466,7 +466,7 @@ footer {
     }
 
     .nav .sub-menu {
-        display: block;
+        display: none;
         width: 100%;
     }
 }

@@ -1,6 +1,9 @@
 let navItems = document.querySelectorAll('.nav-item');
 
 window.addEventListener('load',function () {
+    // 初始化時根據當前螢幕尺寸設置子選單的顯示狀態
+    initializeSubMenuDisplay();
+    
     navItems.forEach(navItem => {
         navItem.onclick = function (event) {
             let screenWidth = window.innerWidth;
@@ -19,9 +22,16 @@ window.addEventListener('load',function () {
             });
 
 
+            // 切換當前子選單的顯示狀態
             let currentSubMenu = this.querySelector('.sub-menu');
             if (currentSubMenu) {
-                currentSubMenu.style.display = currentSubMenu.style.display === 'none' ? 'block' : 'none';
+                // 在小螢幕下，我們總是切換顯示狀態
+                if (screenWidth < 1025) {
+                    currentSubMenu.style.display = currentSubMenu.style.display === 'block' ? 'none' : 'block';
+                } else {
+                    // 在大螢幕下，我們只切換顯示狀態
+                    currentSubMenu.style.display = currentSubMenu.style.display === 'block' ? 'none' : 'block';
+                }
             }
             
 
@@ -56,3 +66,23 @@ window.addEventListener('load',function () {
         }
     }
 });
+
+// 根據螢幕尺寸初始化子選單顯示狀態
+function initializeSubMenuDisplay() {
+    const subMenus = document.querySelectorAll('.sub-menu');
+    
+    if (window.innerWidth <= 1023) {
+        // 在小螢幕下，預設隱藏所有子選單
+        subMenus.forEach(subMenu => {
+            // 只在菜單未被點擊時隱藏
+            if (!document.getElementById('menu-switch').checked) {
+                subMenu.style.display = 'none';
+            }
+        });
+    } else {
+        // 在大螢幕下，隱藏所有子選單
+        subMenus.forEach(subMenu => {
+            subMenu.style.display = 'none';
+        });
+    }
+}
