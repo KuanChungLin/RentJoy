@@ -822,12 +822,16 @@ function renderingCalendar(year, month, dateAreaSelector) {
 }
 
 function isDateReserved(currDate, reservedDateArr) {
-    // 將當前日期轉換為 ISO 8601 格式的字符串，(會自動轉成UTC)
-    var currDateStr = currDate.toISOString().slice(0, 10);
+    // 使用本地日期格式，避免時區轉換問題
+    var currDateStr = currDate.getFullYear() + '-' + 
+                    String(currDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                    String(currDate.getDate()).padStart(2, '0');
     
     for (var i = 0; i < reservedDateArr.length; i++) {
-        // 將 reservedDate 中的日期轉換為 ISO 8601 格式的字符串
-        var reservedDateStr = new Date(reservedDateArr[i]).toISOString().slice(0, 10);
+        var reservedDate = new Date(reservedDateArr[i]);
+        var reservedDateStr = reservedDate.getFullYear() + '-' + 
+                            String(reservedDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                            String(reservedDate.getDate()).padStart(2, '0');
 
         if (currDateStr === reservedDateStr) {
             return true;

@@ -96,7 +96,7 @@ func (s *VenueService) GetVenuePage(venueID int) venuepage.VenuePage {
 		return venuepage.VenuePage{}
 	}
 
-	return venuepage.VenuePage{
+	venueInfo := venuepage.VenuePage{
 		VenueID:                 venue.ID,
 		ImgUrls:                 helper.GetSortedImgs(venue.Imgs),
 		Name:                    venue.Name,
@@ -126,6 +126,9 @@ func (s *VenueService) GetVenuePage(venueID int) venuepage.VenuePage {
 		OpenDayOfWeek:      helper.GetUniqueDayOfWeek(venue.BillingRates),
 		MinRentHours:       helper.GetMinRentHours(venue.BillingRates),
 	}
+
+	log.Println(venueInfo)
+	return venueInfo
 }
 
 // 取得預定場地頁資料
