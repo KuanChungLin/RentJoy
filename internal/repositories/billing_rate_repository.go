@@ -18,7 +18,7 @@ func NewBillingRateRepository(db *gorm.DB) interfaces.BillingRateRepository {
 	}
 }
 
-func (r *BillingRateRepository) FindAvailableTimes(venueID int, dayOfWeek time.Weekday) ([]models.BillingRate, error) {
+func (r *BillingRateRepository) FindAvailableTimes(venueID uint, dayOfWeek time.Weekday) ([]models.BillingRate, error) {
 	var rates []models.BillingRate
 
 	err := r.DB.Where("VenueId = ? AND DayOfWeek = ?", venueID, dayOfWeek).
@@ -35,4 +35,15 @@ func (r *BillingRateRepository) FindByReserved(venueID uint, rateTypeID uint, we
 		First(&rate).Error
 
 	return &rate, err
+}
+
+func (r *BillingRateRepository) FindByIDs(ids []string) ([]models.BillingRate, error) {
+	var rates []models.BillingRate
+
+	err := r.DB.Where("id IN (?)", ids).Find(&rates).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return rates, nil
 }

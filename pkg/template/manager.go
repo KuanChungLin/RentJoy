@@ -34,12 +34,18 @@ func NewManager() *Manager {
 func (m *Manager) InitTemplates() error {
 	// 定義基礎布局、頁面和 partial 的路徑
 	layoutFile := "../../public/html/layout.html"
+	layoutOrderPendingFile := "../../public/html/layout_orderpending.html"
 	pagesGlob := "../../public/html/pages/*.html"
 	partialsGlob := "../../public/html/partials/*.html"
 
 	// 檢查 layout 檔案是否存在
 	if _, err := os.Stat(layoutFile); os.IsNotExist(err) {
 		return fmt.Errorf("layout file not found: %s", layoutFile)
+	}
+
+	// 檢查 layout_orderpending 檔案是否存在
+	if _, err := os.Stat(layoutOrderPendingFile); os.IsNotExist(err) {
+		return fmt.Errorf("order pending layout file not found: %s", layoutOrderPendingFile)
 	}
 
 	// 獲取所有頁面模板

@@ -7,6 +7,7 @@ import (
 	"rentjoy/internal/controllers"
 	"rentjoy/internal/middleware"
 	"rentjoy/internal/services"
+	"rentjoy/pkg/redis"
 	templateManager "rentjoy/pkg/template"
 )
 
@@ -23,11 +24,15 @@ func main() {
 		log.Fatal("Failed to init database: ", err)
 	}
 
+	// 初始化 Redis 客戶端
+	redisClient := redis.NewRedisClient()
+
 	// 初始化 services
 	homeService := services.NewHomeService(db)
 	accountService := services.NewAccountService(db)
 	searchService := services.NewSearchService(db)
 	venueService := services.NewVenueService(db)
+	orderService := services.NewOrderService(db)
 
 	// 初始化 controllers
 	homepageController := controllers.NewHomePageController(
@@ -45,6 +50,16 @@ func main() {
 	venuepageController := controllers.NewVenuePageController(
 		venueService,
 		tmplManager.GetTemplates(),
+		redisClient,
+	)
+	orderController := controllers.NewOrderController(
+		orderService,
+		tmplManager.GetTemplates(),
+		redisClient,
+	)
+	ecpayController := controllers.NewEcpayController(
+		tmplManager.GetTemplates(),
+		redisClient,
 	)
 
 	// 配置靜態文件路徑
@@ -74,7 +89,11 @@ func main() {
 	http.HandleFunc("/SearchPageLoading", searchpageController.SearchPageLoading)
 	http.HandleFunc("/Venue/VenuePage", venuepageController.VenuePage)
 	http.HandleFunc("/Venue/GetAvailableTime", venuepageController.GetAvailableTime)
-	http.HandleFunc("/Venue/ReservedPage", middleware.AuthMiddleware(venuepageController.ReservedPage))
+	http.HandleFunc("/Venue/ReservedPage", venuepageController.ReservedPage)
+	http.HandleFunc("/Venue/OrderPending", middleware.AuthMiddleware(venuepageController.OrderPending))
+	http.HandleFunc("/Order/CreateOrder", middleware.AuthMiddleware(orderController.CreateOrder))
+	http.HandleFunc("/Ecpay/Process", middleware.AuthMiddleware(ecpayController.Process))
+	http.HandleFunc("/Ecpay/ReceivePaymentResult", ecpayController.ReceivePaymentResult)
 
 	log.Println("伺服器運行中：https://localhost:8080")
 	log.Fatal(http.ListenAndServeTLS(":8080", "../../cert.pem", "../../key.pem", nil))

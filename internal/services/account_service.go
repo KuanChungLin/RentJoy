@@ -52,12 +52,13 @@ func (s *AccountService) RegisterAccount(r account.RegisterRequest) (token strin
 
 	newMember := models.Member{
 		Account:   r.Account,
-		Password:  helper.HashPassword(r.Password),
+		Password:  helper.GetSHA256(r.Password),
 		FirstName: r.FirstName,
 		LastName:  r.LastName,
 		Email:     r.Account,
 		Phone:     r.Phone,
 		CreatedAt: time.Now(),
+		UpdatedAt: nil,
 	}
 
 	err = s.memberRepo.Create(newMember)
@@ -138,10 +139,12 @@ func (s *AccountService) FacebookLogin(code string) (jwtToken string, err error)
 		// 創建用戶
 		member = &models.Member{
 			Account:   "您以FaceBook帳號登入RentJoy",
-			Password:  helper.HashPassword(helper.GenerateRandomPassword()),
+			Password:  helper.GetSHA256(helper.GenerateRandomPassword()),
 			Email:     fbUser.Email,
 			FirstName: fbUser.FirstName,
 			LastName:  fbUser.LastName,
+			CreatedAt: time.Now(),
+			UpdatedAt: nil,
 			FacebookLogins: []models.FacebookThirdPartyLogin{
 				{
 					FacebookThirdPartyID: fbUser.ID,
@@ -211,10 +214,12 @@ func (s *AccountService) GoogleLogin(code string) (jwtToken string, err error) {
 		// 創建用戶
 		member = &models.Member{
 			Account:   "您以Google帳號登入RentJoy",
-			Password:  helper.HashPassword(helper.GenerateRandomPassword()),
+			Password:  helper.GetSHA256(helper.GenerateRandomPassword()),
 			Email:     gUser.Email,
 			FirstName: gUser.FirstName,
 			LastName:  gUser.LastName,
+			CreatedAt: time.Now(),
+			UpdatedAt: nil,
 			GoogleLogins: []models.GoogleThirdPartyLogin{
 				{
 					GoogleThirdPartyID: gUser.ID,
@@ -306,7 +311,7 @@ func (s *AccountService) UpdateName(r account.UpdateNameRequest, userID uint) (*
 	// 嘗試更新資料
 	member.FirstName = r.FirstName
 	member.LastName = r.LastName
-	member.UpdatedAt = time.Now()
+	member.UpdatedAt = helper.TimePtr(time.Now())
 
 	err = s.memberRepo.Update(*member)
 
@@ -365,7 +370,7 @@ func (s *AccountService) UpdateEmail(r account.UpdateEmailRequest, userID uint) 
 	}
 
 	member.Email = r.Email
-	member.UpdatedAt = time.Now()
+	member.UpdatedAt = helper.TimePtr(time.Now())
 
 	// 將修改後資料更新至資料庫內
 	err = s.memberRepo.Update(*member)
@@ -421,7 +426,7 @@ func (s *AccountService) UpdatePhone(r account.UpdatePhoneRequest, userID uint) 
 	}
 
 	member.Phone = r.Phone
-	member.UpdatedAt = time.Now()
+	member.UpdatedAt = helper.TimePtr(time.Now())
 
 	// 將修改後資料更新至資料庫內
 	err = s.memberRepo.Update(*member)
@@ -488,8 +493,8 @@ func (s *AccountService) UpdatePassword(r account.UpdatePasswordRequest, userID 
 	}
 
 	// 更新密碼
-	member.Password = helper.HashPassword(r.NewPassword)
-	member.UpdatedAt = time.Now()
+	member.Password = helper.GetSHA256(r.NewPassword)
+	member.UpdatedAt = helper.TimePtr(time.Now())
 
 	err = s.memberRepo.Update(*member)
 	response := account.ProfileResponse{

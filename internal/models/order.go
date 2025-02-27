@@ -15,9 +15,9 @@ type Order struct {
 	LastName        string          `gorm:"column:SubscriberLastName"`
 	Phone           string          `gorm:"column:SubscriberPhone"`
 	Email           string          `gorm:"column:SubscriberEmail"`
-	Amount          decimal.Decimal `gorm:"column:Amount"`
+	Amount          decimal.Decimal `gorm:"column:Amount;type:datetime"`
 	CreatedAt       time.Time       `gorm:"column:CreateAt"`
-	UnsubscribeTime time.Time       `gorm:"column:UnsubscribeTime"`
+	UnsubscribeTime *time.Time      `gorm:"column:UnsubscribeTime"` // 使用指針方可傳入 nil
 	UserCount       int             `gorm:"column:UserCount"`
 	Message         string          `gorm:"column:UserMessage"`
 	MemberID        uint            `gorm:"column:MemberId"`

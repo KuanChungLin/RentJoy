@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/shopspring/decimal"
 	"gorm.io/gorm"
 )
 
@@ -23,9 +24,12 @@ type VenueService struct {
 	recommendedService   serviceInterfaces.RecommendedService
 	billingRateRepo      repoInterfaces.BillingRateRepository
 	orderRepo            repoInterfaces.OrderRepository
+	ecpayRepo            repoInterfaces.EcpayRepository
 	activityRepo         repoInterfaces.ActivityTypeRepository
 	venueImgRepo         repoInterfaces.VenueImgRepository
 	priceService         serviceInterfaces.PriceService
+	ecpayService         serviceInterfaces.EcpayService
+	DB                   *gorm.DB
 }
 
 func NewVenueService(db *gorm.DB) serviceInterfaces.VenuePageService {
@@ -36,9 +40,12 @@ func NewVenueService(db *gorm.DB) serviceInterfaces.VenuePageService {
 		recommendedService:   NewRecommendedService(db),
 		billingRateRepo:      repositories.NewBillingRateRepository(db),
 		orderRepo:            repositories.NewOrderRepository(db),
+		ecpayRepo:            repositories.NewEcpayRepository(db),
 		activityRepo:         repositories.NewActivityTypeRepository(db),
 		venueImgRepo:         repositories.NewVenueImgRepository(db),
 		priceService:         NewPriceService(db),
+		ecpayService:         NewEcpayService(db),
+		DB:                   db,
 	}
 }
 
@@ -50,7 +57,7 @@ func (s *VenueService) GetVenuePage(venueID int) venuepage.VenuePage {
 
 	// 並行查詢場地資訊
 	go func() {
-		venue, err := s.venueInformationRepo.FindVenuePageByID(venueID)
+		venue, err := s.venueInformationRepo.FindVenuePageByID(uint(venueID))
 		if err != nil {
 			errorChan <- err
 			return
@@ -257,8 +264,54 @@ func (s *VenueService) GetReservedPage(detail *venuepage.ReservedDetail) (venuep
 	}, nil
 }
 
-func (s *VenueService) GetOrderPendingPage(orderInfo map[string]string) venuepage.OrderPending {
-	return venuepage.OrderPending{}
+// 取得預訂結果頁資料
+func (s *VenueService) GetOrderPendingPage(orderInfo map[string]string) (venuepage.OrderPending, error) {
+	// 開始交易
+	tx := s.DB.Begin()
+	if tx.Error != nil {
+		return venuepage.OrderPending{}, tx.Error
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+	// 驗證 CheckMacValue
+	ecpayReturnData := s.ecpayService.GetOrderDetails(orderInfo)
+
+	// 取得訂單資訊
+	ecpayOrder, err := s.ecpayRepo.FindByMerchantTradeNo(orderInfo["MerchantTradeNo"])
+	if err != nil {
+		tx.Rollback()
+		return venuepage.OrderPending{}, err
+	}
+
+	if ecpayOrder == nil {
+		tx.Rollback()
+		return venuepage.OrderPending{}, errors.New("order not found")
+	}
+
+	// 開始更新 Ecpay 訂單
+	// 更新 ECPay 訂單資訊
+	if err := s.updateEcpayOrder(tx, ecpayOrder, ecpayReturnData); err != nil {
+		tx.Rollback()
+		log.Printf("Update Ecpay Order Error:%s", err)
+		return venuepage.OrderPending{}, err
+	}
+
+	// 取得 Order 訂單資料
+	order, err := s.orderRepo.FindByEcpayID(tx, ecpayOrder.ID)
+	if err != nil {
+		tx.Rollback()
+		return venuepage.OrderPending{}, err
+	}
+
+	// 根據 CheckMacValue 和 RtnCode 返回不同結果
+	if ecpayReturnData["CheckMacValue"] == orderInfo["CheckMacValue"] {
+		return s.handleValidCheckMacValue(tx, order, orderInfo)
+	} else {
+		return s.handleInvalidCheckMacValue(tx, order, orderInfo)
+	}
 }
 
 // 取得場地開放預訂時間
@@ -274,7 +327,7 @@ func (s *VenueService) GetAvailableTime(selectDay time.Time, venueID int) ([]ven
 
 	// 並行查詢計費規則
 	go func() {
-		rates, err := s.billingRateRepo.FindAvailableTimes(venueID, selectDay.Weekday())
+		rates, err := s.billingRateRepo.FindAvailableTimes(uint(venueID), selectDay.Weekday())
 		if err != nil {
 			errorChan <- err
 			return
@@ -385,4 +438,94 @@ func (s *VenueService) processTimeSlotRate(rate models.BillingRate, orders []mod
 		BillingRateID: strconv.FormatUint(uint64(rate.ID), 10),
 		RateTypeID:    strconv.FormatUint(uint64(rate.RateTypeID), 10),
 	}
+}
+
+// 更新 EcpayOrder
+func (s *VenueService) updateEcpayOrder(tx *gorm.DB, ecpayOrder *models.EcpayOrder, orderInfo map[string]string) error {
+	// 更新 EcpayOrder 資料
+	ecpayOrder.RtnCode, _ = strconv.Atoi(orderInfo["RtnCode"])
+	ecpayOrder.RtnMsg = s.getRtnMsg(orderInfo["RtnMsg"], orderInfo["RtnCode"])
+	ecpayOrder.MerchantID = orderInfo["MerchantID"]
+	ecpayOrder.TradeAmt, _ = decimal.NewFromString(orderInfo["TradeAmt"])
+	ecpayOrder.PaymentDate = s.getPaymentDate(orderInfo["RtnCode"], orderInfo["PaymentDate"])
+	ecpayOrder.PaymentType = orderInfo["PaymentType"]
+	ecpayOrder.Charge, _ = decimal.NewFromString(orderInfo["PaymentTypeChargeFee"])
+	ecpayOrder.TradeDate = helper.MustParseTime(orderInfo["TradeDate"])
+	ecpayOrder.SimulatePaid = orderInfo["SimulatePaid"] == "1"
+	ecpayOrder.CheckMacValue = orderInfo["CheckMacValue"]
+
+	// 更新到資料庫
+	if err := s.ecpayRepo.UpdateByTx(tx, *ecpayOrder); err != nil {
+		return fmt.Errorf("update ecpay order error: %w", err)
+	}
+
+	return nil
+}
+
+// 根據 Ecpay 的 RtnCode 取得 RtnMsg
+func (s *VenueService) getRtnMsg(rtnMsg, rtnCode string) string {
+	if rtnMsg == "Succeeded" {
+		if rtnCode == "1" {
+			return "已付款"
+		}
+		return "付款失敗"
+	}
+	return rtnMsg
+}
+
+// 根據 Ecpay 的 RtnCode 設定 PaymentDate
+func (s *VenueService) getPaymentDate(rtnCode, paymentDateStr string) time.Time {
+	if rtnCode != "1" {
+		return time.Now()
+	}
+	paymentDate, err := helper.ParseTime(paymentDateStr)
+	if err != nil {
+		return time.Now()
+	}
+	return paymentDate
+}
+
+// 處理 Ecpay 檢查碼相同時的 Order 資料更新
+func (s *VenueService) handleValidCheckMacValue(tx *gorm.DB, order *models.Order, orderInfo map[string]string) (venuepage.OrderPending, error) {
+	if orderInfo["RtnCode"] != "1" {
+		if err := s.orderRepo.UpdateStatus(tx, order.ID, 5); err != nil {
+			return venuepage.OrderPending{}, err
+		}
+		return venuepage.OrderPending{
+			IsPayFail: true,
+			VenueId:   strconv.FormatUint(uint64(order.VenueID), 10),
+		}, nil
+	}
+
+	if err := s.orderRepo.UpdateStatus(tx, order.ID, 1); err != nil {
+		return venuepage.OrderPending{}, err
+	}
+	return venuepage.OrderPending{
+		VenueId: strconv.FormatUint(uint64(order.VenueID), 10),
+		OrderId: strconv.FormatUint(uint64(order.ID), 10),
+		OrderNo: strconv.FormatUint(uint64(order.ID), 10),
+		Email:   order.Email,
+		Phone:   order.Phone,
+	}, nil
+}
+
+// 處理 Ecpay 檢查碼不同時的 Order 資料更新
+func (s *VenueService) handleInvalidCheckMacValue(tx *gorm.DB, order *models.Order, orderInfo map[string]string) (venuepage.OrderPending, error) {
+	if orderInfo["RtnCode"] != "1" {
+		if err := s.orderRepo.UpdateStatus(tx, order.ID, 5); err != nil {
+			return venuepage.OrderPending{}, err
+		}
+		return venuepage.OrderPending{
+			IsPayFail: true,
+			VenueId:   strconv.FormatUint(uint64(order.VenueID), 10),
+		}, nil
+	}
+
+	if err := s.orderRepo.UpdateStatus(tx, order.ID, 1); err != nil {
+		return venuepage.OrderPending{}, err
+	}
+	return venuepage.OrderPending{
+		IsCheckMacValueFail: true,
+		VenueId:             strconv.FormatUint(uint64(order.VenueID), 10),
+	}, nil
 }

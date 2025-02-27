@@ -37,20 +37,20 @@ func (c *SearchPageController) SearchPage(w http.ResponseWriter, r *http.Request
 	}
 
 	activityID, err := helper.StrToUint(r.FormValue("ActivityId"))
-	if err != nil {
-		log.Printf("無法解析 Error: %s", err)
+	if r.FormValue("ActivityId") != "" && err != nil {
+		log.Printf("無法解析 ActivityId Error: %s", err)
 		return
 	}
 
 	maxPrice, err := strconv.Atoi(r.FormValue("MaxPrice"))
-	if err != nil {
-		log.Printf("無法解析 Error: %s", err)
+	if r.FormValue("MaxPrice") != "" && err != nil {
+		log.Printf("無法解析 maxPrice Error: %s", err)
 		return
 	}
 
 	minPrice, err := strconv.Atoi(r.FormValue("MinPrice"))
-	if err != nil {
-		log.Printf("無法解析 Error: %s", err)
+	if r.FormValue("MinPrice") != "" && err != nil {
+		log.Printf("無法解析 minPrice Error: %s", err)
 		return
 	}
 
@@ -86,26 +86,26 @@ func (c *SearchPageController) SearchPageLoading(w http.ResponseWriter, r *http.
 	}
 
 	activityID, err := helper.StrToUint(r.FormValue("ActivityId"))
-	if err != nil {
-		log.Printf("無法解析 Error: %s", err)
+	if r.FormValue("ActivityId") != "" && err != nil {
+		log.Printf("無法解析 ActivityId Error: %s", err)
 		return
 	}
 
 	maxPrice, err := strconv.Atoi(r.FormValue("MaxPrice"))
-	if err != nil {
-		log.Printf("無法解析 Error: %s", err)
+	if r.FormValue("MaxPrice") != "" && err != nil {
+		log.Printf("無法解析 MaxPrice Error: %s", err)
 		return
 	}
 
 	minPrice, err := strconv.Atoi(r.FormValue("MinPrice"))
-	if err != nil {
-		log.Printf("無法解析 Error: %s", err)
+	if r.FormValue("MinPrice") != "" && err != nil {
+		log.Printf("無法解析 MinPrice Error: %s", err)
 		return
 	}
 
 	page, err := strconv.Atoi(r.FormValue("Page"))
 	if err != nil {
-		log.Printf("無法解析 Error: %s", err)
+		log.Printf("無法解析 Page Error: %s", err)
 		return
 	}
 

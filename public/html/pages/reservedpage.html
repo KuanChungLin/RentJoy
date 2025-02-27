@@ -4,7 +4,7 @@
 {{end}}
 {{define "content"}}
 <div class="wrapper w-100 d-flex">
-    <form id="form" action="/CreateOrder" method="POST" class="left">
+    <form id="form" action="/Order/CreateOrder" method="POST" class="left">
         <div class="step1">
             <div class="row d-flex justify-content-between">
                 <div class="col-6 back-btn">
@@ -149,7 +149,7 @@
                         <button id="submitBtn" type="button" class="btn rounded-pill border submit-reserved-btn w-100">送出預定</button>
                     </div>
                     <input name="VenueId" value={{.VenueID}} type="hidden">
-                    <input name="TimeDetails" value=@timeDetailCookieJson type="hidden">
+                    <input name="ReservedDetails" value={{.ReservedDetailCookie}} type="hidden">
                 </div>
             </div>
         </div>

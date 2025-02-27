@@ -1,7 +1,9 @@
 package controllers
 
 import (
+	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -10,17 +12,21 @@ import (
 	interfaces "rentjoy/internal/interfaces/services"
 	"strconv"
 	"time"
+
+	"github.com/go-redis/redis"
 )
 
 type VenuePageController struct {
 	BaseController
 	venueService interfaces.VenuePageService
+	redisClient  *redis.Client
 }
 
-func NewVenuePageController(venueService interfaces.VenuePageService, templates map[string]*template.Template) *VenuePageController {
+func NewVenuePageController(venueService interfaces.VenuePageService, templates map[string]*template.Template, redisClient *redis.Client) *VenuePageController {
 	return &VenuePageController{
 		BaseController: NewBaseController(templates),
 		venueService:   venueService,
+		redisClient:    redisClient,
 	}
 }
 
@@ -122,7 +128,7 @@ func (c *VenuePageController) GetAvailableTime(w http.ResponseWriter, r *http.Re
 	}
 }
 
-// 預定場地頁面
+// 預訂場地頁面
 func (c *VenuePageController) ReservedPage(w http.ResponseWriter, r *http.Request) {
 	// 檢查 Ｃookie 是否存在
 	cookie, err := r.Cookie("TimeDetailCookie")
@@ -163,4 +169,61 @@ func (c *VenuePageController) ReservedPage(w http.ResponseWriter, r *http.Reques
 	})
 
 	c.RenderTemplate(w, r, "reservedpage", vm)
+}
+
+// 預訂場地結果頁
+func (c *VenuePageController) OrderPending(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet && r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// 從 QueryString 取得訂單 ID
+	tradeNo := r.URL.Query().Get("merchantTradeNo")
+	if tradeNo == "" {
+		http.Error(w, "Invalid merchantTradeNo", http.StatusBadRequest)
+		return
+	}
+
+	// 從 Redis 取得訂單資訊
+	key := fmt.Sprintf("order:%s", tradeNo)
+	orderData, err := c.redisClient.Get(key).Result()
+	if err != nil {
+		if err == redis.Nil {
+			http.Error(w, "Order not found", http.StatusNotFound)
+		} else {
+			log.Printf("Redis Get Error: %v", err)
+			http.Error(w, "Internal server error", http.StatusInternalServerError)
+		}
+		return
+	}
+
+	// 解析 JSON 字串回 map
+	var orderInfo map[string]string
+	if err := json.Unmarshal([]byte(orderData), &orderInfo); err != nil {
+		log.Printf("JSON Unmarshal Error: %v", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	// 如果存在編碼過的 CheckMacValue，則解碼恢復
+	if encodedCheckMac, exists := orderInfo["CheckMacValue"]; exists {
+		decodedBytes, err := base64.StdEncoding.DecodeString(encodedCheckMac)
+		if err == nil {
+			// 將解碼後的值寫回原始鍵
+			orderInfo["CheckMacValue"] = string(decodedBytes)
+		} else {
+			log.Printf("Base64 Decode Error: %v", err)
+		}
+	}
+
+	// 透過 Service 處理訂單資訊
+	pendingOrder, err := c.venueService.GetOrderPendingPage(orderInfo)
+	if err != nil {
+		log.Printf("Get Order Pending Info Error: %s", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	c.RenderTemplate(w, r, "order_pending", pendingOrder)
 }

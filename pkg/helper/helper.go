@@ -10,8 +10,8 @@ import (
 	"github.com/shopspring/decimal"
 )
 
-// 密碼雜湊
-func HashPassword(p string) string {
+// 字串雜湊
+func GetSHA256(p string) string {
 	hasher := sha256.New()
 
 	hasher.Write([]byte(p))
@@ -27,7 +27,7 @@ func GenerateRandomPassword() string {
 
 // 輸入密碼比對
 func CheckPasswordHash(inputPassword, modelPassword string) bool {
-	if HashPassword(inputPassword) != modelPassword {
+	if GetSHA256(inputPassword) != modelPassword {
 		return false
 	} else {
 		return true

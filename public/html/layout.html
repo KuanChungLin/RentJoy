@@ -9,12 +9,27 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/css/reset.css">
-    <link rel="stylesheet" href="/static/css/header_footer.css" asp-append-version="true">
+    <link rel="stylesheet" href="/static/css/header_footer.css">
     {{template "css" .}}
 </head>
 <body>
     <!-- header -->
-    {{if .IsLoggedIn}}
+    {{if .IsOrderPending}}
+        <header>
+            <div class="logo-area">
+                <h1 class="logo-image">
+                    <a href="/">
+                        <img src="/static/images/RentJoy_Logo.jpeg" alt="">
+                    </a>
+                </h1>
+                <p>
+                    租借趣
+                    <span>|</span>
+                    享受租借場地的樂趣
+                </p>
+            </div>
+        </header>
+    {{else if .IsLoggedIn}}
         <input type="checkbox" id="menu-switch">
         <header>
             <div class="logo-area">
@@ -334,82 +349,86 @@
     </main>
 
     <!-- footer -->
-    <footer>
-        <div class="footer-container">
-            <div class="footer-row">
-                <div class="content">
-                    <h3>
-                        <img src="/static/images/RentJoy_GrayLogo.jpeg" alt="">
-                    </h3>
+    {{if .IsOrderPending}}
+    {{else}}
+        <footer>
+            <div class="footer-container">
+                <div class="footer-row">
+                    <div class="content">
+                        <h3>
+                            <img src="/static/images/RentJoy_GrayLogo.jpeg" alt="">
+                        </h3>
+                    </div>
+                    <div class="content">
+                        <h3>
+                            場地內容
+                        </h3>
+                        <ul class="content-list">
+                            <li>
+                                <a href="/SearchPage">找場地</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="content">
+                        <h3>
+                            合作提案
+                        </h3>
+                        <ul class="content-list">
+                            <li>
+                                <a href="">刊場地</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="content">
+                        <h3>
+                            網站條款
+                        </h3>
+                        <ul class="content-list">
+                            <li>
+                                <a href="/UserRules">使用者條款</a>
+                            </li>
+                            <li>
+                                <a href="/Policy">隱私權保護條款</a>
+                            </li>
+                            <li>
+                                <a href="/OrderRules">線上預訂條約</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="content">
+                        <h3>
+                            聯絡我們
+                        </h3>
+                        <ul class="content-list link-list">
+                            <li>
+                                <a href="#" class="facebook">
+                                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30"
+                                        viewBox="0 0 30 30">
+                                        <path d="M12,27V15H8v-4h4V8.852C12,4.785,13.981,3,17.361,3c1.619,0,2.475,0.12,2.88,0.175V7h-2.305C16.501,7,16,7.757,16,9.291V11 h4.205l-0.571,4H16v12H12z"
+                                            fill="#d3d3d3"></path>
+                                    </svg>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="instagram">
+                                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30"
+                                        viewBox="0 0 24 24">
+                                        <path d="M 8 3 C 5.243 3 3 5.243 3 8 L 3 16 C 3 18.757 5.243 21 8 21 L 16 21 C 18.757 21 21 18.757 21 16 L 21 8 C 21 5.243 18.757 3 16 3 L 8 3 z M 8 5 L 16 5 C 17.654 5 19 6.346 19 8 L 19 16 C 19 17.654 17.654 19 16 19 L 8 19 C 6.346 19 5 17.654 5 16 L 5 8 C 5 6.346 6.346 5 8 5 z M 17 6 A 1 1 0 0 0 16 7 A 1 1 0 0 0 17 8 A 1 1 0 0 0 18 7 A 1 1 0 0 0 17 6 z M 12 7 C 9.243 7 7 9.243 7 12 C 7 14.757 9.243 17 12 17 C 14.757 17 17 14.757 17 12 C 17 9.243 14.757 7 12 7 z M 12 9 C 13.654 9 15 10.346 15 12 C 15 13.654 13.654 15 12 15 C 10.346 15 9 13.654 9 12 C 9 10.346 10.346 9 12 9 z"
+                                            fill="#d3d3d3"></path>
+                                    </svg>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="content">
-                    <h3>
-                        場地內容
-                    </h3>
-                    <ul class="content-list">
-                        <li>
-                            <a href="/SearchPage">找場地</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="content">
-                    <h3>
-                        合作提案
-                    </h3>
-                    <ul class="content-list">
-                        <li>
-                            <a href="">刊場地</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="content">
-                    <h3>
-                        網站條款
-                    </h3>
-                    <ul class="content-list">
-                        <li>
-                            <a href="/UserRules">使用者條款</a>
-                        </li>
-                        <li>
-                            <a href="/Policy">隱私權保護條款</a>
-                        </li>
-                        <li>
-                            <a href="/OrderRules">線上預訂條約</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="content">
-                    <h3>
-                        聯絡我們
-                    </h3>
-                    <ul class="content-list link-list">
-                        <li>
-                            <a href="#" class="facebook">
-                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30"
-                                     viewBox="0 0 30 30">
-                                    <path d="M12,27V15H8v-4h4V8.852C12,4.785,13.981,3,17.361,3c1.619,0,2.475,0.12,2.88,0.175V7h-2.305C16.501,7,16,7.757,16,9.291V11 h4.205l-0.571,4H16v12H12z"
-                                          fill="#d3d3d3"></path>
-                                </svg>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="instagram">
-                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30"
-                                     viewBox="0 0 24 24">
-                                    <path d="M 8 3 C 5.243 3 3 5.243 3 8 L 3 16 C 3 18.757 5.243 21 8 21 L 16 21 C 18.757 21 21 18.757 21 16 L 21 8 C 21 5.243 18.757 3 16 3 L 8 3 z M 8 5 L 16 5 C 17.654 5 19 6.346 19 8 L 19 16 C 19 17.654 17.654 19 16 19 L 8 19 C 6.346 19 5 17.654 5 16 L 5 8 C 5 6.346 6.346 5 8 5 z M 17 6 A 1 1 0 0 0 16 7 A 1 1 0 0 0 17 8 A 1 1 0 0 0 18 7 A 1 1 0 0 0 17 6 z M 12 7 C 9.243 7 7 9.243 7 12 C 7 14.757 9.243 17 12 17 C 14.757 17 17 14.757 17 12 C 17 9.243 14.757 7 12 7 z M 12 9 C 13.654 9 15 10.346 15 12 C 15 13.654 13.654 15 12 15 C 10.346 15 9 13.654 9 12 C 9 10.346 10.346 9 12 9 z"
-                                          fill="#d3d3d3"></path>
-                                </svg>
-                            </a>
-                        </li>
-                    </ul>
+                <div class="statement">
+                    <p>本網站的所有資訊均由用戶提供，如有觸犯您的知識版權，請聯繫我們，我們會於接到投訴後即時處理。</p>
+                    <p>© RentJoy 租借趣 2024 All Rights Reserved</p>
                 </div>
             </div>
-            <div class="statement">
-                <p>本網站的所有資訊均由用戶提供，如有觸犯您的知識版權，請聯繫我們，我們會於接到投訴後即時處理。</p>
-                <p>© RentJoy 租借趣 2024 All Rights Reserved</p>
-            </div>
-        </div>
-    </footer>
+        </footer>
+    {{end}}
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>

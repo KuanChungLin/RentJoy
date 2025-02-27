@@ -39,17 +39,17 @@ $(document).ready(function () {
         });
 
         // 攔截表單提交，確保城市和地區被正確提交
-        $('#searchNavbar').on('submit', function() {
-            // 確保城市和地區被正確設置
-            const cityVal = $('#citySelect').val();
-            const districtVal = $('#districtSelect').val();
+        // $('#searchNavbar').on('submit', function() {
+        //     // 確保城市和地區被正確設置
+        //     const cityVal = $('#citySelect').val();
+        //     const districtVal = $('#districtSelect').val();
 
-            // 如果城市已選但地區未選，阻止提交並提示
-            if (cityVal && !districtVal) {
-                alert('請選擇地區');
-                return false;
-            }
-        });
+        //     // 如果城市已選但地區未選，阻止提交並提示
+        //     if (cityVal && !districtVal) {
+        //         alert('請選擇地區');
+        //         return false;
+        //     }
+        // });
     });
 });
 

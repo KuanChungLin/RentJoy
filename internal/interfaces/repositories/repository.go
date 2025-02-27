@@ -2,8 +2,12 @@ package interfaces
 
 import (
 	"rentjoy/internal/dto/searchpage"
+	"rentjoy/internal/dto/venuepage"
 	"rentjoy/internal/models"
 	"time"
+
+	"github.com/shopspring/decimal"
+	"gorm.io/gorm"
 )
 
 type Repository[T any] interface {
@@ -31,7 +35,7 @@ type VenueInformationRepository interface {
 	FindExhibits() ([]models.VenueInformation, error)
 	FindExhibitDESC() ([]models.ActivityType, map[uint][]models.VenueInformation, error)
 	FindSearchPageInfos(filter searchpage.VenueFilter) ([]models.VenueInformation, error)
-	FindVenuePageByID(venueID int) (*models.VenueInformation, error)
+	FindVenuePageByID(venueID uint) (*models.VenueInformation, error)
 	FindRecommended() ([]models.VenueInformation, error)
 }
 
@@ -59,13 +63,27 @@ type DeviceItemRepository interface {
 
 type BillingRateRepository interface {
 	Repository[models.BillingRate]
-	FindAvailableTimes(venueID int, dayOfWeek time.Weekday) ([]models.BillingRate, error)
+	FindAvailableTimes(venueID uint, dayOfWeek time.Weekday) ([]models.BillingRate, error)
 	FindByReserved(venueID uint, rateTypeID uint, weekDay int) (*models.BillingRate, error)
+	FindByIDs(ids []string) ([]models.BillingRate, error)
 }
 
 type OrderRepository interface {
 	Repository[models.Order]
+	CreateOrder(tx *gorm.DB, order *models.Order) error
 	FindConflictingOrders(venueID int, date time.Time) ([]models.Order, error)
+	FindByEcpayID(tx *gorm.DB, id uint) (*models.Order, error)
+	UpdateStatus(tx *gorm.DB, id uint, status int) error
+}
+
+type OrderDetailRepository interface {
+	CreateOrderDetails(tx *gorm.DB, orderID uint, timeDetail *venuepage.ReservedDetail, priceList []decimal.Decimal) error
+}
+
+type EcpayRepository interface {
+	CreateEcpayOrder(tx *gorm.DB, ecpayOrder models.EcpayOrder) error
+	FindByMerchantTradeNo(tradeNo string) (*models.EcpayOrder, error)
+	UpdateByTx(tx *gorm.DB, ecpayOrder models.EcpayOrder) error
 }
 
 type VenueImgRepository interface {

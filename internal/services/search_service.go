@@ -97,7 +97,6 @@ func (s *SearchService) GetSearchPrice() []int {
 // 取得場地資訊
 func (s *SearchService) GetVenueInfos(filter searchpage.VenueFilter) []searchpage.VenueInfo {
 	ranges, err := s.venueInformationRepo.FindSearchPageInfos(filter)
-
 	if err != nil {
 		log.Printf("SearchPage Venue Get Error: %s", err)
 		return []searchpage.VenueInfo{}

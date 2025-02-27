@@ -10,7 +10,17 @@ require (
 	gorm.io/gorm v1.25.12
 )
 
-require cloud.google.com/go/compute/metadata v0.3.0 // indirect
+require (
+	cloud.google.com/go/compute/metadata v0.3.0 // indirect
+	github.com/caarlos0/env/v6 v6.10.1 // indirect
+	github.com/cespare/xxhash/v2 v2.2.0 // indirect
+	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
+	github.com/go-redis/redis v6.15.9+incompatible // indirect
+	github.com/gorilla/securecookie v1.1.2 // indirect
+	github.com/gorilla/sessions v1.4.0 // indirect
+	github.com/redis/go-redis v6.15.9+incompatible // indirect
+	github.com/redis/go-redis/v9 v9.7.0 // indirect
+)
 
 require (
 	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect

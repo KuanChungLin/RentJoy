@@ -1,8 +1,19 @@
-$(function () {
+$(document).ready(function () {
     var isLoading = false;
     var page = 1;
     var hasMoreData = true;
-    let filterData = $('#searchNavbar').serializeArray();
+    const city = $('#search-params').data('city');
+    const district = $('#search-params').data('district');
+    const filterData = $('#searchNavbar').serializeArray().map(item => {
+        if (item.name === 'City') {
+            return { ...item, value: city };
+        } else if (item.name === 'District') {
+            return { ...item, value: district };
+        } else {
+            return item;
+        }
+    });
+    console.log(filterData)
 
 
     $(window).on('scroll', function () {
@@ -19,6 +30,7 @@ $(function () {
             filterData.push({ name: "Page", value: page });
 
             var formData = $.param(filterData);
+            console.log(formData)
 
             if (!$('#loading').length) {
                 $('#searchResult').append('<div id="loading" class="spinner"><div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div><div class="rect5"></div></div>');

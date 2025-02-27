@@ -4,6 +4,8 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"reflect"
+	"rentjoy/internal/dto/venuepage"
 	"rentjoy/pkg/auth"
 )
 
@@ -12,9 +14,10 @@ type BaseController struct {
 }
 
 type BaseViewModel struct {
-	IsLoggedIn bool
-	UserEmail  string
-	PageData   interface{}
+	IsOrderPending bool
+	IsLoggedIn     bool
+	UserEmail      string
+	PageData       interface{}
 }
 
 func NewBaseController(templates map[string]*template.Template) BaseController {
@@ -33,9 +36,10 @@ func (c *BaseController) RenderTemplate(w http.ResponseWriter, r *http.Request, 
 
 	// 創建基礎 layout 結構
 	vm := BaseViewModel{
-		IsLoggedIn: false,
-		UserEmail:  "",
-		PageData:   data,
+		IsOrderPending: false,
+		IsLoggedIn:     false,
+		UserEmail:      "",
+		PageData:       data,
 	}
 
 	// 從 Cookie 讀取 token 判斷登入狀態
@@ -46,6 +50,14 @@ func (c *BaseController) RenderTemplate(w http.ResponseWriter, r *http.Request, 
 			vm.IsLoggedIn = true
 			vm.UserEmail = claims.Email
 		}
+	}
+
+	reflectType := reflect.TypeOf(venuepage.OrderPending{})
+	pageDataType := reflect.TypeOf(vm.PageData)
+
+	// 依照不同的 PageData 顯示 layout
+	if pageDataType == reflectType {
+		vm.IsOrderPending = true
 	}
 
 	err = template.ExecuteTemplate(w, "layout", vm)
