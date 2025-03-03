@@ -127,7 +127,6 @@ func (s *VenueService) GetVenuePage(venueID int) venuepage.VenuePage {
 		MinRentHours:       helper.GetMinRentHours(venue.BillingRates),
 	}
 
-	log.Println(venueInfo)
 	return venueInfo
 }
 
@@ -269,6 +268,7 @@ func (s *VenueService) GetReservedPage(detail *venuepage.ReservedDetail) (venuep
 
 // 取得預訂結果頁資料
 func (s *VenueService) GetOrderPendingPage(orderInfo map[string]string) (venuepage.OrderPending, error) {
+	var err error
 	// 開始交易
 	tx := s.DB.Begin()
 	if tx.Error != nil {
@@ -277,6 +277,10 @@ func (s *VenueService) GetOrderPendingPage(orderInfo map[string]string) (venuepa
 	defer func() {
 		if r := recover(); r != nil {
 			tx.Rollback()
+		} else if err != nil {
+			tx.Rollback()
+		} else {
+			err = tx.Commit().Error
 		}
 	}()
 	// 驗證 CheckMacValue

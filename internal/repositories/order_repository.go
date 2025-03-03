@@ -47,7 +47,7 @@ func (r *OrderRepository) FindByEcpayID(tx *gorm.DB, id uint) (*models.Order, er
 // 更新訂單狀態
 func (r *OrderRepository) UpdateStatus(tx *gorm.DB, id uint, status int) error {
 	result := tx.Model(&models.Order{}).
-		Where("id = ?", id).
+		Where("Id = ?", id).
 		Update("Status", status)
 
 	if result.Error != nil {
