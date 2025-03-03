@@ -267,7 +267,7 @@ func (s *VenueService) GetReservedPage(detail *venuepage.ReservedDetail) (venuep
 }
 
 // 取得預訂結果頁資料
-func (s *VenueService) GetOrderPendingPage(orderInfo map[string]string) (venuepage.OrderPending, error) {
+func (s *VenueService) ProcessOrderResult(orderInfo map[string]string) (venuepage.OrderPending, error) {
 	var err error
 	// 開始交易
 	tx := s.DB.Begin()

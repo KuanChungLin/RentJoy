@@ -218,7 +218,7 @@ func (c *VenuePageController) OrderPending(w http.ResponseWriter, r *http.Reques
 	}
 
 	// 透過 Service 處理訂單資訊
-	pendingOrder, err := c.venueService.GetOrderPendingPage(orderInfo)
+	pendingOrder, err := c.venueService.ProcessOrderResult(orderInfo)
 	if err != nil {
 		log.Printf("Get Order Pending Info Error: %s", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
