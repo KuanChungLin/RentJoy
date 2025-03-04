@@ -34,6 +34,12 @@ func main() {
 	venueService := services.NewVenueService(db)
 	orderService := services.NewOrderService(db)
 
+	// 初始化排程
+	scheduleService := services.NewScheduleService(db)
+
+	// 啟動排程任務
+	scheduleService.OrderSchedule()
+
 	// 初始化 controllers
 	homepageController := controllers.NewHomePageController(
 		homeService,
