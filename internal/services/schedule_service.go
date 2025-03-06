@@ -2,24 +2,20 @@ package services
 
 import (
 	"log"
-	repoInterfaces "rentjoy/internal/interfaces/repositories"
 	serviceInterfaces "rentjoy/internal/interfaces/services"
 	"rentjoy/internal/models"
-	"rentjoy/internal/repositories"
 	"time"
 
 	"gorm.io/gorm"
 )
 
 type ScheduleService struct {
-	participantRangeRepo repoInterfaces.ParticipantRangeRepository
-	DB                   *gorm.DB
+	DB *gorm.DB
 }
 
 func NewScheduleService(db *gorm.DB) serviceInterfaces.ScheduleService {
 	return &ScheduleService{
-		participantRangeRepo: repositories.NewParticipantRangeRepository(db),
-		DB:                   db,
+		DB: db,
 	}
 }
 

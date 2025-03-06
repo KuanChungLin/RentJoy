@@ -98,6 +98,10 @@ func main() {
 	http.HandleFunc("/Venue/ReservedPage", venuepageController.ReservedPage)
 	http.HandleFunc("/Venue/OrderPending", middleware.AuthMiddleware(venuepageController.OrderPending))
 	http.HandleFunc("/Order/CreateOrder", middleware.AuthMiddleware(orderController.CreateOrder))
+	http.HandleFunc("/Order/OrderReserved", middleware.AuthMiddleware(orderController.OrderReserved))
+	http.HandleFunc("/Order/OrderProcessing", middleware.AuthMiddleware(orderController.OrderProcessing))
+	http.HandleFunc("/Order/OrderCancel", middleware.AuthMiddleware(orderController.OrderCancel))
+	http.HandleFunc("/Order/OrderFinished", middleware.AuthMiddleware(orderController.OrderFinished))
 	http.HandleFunc("/Ecpay/Process", middleware.AuthMiddleware(ecpayController.Process))
 	http.HandleFunc("/Ecpay/ReceivePaymentResult", ecpayController.ReceivePaymentResult)
 

@@ -59,8 +59,7 @@ func (c *VenuePageController) VenuePage(w http.ResponseWriter, r *http.Request) 
 			venueID, err = strconv.Atoi(formID)
 			if err != nil {
 				log.Printf("Form 解析錯誤: %s", err)
-				// TODO
-				// http.Redirect(w, r, "/error", http.StatusSeeOther)
+				http.Redirect(w, r, "/error", http.StatusSeeOther)
 				return
 			}
 		}

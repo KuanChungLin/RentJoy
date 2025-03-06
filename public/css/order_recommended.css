@@ -1,0 +1,76 @@
+.recommended {
+    width: 960px;
+    margin: auto;
+    padding: 50px 0 20px;
+}
+
+.recommended p {
+    margin: 0 20px 30px 20px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #212529;
+}
+
+.recommended .may-like-product {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.recommended .card {
+    width: 200px;
+    margin: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    transition: 0.3s;
+    background-color: white;
+}
+
+.recommended .card:hover {
+    opacity: 0.6
+}
+
+.recommended .card img {
+    width: 100%;
+    vertical-align: top;
+    height: 200px;
+}
+
+.recommended .card p {
+    margin: 0;
+    padding-bottom:30px;
+}
+
+@media screen and (max-width: 1023px) {
+    .recommended {
+        width: 100%;
+        max-width: 720px;
+    }
+
+    .recommended .may-like-product {
+        justify-content: space-around;
+    }
+
+    .recommended .may-like-product .card {
+        width: 240px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .recommended {
+        max-width: 540px;
+    }
+
+    .recommended .may-like-product {
+        flex-direction: column;
+        align-content: center;
+    }
+
+}
+
+@media screen and (max-width: 350px) {
+    .recommended .may-like-product .card {
+        width: 80%;
+    }
+}

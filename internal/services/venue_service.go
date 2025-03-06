@@ -18,7 +18,6 @@ import (
 )
 
 type VenueService struct {
-	participantRangeRepo repoInterfaces.ParticipantRangeRepository
 	venueInformationRepo repoInterfaces.VenueInformationRepository
 	deviceRepo           repoInterfaces.DeviceItemRepository
 	recommendedService   serviceInterfaces.RecommendedService
@@ -34,7 +33,6 @@ type VenueService struct {
 
 func NewVenueService(db *gorm.DB) serviceInterfaces.VenuePageService {
 	return &VenueService{
-		participantRangeRepo: repositories.NewParticipantRangeRepository(db),
 		venueInformationRepo: repositories.NewVenueInformationRepository(db),
 		deviceRepo:           repositories.NewDeviceItemRepository(db),
 		recommendedService:   NewRecommendedService(db),

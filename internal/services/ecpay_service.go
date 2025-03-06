@@ -18,22 +18,20 @@ import (
 )
 
 type EcpayService struct {
-	participantRangeRepo repoInterfaces.ParticipantRangeRepository
-	venueInfoRepo        repoInterfaces.VenueInformationRepository
-	db                   *gorm.DB
-	merchantID           string
-	hashKey              string
-	hashIV               string
+	venueInfoRepo repoInterfaces.VenueInformationRepository
+	db            *gorm.DB
+	merchantID    string
+	hashKey       string
+	hashIV        string
 }
 
 func NewEcpayService(db *gorm.DB) serviceInterfaces.EcpayService {
 	return &EcpayService{
-		participantRangeRepo: repositories.NewParticipantRangeRepository(db),
-		venueInfoRepo:        repositories.NewVenueInformationRepository(db),
-		db:                   db,
-		merchantID:           os.Getenv("ECPAY_MERCHANT_ID"), // 測試商店編號
-		hashKey:              os.Getenv("ECPAY_HASH_KEY"),    // 測試 HashKey
-		hashIV:               os.Getenv("ECPAY_HASH_IV"),     // 測試 HashIV
+		venueInfoRepo: repositories.NewVenueInformationRepository(db),
+		db:            db,
+		merchantID:    os.Getenv("ECPAY_MERCHANT_ID"), // 測試商店編號
+		hashKey:       os.Getenv("ECPAY_HASH_KEY"),    // 測試 HashKey
+		hashIV:        os.Getenv("ECPAY_HASH_IV"),     // 測試 HashIV
 	}
 }
 

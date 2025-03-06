@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
+	"math"
 	"net/http"
 	"rentjoy/internal/dto/order"
 	"rentjoy/internal/dto/venuepage"
@@ -20,28 +22,32 @@ import (
 )
 
 type OrderService struct {
-	participantRangeRepo repoInterfaces.ParticipantRangeRepository
-	orderRepo            repoInterfaces.OrderRepository
-	orderDetailRepo      repoInterfaces.OrderDetailRepository
-	ecpayRepo            repoInterfaces.EcpayRepository
-	billingRateRepo      repoInterfaces.BillingRateRepository
-	venueRepo            repoInterfaces.VenueInformationRepository
-	priceService         serviceInterfaces.PriceService
-	ecpayService         serviceInterfaces.EcpayService
-	DB                   *gorm.DB
+	orderRepo         repoInterfaces.OrderRepository
+	orderDetailRepo   repoInterfaces.OrderDetailRepository
+	ecpayRepo         repoInterfaces.EcpayRepository
+	billingRateRepo   repoInterfaces.BillingRateRepository
+	venueRepo         repoInterfaces.VenueInformationRepository
+	venueImgRepo      repoInterfaces.VenueImgRepository
+	venueEvaluateRepo repoInterfaces.VenueEvaluateRepository
+	priceService      serviceInterfaces.PriceService
+	ecpayService      serviceInterfaces.EcpayService
+	recommendService  serviceInterfaces.RecommendedService
+	DB                *gorm.DB
 }
 
 func NewOrderService(db *gorm.DB) serviceInterfaces.OrderService {
 	return &OrderService{
-		participantRangeRepo: repositories.NewParticipantRangeRepository(db),
-		orderRepo:            repositories.NewOrderRepository(db),
-		orderDetailRepo:      repositories.NewOrderDetailRepository(db),
-		ecpayRepo:            repositories.NewEcpayRepository(db),
-		billingRateRepo:      repositories.NewBillingRateRepository(db),
-		venueRepo:            repositories.NewVenueInformationRepository(db),
-		priceService:         NewPriceService(db),
-		ecpayService:         NewEcpayService(db),
-		DB:                   db,
+		orderRepo:         repositories.NewOrderRepository(db),
+		orderDetailRepo:   repositories.NewOrderDetailRepository(db),
+		ecpayRepo:         repositories.NewEcpayRepository(db),
+		billingRateRepo:   repositories.NewBillingRateRepository(db),
+		venueRepo:         repositories.NewVenueInformationRepository(db),
+		venueImgRepo:      repositories.NewVenueImgRepository(db),
+		venueEvaluateRepo: repositories.NewVenueEvaluateRepository(db),
+		priceService:      NewPriceService(db),
+		ecpayService:      NewEcpayService(db),
+		recommendService:  NewRecommendedService(db),
+		DB:                db,
 	}
 }
 
@@ -169,6 +175,50 @@ func (s *OrderService) SaveOrder(orderForm order.OrderForm, userID uint, r *http
 	}
 
 	return ecpayParams, strconv.FormatUint(uint64(order.ID), 10), nil
+}
+
+// 根據訂單狀態取得預訂場地相關資訊
+// orderStatus 訂單狀態
+// pageIndex   當前頁數
+// pageSize    每頁顯示訂單筆數
+func (s *OrderService) GetOrderPage(userId uint, orderStatus order.OrderStatus, pageIndex int, pageSize int) (order.OrderPageInfo, error) {
+	// 取得該使用者的所有指定狀態下的預訂次數
+	orderCount, err := s.orderRepo.CountByUserAndStatus(userId, orderStatus)
+	if err != nil {
+		log.Printf("Get Orders Error:%s", err)
+		return order.OrderPageInfo{}, err
+	}
+
+	// 取得該使用者的所有指定狀態下的預訂記錄
+	orders, err := s.orderRepo.FindByUserAndStatus(userId, orderStatus, pageIndex, pageSize)
+	if err != nil {
+		log.Printf("Get Orders Error:%s", err)
+		return order.OrderPageInfo{}, err
+	}
+
+	// 根據預訂紀錄取得介面要顯示的相關資訊
+	vm, err := s.convertToOrderVM(orders)
+	if err != nil {
+		log.Printf("Get OrderVM Error:%s", err)
+		return order.OrderPageInfo{}, err
+	}
+
+	// 取得推薦場地資訊
+	recommendedVenues, err := s.recommendService.GetRecommended()
+	if err != nil {
+		log.Printf("Get Recommended Venues Error:%s", err)
+		return order.OrderPageInfo{}, err
+	}
+
+	totalPages := int(math.Ceil(float64(orderCount) / float64(pageSize)))
+
+	return order.OrderPageInfo{
+		Orders:      vm,
+		Recommend:   recommendedVenues,
+		OrderCount:  orderCount,
+		TotalPages:  totalPages,
+		CurrentPage: pageIndex,
+	}, nil
 }
 
 // 驗證時間細節
@@ -319,4 +369,93 @@ func (s *OrderService) calculatePrice(timeDetail *venuepage.ReservedDetail) (dec
 	}
 
 	return totalAmount, priceList, nil
+}
+
+// 取得預訂單資訊細節
+func (s *OrderService) convertToOrderVM(orders []models.Order) ([]order.OrderVM, error) {
+	var orderVMs []order.OrderVM
+
+	for _, o := range orders {
+		// 獲取場地信息
+		venue, err := s.venueRepo.FindByID(o.VenueID)
+		if err != nil {
+			log.Printf("Venue not found for order %d: %s", o.ID, err)
+			continue
+		}
+
+		// 獲取場地圖片
+		venueImg, err := s.venueImgRepo.FindFirstBySort(o.VenueID, 0)
+		if err != nil {
+			log.Printf("Venue image not found for venue %d: %s", o.VenueID, err)
+			continue
+		}
+
+		// 獲取評價
+		var orderEvaluate order.OrderEvaluate
+		hasEvaluate := false
+
+		// 設定默認值
+		orderEvaluate = order.OrderEvaluate{
+			Rating:       0,  // 默認評分為0
+			Content:      "", // 默認評價內容為空字符串
+			EvaluateTime: "", // 默認評價時間為空字符串
+		}
+
+		evaluate, err := s.venueEvaluateRepo.FindByOrderId(o.ID)
+		if err == nil && evaluate != nil {
+			orderEvaluate = order.OrderEvaluate{
+				Rating:       int(evaluate.EvaluateRate),
+				Content:      evaluate.EvaluateComment,
+				EvaluateTime: evaluate.CreatedAt.Format("2006-01-02 15:04:05"),
+			}
+			hasEvaluate = true
+		}
+
+		// 獲取預訂時間
+		orderDetails, err := s.orderDetailRepo.FindByOrderID(o.ID)
+		if err != nil {
+			log.Printf("Order details not found for order %d: %s", o.ID, err)
+			continue
+		}
+
+		// 創建預訂時間列表
+		var scheduledTimes []order.OrderScheduleTime
+		for _, detail := range orderDetails {
+			scheduledTimes = append(scheduledTimes, order.OrderScheduleTime{
+				StartTime: detail.StartTime.Format("15:04"),
+				EndTime:   detail.EndTime.Format("15:04"),
+			})
+		}
+
+		// 取得退訂時間
+		var unsubscribeTime string
+		if o.UnsubscribeTime != nil {
+			unsubscribeTime = o.UnsubscribeTime.Format("2006-01-02 15:04")
+		}
+
+		// 創建訂單視圖模型
+		orderVM := order.OrderVM{
+			Title:          venue.Name,
+			Address:        venue.Address,
+			OrderId:        fmt.Sprintf("%d", o.ID),
+			OrderTime:      o.CreatedAt.Format("2006-01-02 15:04:05"),
+			CancelTime:     unsubscribeTime,
+			Status:         order.OrderStatus(o.Status),
+			OrderPrice:     helper.DecimalToIntRounded(o.Amount),
+			ContactPerson:  o.LastName + o.FirstName,
+			Email:          o.Email,
+			ImgUrl:         venueImg.VenueImgPath,
+			ProductUrl:     fmt.Sprintf("/Venue/VenuePage?venueId=%d", o.VenueID),
+			ScheduledTimes: scheduledTimes,
+		}
+
+		// 只有當評價存在時才設置評價
+		if hasEvaluate {
+			orderVM.Evaluate = orderEvaluate
+		}
+
+		orderVMs = append(orderVMs, orderVM)
+	}
+
+	return orderVMs, nil
 }

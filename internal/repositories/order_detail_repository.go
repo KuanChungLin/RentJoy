@@ -72,3 +72,12 @@ func (r *OrderDetailRepository) CreateOrderDetails(tx *gorm.DB, orderID uint, ti
 
 	return tx.Create(&orderDetail).Error
 }
+
+func (r *OrderDetailRepository) FindByOrderID(orderId uint) ([]models.OrderDetail, error) {
+	var details []models.OrderDetail
+
+	err := r.DB.Where("OrderId = ?", orderId).
+		Find(&details).Error
+
+	return details, err
+}

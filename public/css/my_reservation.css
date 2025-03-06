@@ -1,0 +1,333 @@
+.my-reservation {
+    width: 960px;
+    margin: auto;
+    padding-top: 20px;
+}
+
+.reservation-title {
+    margin: 0 20px 30px 20px;
+    display: flex;
+}
+
+.reservation-title img {
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
+.reservation-title h2 {
+    margin: 0;
+    color: #4a4a4a;
+    line-height: 1.95;
+    font-size: 24px;
+}
+
+.order-status-list {
+    display: flex;
+    margin: 0 20px 30px 20px;
+    gap: 25px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #d1d1d1;
+}
+
+.order-status-title a {
+    color: #4a4a4a;
+    /* 點擊時的狀態 黑線及粗字 */
+    /* font-weight: 700;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #4a4a4a; */
+}
+
+.order-status {
+    margin: 0 20px 0px 20px;
+    color: #666;
+    font-size: 14px;
+}
+
+.order-status-card {
+    display: flex;
+    gap: 10%;
+    border: 1px solid gainsboro;
+    position: relative;
+    margin-bottom: 10px;
+    background-color: white;
+}
+
+.order-status-card .img {
+    align-self: center;
+    width: 1250px;
+    height: 220px;
+}
+
+.order-status-card img {
+    padding: 10px;
+    vertical-align: middle;
+    width:  300px;
+    height: 220px;
+}
+
+.order-status-card .txt h3 {
+    font-weight: bolder;
+    padding: 20px 5px 10px 5px;
+}
+
+.order-status-card .txt ul {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.order-status-card .txt li {
+    width: 250px;
+    padding-bottom: 5px;
+}
+
+.order-status-card .details-address::before {
+    content: '';
+    display: inline-block;
+    background-image: url(../images/location_map_icon.png);
+    vertical-align: middle;
+    width: 18px;
+    height: 18px;
+    background-repeat: no-repeat;
+}
+
+.order-status-card .details-scheduled::before {
+    content: '';
+    display: inline-block;
+    background-image: url(../images/time_icon.png);
+    vertical-align: middle;
+    width: 18px;
+    height: 18px;
+    background-repeat: no-repeat;
+}
+
+.order-status .txt .details-btn {
+    text-align: right;
+    padding: 10px;
+}
+
+.dropdown-toggle {
+    background-color: #FFFFFF;
+    color: #666666;
+    border: none;
+    cursor: pointer;
+}
+
+.order-status-card .txt ul .dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    min-width: 160px;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    z-index: 1;
+    max-height: 135px;
+    overflow-y: scroll;
+}
+
+.order-status-card ul .dropdown-menu li{
+    display:block;
+}
+
+.dropdown-menu li {
+    list-style: none;
+}
+
+.dropdown-menu li {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: #343a40;
+    text-decoration: none;
+}
+
+#pagination {
+    display: flex;
+    justify-content: center;
+}
+
+.evaluate-modal .modal-content {
+    padding: 20px;
+}
+
+.evaluate-modal .modal-header {
+    display: flex;
+    justify-content: center;
+    margin: auto;
+}
+
+.evaluate-modal .modal-header .btn-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.evaluate-modal .modal-title {
+    font-size: 24px;
+    color: #0f4c81;
+    margin: auto;
+}
+
+.evaluate-modal .rating {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.evaluate-modal .rating button {
+    background: none;
+    border: none;
+    font-size: 35px;
+    color: #ffc107;
+    cursor: pointer;
+}
+
+#evaluate-text {
+    width: 100%;
+    border-radius: 10px;
+    padding: 10px;
+    resize: none;
+}
+
+.evaluate-modal .modal-body button.btn {
+    width: 100%;
+    color: #fff;
+    font-size: 16px;
+    margin-top: 15px;
+    border-radius: 5px;
+    background-color: #0f4c81;
+}
+
+.evaluate-modal .modal-body button.btn:hover {
+    background-color: #0c3f6a;
+}
+
+.view-evaluate-modal .modal-header {
+    display: flex;
+    justify-content: center;
+    margin: auto;
+}
+
+.view-evaluate-modal .modal-header .btn-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.view-evaluate-modal .modal-content {
+    padding: 20px;
+}
+
+.view-evaluate-modal .modal-title {
+    font-size: 24px;
+    color: #0f4c81;
+    margin: auto;
+}
+
+.view-evaluate-modal .modal-footer {
+    border: none;
+}
+
+.view-evaluate-modal .modal-footer button {
+    color: #fff;
+    font-size: 16px;
+    border-radius: 5px;
+    background-color: #0f4c81;
+}
+
+.view-evaluate-modal .modal-footer button:hover {
+    background-color: #0c3f6a;
+}
+
+.view-evaluate-modal div {
+    padding-bottom: 10px;
+}
+
+.view-evaluate-modal #evaluate-stars span{
+    color: #ffc107;
+    font-size: 18px;
+}
+
+@media screen and (max-width: 1023px) {
+    .order-status-card li:nth-last-child(-n+2) {
+        display: none;
+    }
+
+    .order-status-card .txt h3 {
+        padding-top: 10px;
+    }
+
+    .order-status-card .details-btn {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
+
+    .order-status-card .txt ul .dropdown-menu {
+        max-height: 120px;
+    }
+
+    .my-reservation {
+        width: 100%;
+        max-width: 720px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .order-status-card {
+        flex-direction: column;
+    }
+
+    .order-status-card .img {
+        width: auto;
+    }
+
+    .order-status-card .txt {
+        margin-left: 10px;
+    }
+
+    .order-status-card .txt h3 {
+        padding: 10px 5px 10px 5px;
+    }
+
+    .order-status-card h3 {
+        text-align: center;
+    }
+
+    .order-status-card .txt {
+        padding: 5px;
+    }
+
+    .order-status-card button {
+        text-wrap: nowrap;
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    .details-btn .evaluate-btn {
+        margin-right: 10px;
+    }
+    .details-scheduled .dropdown-toggle {
+        padding: 0px;
+        font-size: 14px;
+    }
+
+    .my-reservation {
+        max-width: 540px;
+    }
+
+}
+
+@media screen and (max-width: 350px) {
+    .order-status-card img {
+        width: 100%;
+    }
+
+    .order-status-card .again-btn {
+        display: none;
+    }
+
+    .details-btn .evaluate-btn {
+        margin-right: 0;
+    }
+
+}

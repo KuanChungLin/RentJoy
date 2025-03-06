@@ -1,6 +1,7 @@
 package interfaces
 
 import (
+	"rentjoy/internal/dto/order"
 	"rentjoy/internal/dto/searchpage"
 	"rentjoy/internal/dto/venuepage"
 	"rentjoy/internal/models"
@@ -72,15 +73,20 @@ type OrderRepository interface {
 	Repository[models.Order]
 	CreateOrder(tx *gorm.DB, order *models.Order) error
 	FindConflictingOrders(venueID int, date time.Time) ([]models.Order, error)
+	FindByUserAndStatus(userId uint, status order.OrderStatus, pageIndex int, pageSize int) ([]models.Order, error)
 	FindByEcpayID(tx *gorm.DB, id uint) (*models.Order, error)
+	CountByUserAndStatus(userId uint, status order.OrderStatus) (int, error)
 	UpdateStatus(tx *gorm.DB, id uint, status int) error
 }
 
 type OrderDetailRepository interface {
+	Repository[models.OrderDetail]
 	CreateOrderDetails(tx *gorm.DB, orderID uint, timeDetail *venuepage.ReservedDetail, priceList []decimal.Decimal) error
+	FindByOrderID(orderId uint) ([]models.OrderDetail, error)
 }
 
 type EcpayRepository interface {
+	Repository[models.EcpayOrder]
 	CreateEcpayOrder(tx *gorm.DB, ecpayOrder models.EcpayOrder) error
 	FindByMerchantTradeNo(tradeNo string) (*models.EcpayOrder, error)
 	UpdateByTx(tx *gorm.DB, ecpayOrder models.EcpayOrder) error
@@ -89,4 +95,9 @@ type EcpayRepository interface {
 type VenueImgRepository interface {
 	Repository[models.VenueImg]
 	FindFirstBySort(venueID uint, sort int) (*models.VenueImg, error)
+}
+
+type VenueEvaluateRepository interface {
+	Repository[models.VenueEvaluate]
+	FindByOrderId(orderId uint) (*models.VenueEvaluate, error)
 }

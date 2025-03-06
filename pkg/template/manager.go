@@ -24,6 +24,13 @@ func NewManager() *Manager {
 			}
 			return template.JS(b)
 		},
+		"makeRange": func(min, max int) []int {
+			a := make([]int, max-min+1)
+			for i := range a {
+				a[i] = min + i
+			}
+			return a
+		},
 	}
 	return &Manager{
 		templates: make(map[string]*template.Template),

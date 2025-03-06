@@ -106,3 +106,102 @@ func (c *OrderController) CreateOrder(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, "/Ecpay/Process?id="+orderID, http.StatusSeeOther)
 }
+
+// 訂單處理中資料顯示
+func (c *OrderController) OrderReserved(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	userId, ok := middleware.GetUserIDFromContext(r.Context())
+	if !ok {
+		log.Println("Get userId Error")
+		http.Redirect(w, r, "/Login", http.StatusSeeOther)
+		return
+	}
+	pageIndex := 1
+	pageSize := 5
+
+	orderInfo, err := c.orderService.GetOrderPage(userId, order.Reserved, pageIndex, pageSize)
+	if err != nil {
+		log.Printf("Get OrderPage Error:%s", err)
+	}
+
+	c.RenderTemplate(w, r, "order_reserved", orderInfo)
+}
+
+// 訂單已預訂資料顯示
+func (c *OrderController) OrderProcessing(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	userId, ok := middleware.GetUserIDFromContext(r.Context())
+	if !ok {
+		log.Println("Get userId Error")
+		http.Redirect(w, r, "/Login", http.StatusSeeOther)
+		return
+	}
+	pageIndex := 1
+	pageSize := 5
+
+	orderInfo, err := c.orderService.GetOrderPage(userId, order.Processing, pageIndex, pageSize)
+	if err != nil {
+		log.Printf("Get OrderPage Error:%s", err)
+		return
+	}
+
+	c.RenderTemplate(w, r, "order_reserved", orderInfo)
+}
+
+// 訂單退訂資料顯示
+func (c *OrderController) OrderCancel(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	userId, ok := middleware.GetUserIDFromContext(r.Context())
+	if !ok {
+		log.Println("Get userId Error")
+		http.Redirect(w, r, "/Login", http.StatusSeeOther)
+		return
+	}
+	pageIndex := 1
+	pageSize := 5
+
+	orderInfo, err := c.orderService.GetOrderPage(userId, order.Cancel, pageIndex, pageSize)
+	if err != nil {
+		log.Printf("Get OrderPage Error:%s", err)
+		return
+	}
+
+	c.RenderTemplate(w, r, "order_reserved", orderInfo)
+}
+
+// 訂單已結束資料顯示
+func (c *OrderController) OrderFinished(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	userId, ok := middleware.GetUserIDFromContext(r.Context())
+	if !ok {
+		log.Println("Get userId Error")
+		http.Redirect(w, r, "/Login", http.StatusSeeOther)
+		return
+	}
+	pageIndex := 1
+	pageSize := 5
+
+	orderInfo, err := c.orderService.GetOrderPage(userId, order.Finished, pageIndex, pageSize)
+	if err != nil {
+		log.Printf("Get OrderPage Error:%s", err)
+		return
+	}
+
+	c.RenderTemplate(w, r, "order_reserved", orderInfo)
+}

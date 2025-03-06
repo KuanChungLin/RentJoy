@@ -1,0 +1,17 @@
+{{define "css"}}
+    <link rel="stylesheet" href="/static/css/my_reservation.css">
+    <link rel="stylesheet" href="/static/css/order_recommended.css">
+{{end}}
+
+{{define "content"}}
+    {{template "orderpage_partial" .}}
+{{end}}
+
+{{define "js"}}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+                integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" 
+                crossorigin="anonymous">
+    </script>
+    <script src="/static/js/order_title.js"></script>
+    <script src="/static/js/order_evaluate.js"></script>
+{{end}}

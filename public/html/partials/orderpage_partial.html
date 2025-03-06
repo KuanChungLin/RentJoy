@@ -1,0 +1,185 @@
+{{define "css"}}{{end}}
+{{define "orderpage_partial"}}
+    <section class="my-reservation">
+        <div class="reservation-title">
+            <img src="../images/orderList_Icon.svg" alt="">
+            <h2>我的預訂</h2>
+        </div>
+        <div class="order-status-list">
+            <div class="order-status-title">
+                <a href="./OrderReserved" class="title-reserved">處理中</a>
+            </div>
+            <div class="order-status-title">
+                <a href="./OrderProcessing" class="title-processing">已預訂</a>
+            </div>
+            <div class="order-status-title">
+                <a href="./OrderCancel" class="title-cancel">退訂</a>
+            </div>
+            <div class="order-status-title">
+                <a href="./OrderFinished" class="title-finished">已結束</a>
+            </div>
+        </div>
+        <div class="order-status">
+            {{if le (len .Orders) 0}}
+            <p>
+                你沒有任何即將到來的預訂。<br>
+                趕緊來尋找場地，規劃下一段美好時光吧。<br>
+                <br>
+                找不到你的預訂？ 請填寫 Email 或透過 Facebook 聯絡我們。
+            </p>
+            {{else}}
+                {{range .Orders}}
+                <div class="order-status-card">
+                    <a href="{{.ProductUrl}}" class="img">
+                        <img src="{{.ImgUrl}}">
+                    </a>
+                    <div class="txt">
+                        <div class="title">
+                            <h3>{{.Title}}</h3>
+                        </div>
+                        <div class="details">
+                            <ul>
+                                <li class="details-address">{{.Address}}</li>
+                                <li class="details-scheduled dropdown">
+                                    <button class="dropdown-toggle" aria-haspopup="true"
+                                        aria-expanded="false">預訂時間</button>
+                                    <ul class="dropdown-menu">
+                                        {{range .ScheduledTimes}}
+                                            <li>{{.StartTime}}~{{if ne .EndTime "23:59"}}{{.EndTime}}{{else}}24:00{{end}}</li>
+                                        {{end}}
+                                    </ul>
+                                </li>
+                                <li>訂單編號 : {{.OrderId}}</li>
+
+                                {{if eq .Status 3}}
+                                    <li>退訂時間 : {{.CancelTime}}</li>
+                                {{else}}
+                                    <li>下訂時間 : {{.OrderTime}}</li>
+                                {{end}}
+                                <li>
+                                    狀態 : 
+                                    {{if eq .Status 1}}
+                                        待店家處理
+                                    {{else if eq .Status 2}}
+                                        已預訂
+                                    {{else if eq .Status 3}}
+                                        已退訂
+                                    {{else if eq .Status 4}}
+                                        已結束
+                                    {{else}}
+                                        
+                                    {{end}}
+                                </li>
+                                <li>訂單金額 : {{.OrderPrice}}</li>
+                                <li>聯絡人 : {{.ContactPerson}}</li>
+                                <li>信箱 : {{.Email}}</li>
+                            </ul>
+                        </div>
+                        <div class="details-btn">
+                            {{if and (eq .Status 4) (eq .Evaluate.Content "")}}
+                                <button type="button" class="btn btn-secondary btn-sm evaluate-btn" data-order-id="{{.OrderId}}" data-bs-toggle="modal" data-bs-target="#evaluate-modal">填寫評價</button>
+                                <a href="{{.ProductUrl}}">
+                                    <button type="button" class="btn btn-secondary btn-sm">再次預訂</button>
+                                </a>
+                            {{else if and (eq .Status 4) (ne .Evaluate.Content "")}}
+                                <button type="button" class="btn btn-secondary btn-sm evaluate-view-btn" data-bs-toggle="modal" data-bs-target="#view-evaluate-modal-{{.OrderId}}">查看評價</button>
+                                <a href="{{.ProductUrl}}">
+                                    <button type="button" class="btn btn-secondary btn-sm">再次預訂</button>
+                                </a>
+                            {{else if eq .Status 3}}
+                                <a href="{{.ProductUrl}}">
+                                    <button type="button" class="btn btn-secondary btn-sm">再次預訂</button>
+                                </a>
+                            {{else}}
+                                <a href="/Order/CancelOrder?orderId={{OrderId}}">
+                                    <button type="button" class="btn btn-secondary btn-sm close-btn">取消訂單</button>
+                                </a> 
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                {{if ne .Evaluate.Rating 0}}
+                    <!-- viewEvaluate查看評價Model -->
+                    <div class="modal fade view-evaluate-modal" id="view-evaluate-modal-{{.OrderId}}" tabindex="-1" aria-labelledby="view-evaluate-modal-label"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="view-evaluate-modal-label">您的評價</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="evaluate-time"><p>填寫時間：{{.Evaluate.EvaluateTime}}</p></div>
+                                    <div id="evaluate-stars">
+                                        <p>星級：{{.Evaluate.Rating}}<span>★</span></p>
+                                    </div>
+                                    <div id="evaluate-content"><p>評價内容：<br> {{.Evaluate.Content}}</p></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{end}}
+                {{end}}
+            {{end}}
+        </div>
+
+        {{if gt (len .Orders) 0}}
+            <div id="pagination" class="">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link text-secondary" href="?id=1" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+
+                        {{range $i := makeRange 1 .TotalPages}}
+                            <li class="page-item ">
+                                <a class="page-link text-secondary {{if eq $i $.CurrentPage}}bg-body-secondary{{end}}" href="?id={{$i}}">{{$i}}</a>
+                            </li>
+                        {{end}}
+                        <li class="page-item">
+                            <a class="page-link text-secondary" href="?id={{.TotalPages}}" aria-label="Next">
+                                <span a-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        {{end}}
+    </section>
+
+    <div class="recommended">
+        <p>RentJoy 精選推薦</p>
+        {{template "recommended_partial" .Recommend}}
+    </div>
+
+    <!-- evaluate評價Model -->
+    <div class="modal fade evaluate-modal" id="evaluate-modal" tabindex="-1" aria-labelledby="#evaluateModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="evaluateModalLabel">評價我們的服務</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- 為星級評分設置一個五個按鈕口的形式 -->
+                    <div class="rating">
+                        <button>★</button>
+                        <button>☆</button>
+                        <button>☆</button>
+                        <button>☆</button>
+                        <button>☆</button>
+                    </div>
+                    <!-- 評價輸入框 -->
+                    <textarea class="form-control my-3" id="evaluate-text" rows="8" placeholder="寫下您的評價(100字以內)" maxlength="100"></textarea>
+                    <button class="btn btn-primary" id="submitEvaluateButton">提交評價</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{{end}}
+{{define "js"}}{{end}}

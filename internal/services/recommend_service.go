@@ -13,13 +13,11 @@ import (
 )
 
 type RecommendedService struct {
-	participantRangeRepo repoInterfaces.ParticipantRangeRepository
 	venueInformationRepo repoInterfaces.VenueInformationRepository
 }
 
 func NewRecommendedService(db *gorm.DB) serviceInterfaces.RecommendedService {
 	return &RecommendedService{
-		participantRangeRepo: repositories.NewParticipantRangeRepository(db),
 		venueInformationRepo: repositories.NewVenueInformationRepository(db),
 	}
 }

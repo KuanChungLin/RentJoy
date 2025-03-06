@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"errors"
+	"rentjoy/internal/dto/order"
 	interfaces "rentjoy/internal/interfaces/repositories"
 	"rentjoy/internal/models"
 	"time"
@@ -33,6 +34,33 @@ func (r *OrderRepository) FindConflictingOrders(venueID int, date time.Time) ([]
 		Find(&orders).Error
 
 	return orders, err
+}
+
+func (r *OrderRepository) FindByUserAndStatus(userId uint, status order.OrderStatus, pageIndex int, pageSize int) ([]models.Order, error) {
+	var orders []models.Order
+
+	// 計算要跳過的記錄數
+	offset := (pageIndex - 1) * pageSize
+
+	// 執行查詢，包含分頁和降序排序
+	err := r.DB.Where("MemberId = ? AND OrderStatus = ?", userId, status).
+		Order("CreateAt DESC").
+		Offset(offset).
+		Limit(pageSize).
+		Find(&orders).Error
+
+	return orders, err
+}
+
+// 透過 userId 及 orderStatus 取得使用者的預訂單數量
+func (r *OrderRepository) CountByUserAndStatus(userId uint, status order.OrderStatus) (int, error) {
+	var count int64
+
+	err := r.DB.Model(&models.Order{}).
+		Where("MemberId = ? AND OrderStatus = ?", userId, status).
+		Count(&count).Error
+
+	return int(count), err
 }
 
 // 透過 EcpayID 取得訂單資料
