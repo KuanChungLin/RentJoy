@@ -181,44 +181,65 @@ func (s *OrderService) SaveOrder(orderForm order.OrderForm, userID uint, r *http
 // orderStatus 訂單狀態
 // pageIndex   當前頁數
 // pageSize    每頁顯示訂單筆數
-func (s *OrderService) GetOrderPage(userId uint, orderStatus order.OrderStatus, pageIndex int, pageSize int) (order.OrderPageInfo, error) {
+func (s *OrderService) GetOrderPage(userId uint, orderStatus order.OrderStatus, pageIndex int, pageSize int) (*order.OrderPageInfo, error) {
 	// 取得該使用者的所有指定狀態下的預訂次數
 	orderCount, err := s.orderRepo.CountByUserAndStatus(userId, orderStatus)
 	if err != nil {
 		log.Printf("Get Orders Error:%s", err)
-		return order.OrderPageInfo{}, err
+		return &order.OrderPageInfo{}, err
 	}
 
 	// 取得該使用者的所有指定狀態下的預訂記錄
 	orders, err := s.orderRepo.FindByUserAndStatus(userId, orderStatus, pageIndex, pageSize)
 	if err != nil {
 		log.Printf("Get Orders Error:%s", err)
-		return order.OrderPageInfo{}, err
+		return &order.OrderPageInfo{}, err
 	}
 
 	// 根據預訂紀錄取得介面要顯示的相關資訊
 	vm, err := s.convertToOrderVM(orders)
 	if err != nil {
 		log.Printf("Get OrderVM Error:%s", err)
-		return order.OrderPageInfo{}, err
+		return &order.OrderPageInfo{}, err
 	}
 
 	// 取得推薦場地資訊
 	recommendedVenues, err := s.recommendService.GetRecommended()
 	if err != nil {
 		log.Printf("Get Recommended Venues Error:%s", err)
-		return order.OrderPageInfo{}, err
+		return &order.OrderPageInfo{}, err
 	}
 
 	totalPages := int(math.Ceil(float64(orderCount) / float64(pageSize)))
 
-	return order.OrderPageInfo{
+	return &order.OrderPageInfo{
 		Orders:      vm,
 		Recommend:   recommendedVenues,
 		OrderCount:  orderCount,
 		TotalPages:  totalPages,
 		CurrentPage: pageIndex,
 	}, nil
+}
+
+// 取消預訂場地作業
+func (s *OrderService) CancelReservation(orderId uint) error {
+	// 取得訂單資料
+	order, err := s.orderRepo.FindByID(orderId)
+	if err != nil {
+		log.Printf("Get Order Error:%s", err)
+		return err
+	}
+
+	order.Status = 3
+	order.UnsubscribeTime = helper.TimePtr(time.Now())
+
+	err = s.orderRepo.Update(*order)
+	if err != nil {
+		log.Printf("Update Order to Cancel Reservation Error:%s", err)
+		return err
+	}
+
+	return nil
 }
 
 // 驗證時間細節
@@ -422,7 +443,7 @@ func (s *OrderService) convertToOrderVM(orders []models.Order) ([]order.OrderVM,
 		var scheduledTimes []order.OrderScheduleTime
 		for _, detail := range orderDetails {
 			scheduledTimes = append(scheduledTimes, order.OrderScheduleTime{
-				StartTime: detail.StartTime.Format("15:04"),
+				StartTime: detail.StartTime.Format("2006-01-02 15:04"),
 				EndTime:   detail.EndTime.Format("15:04"),
 			})
 		}

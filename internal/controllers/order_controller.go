@@ -11,6 +11,7 @@ import (
 	"rentjoy/internal/dto/venuepage"
 	interfaces "rentjoy/internal/interfaces/services"
 	"rentjoy/internal/middleware"
+	"rentjoy/pkg/helper"
 	"time"
 
 	"github.com/go-redis/redis"
@@ -204,4 +205,32 @@ func (c *OrderController) OrderFinished(w http.ResponseWriter, r *http.Request) 
 	}
 
 	c.RenderTemplate(w, r, "order_reserved", orderInfo)
+}
+
+// 取消預訂
+func (c *OrderController) CancelReservation(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// 解析表單
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "無法解析表單數據", http.StatusBadRequest)
+		return
+	}
+
+	orderId, err := helper.StrToUint(r.FormValue("orderId"))
+	if err != nil {
+		log.Printf("無法解析 OrderId Error:%s", err)
+		return
+	}
+
+	err = c.orderService.CancelReservation(orderId)
+	if err != nil {
+		log.Printf("Cancel Reservation Error:%s", err)
+		http.Redirect(w, r, "/Order/OrderReserved", http.StatusSeeOther)
+	}
+
+	http.Redirect(w, r, "/Order/OrderReserved", http.StatusSeeOther)
 }
