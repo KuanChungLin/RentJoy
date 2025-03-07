@@ -48,7 +48,7 @@ func NewVenueService(db *gorm.DB) serviceInterfaces.VenuePageService {
 }
 
 // 取得場地資訊頁資料
-func (s *VenueService) GetVenuePage(venueID int) venuepage.VenuePage {
+func (s *VenueService) GetVenuePage(venueID int) *venuepage.VenuePage {
 	venueChan := make(chan *models.VenueInformation)
 	devicesChan := make(chan []string)
 	errorChan := make(chan error, 2)
@@ -82,7 +82,7 @@ func (s *VenueService) GetVenuePage(venueID int) venuepage.VenuePage {
 		select {
 		case err := <-errorChan:
 			log.Printf("Goroutine Error: %s", err)
-			return venuepage.VenuePage{}
+			return &venuepage.VenuePage{}
 		case venue = <-venueChan:
 		case devices = <-devicesChan:
 		}
@@ -91,7 +91,7 @@ func (s *VenueService) GetVenuePage(venueID int) venuepage.VenuePage {
 	recommendedVenues, err := s.recommendedService.GetRecommended()
 	if err != nil {
 		log.Printf("VenuePage Get recommended Error: %s", err)
-		return venuepage.VenuePage{}
+		return &venuepage.VenuePage{}
 	}
 
 	venueInfo := venuepage.VenuePage{
@@ -125,11 +125,11 @@ func (s *VenueService) GetVenuePage(venueID int) venuepage.VenuePage {
 		MinRentHours:       helper.GetMinRentHours(venue.BillingRates),
 	}
 
-	return venueInfo
+	return &venueInfo
 }
 
 // 取得預定場地頁資料
-func (s *VenueService) GetReservedPage(detail *venuepage.ReservedDetail) (venuepage.ReservedPage, error) {
+func (s *VenueService) GetReservedPage(detail *venuepage.ReservedDetail) (*venuepage.ReservedPage, error) {
 	// 建立 channels
 	venueChan := make(chan *models.VenueInformation)
 	imgChan := make(chan *models.VenueImg)
@@ -179,12 +179,12 @@ func (s *VenueService) GetReservedPage(detail *venuepage.ReservedDetail) (venuep
 		case imgResult = <-imgChan:
 		case activitiesResult = <-activitiesChan:
 		case <-time.After(30 * time.Second):
-			return venuepage.ReservedPage{}, errors.New("timeout getting data")
+			return &venuepage.ReservedPage{}, errors.New("timeout getting data")
 		}
 	}
 
 	if venueResult == nil || imgResult == nil || activitiesResult == nil {
-		return venuepage.ReservedPage{}, errors.New("failed to get all required data")
+		return &venuepage.ReservedPage{}, errors.New("failed to get all required data")
 	}
 
 	var timeDetails []venuepage.TimeDetail
@@ -196,16 +196,16 @@ func (s *VenueService) GetReservedPage(detail *venuepage.ReservedDetail) (venuep
 		for _, id := range detail.TimeSlotIds {
 			intID, err := strconv.Atoi(id)
 			if err != nil {
-				return venuepage.ReservedPage{}, err
+				return &venuepage.ReservedPage{}, err
 			}
 			rate, err := s.billingRateRepo.FindByID(uint(intID))
 			if err != nil {
-				return venuepage.ReservedPage{}, err
+				return &venuepage.ReservedPage{}, err
 			}
 
 			price, err := s.priceService.CalculatePeriodPrice(intID)
 			if err != nil {
-				return venuepage.ReservedPage{}, err
+				return &venuepage.ReservedPage{}, err
 			}
 
 			amount += price
@@ -235,7 +235,7 @@ func (s *VenueService) GetReservedPage(detail *venuepage.ReservedDetail) (venuep
 
 		price, err := s.priceService.CalculateTimePrices(detail)
 		if err != nil {
-			return venuepage.ReservedPage{}, err
+			return &venuepage.ReservedPage{}, err
 		}
 
 		amount += price
@@ -252,7 +252,7 @@ func (s *VenueService) GetReservedPage(detail *venuepage.ReservedDetail) (venuep
 	dateStr := fmt.Sprintf("%d 年 %d 月 %d 日 %s",
 		reservedDay.Year(), reservedDay.Month(), reservedDay.Day(), weekday)
 
-	return venuepage.ReservedPage{
+	return &venuepage.ReservedPage{
 		VenueID:            strconv.Itoa(detail.VenueID),
 		VenueImgUrl:        imgResult.VenueImgPath,
 		Name:               venueResult.Name,
@@ -265,12 +265,12 @@ func (s *VenueService) GetReservedPage(detail *venuepage.ReservedDetail) (venuep
 }
 
 // 取得預訂結果頁資料
-func (s *VenueService) ProcessOrderResult(orderInfo map[string]string) (venuepage.OrderPending, error) {
+func (s *VenueService) ProcessOrderResult(orderInfo map[string]string) (*venuepage.OrderPending, error) {
 	var err error
 	// 開始交易
 	tx := s.DB.Begin()
 	if tx.Error != nil {
-		return venuepage.OrderPending{}, tx.Error
+		return &venuepage.OrderPending{}, tx.Error
 	}
 	defer func() {
 		if r := recover(); r != nil {
@@ -288,12 +288,12 @@ func (s *VenueService) ProcessOrderResult(orderInfo map[string]string) (venuepag
 	ecpayOrder, err := s.ecpayRepo.FindByMerchantTradeNo(orderInfo["MerchantTradeNo"])
 	if err != nil {
 		tx.Rollback()
-		return venuepage.OrderPending{}, err
+		return &venuepage.OrderPending{}, err
 	}
 
 	if ecpayOrder == nil {
 		tx.Rollback()
-		return venuepage.OrderPending{}, errors.New("order not found")
+		return &venuepage.OrderPending{}, errors.New("order not found")
 	}
 
 	// 開始更新 Ecpay 訂單
@@ -301,14 +301,14 @@ func (s *VenueService) ProcessOrderResult(orderInfo map[string]string) (venuepag
 	if err := s.updateEcpayOrder(tx, ecpayOrder, ecpayReturnData); err != nil {
 		tx.Rollback()
 		log.Printf("Update Ecpay Order Error:%s", err)
-		return venuepage.OrderPending{}, err
+		return &venuepage.OrderPending{}, err
 	}
 
 	// 取得 Order 訂單資料
 	order, err := s.orderRepo.FindByEcpayID(tx, ecpayOrder.ID)
 	if err != nil {
 		tx.Rollback()
-		return venuepage.OrderPending{}, err
+		return &venuepage.OrderPending{}, err
 	}
 
 	// 根據 CheckMacValue 和 RtnCode 返回不同結果
@@ -491,21 +491,21 @@ func (s *VenueService) getPaymentDate(rtnCode, paymentDateStr string) time.Time 
 }
 
 // 處理 Ecpay 檢查碼相同時的 Order 資料更新
-func (s *VenueService) handleValidCheckMacValue(tx *gorm.DB, order *models.Order, orderInfo map[string]string) (venuepage.OrderPending, error) {
+func (s *VenueService) handleValidCheckMacValue(tx *gorm.DB, order *models.Order, orderInfo map[string]string) (*venuepage.OrderPending, error) {
 	if orderInfo["RtnCode"] != "1" {
 		if err := s.orderRepo.UpdateStatus(tx, order.ID, 5); err != nil {
-			return venuepage.OrderPending{}, err
+			return &venuepage.OrderPending{}, err
 		}
-		return venuepage.OrderPending{
+		return &venuepage.OrderPending{
 			IsPayFail: true,
 			VenueId:   strconv.FormatUint(uint64(order.VenueID), 10),
 		}, nil
 	}
 
 	if err := s.orderRepo.UpdateStatus(tx, order.ID, 1); err != nil {
-		return venuepage.OrderPending{}, err
+		return &venuepage.OrderPending{}, err
 	}
-	return venuepage.OrderPending{
+	return &venuepage.OrderPending{
 		VenueId: strconv.FormatUint(uint64(order.VenueID), 10),
 		OrderId: strconv.FormatUint(uint64(order.ID), 10),
 		OrderNo: strconv.FormatUint(uint64(order.ID), 10),
@@ -515,21 +515,21 @@ func (s *VenueService) handleValidCheckMacValue(tx *gorm.DB, order *models.Order
 }
 
 // 處理 Ecpay 檢查碼不同時的 Order 資料更新
-func (s *VenueService) handleInvalidCheckMacValue(tx *gorm.DB, order *models.Order, orderInfo map[string]string) (venuepage.OrderPending, error) {
+func (s *VenueService) handleInvalidCheckMacValue(tx *gorm.DB, order *models.Order, orderInfo map[string]string) (*venuepage.OrderPending, error) {
 	if orderInfo["RtnCode"] != "1" {
 		if err := s.orderRepo.UpdateStatus(tx, order.ID, 5); err != nil {
-			return venuepage.OrderPending{}, err
+			return &venuepage.OrderPending{}, err
 		}
-		return venuepage.OrderPending{
+		return &venuepage.OrderPending{
 			IsPayFail: true,
 			VenueId:   strconv.FormatUint(uint64(order.VenueID), 10),
 		}, nil
 	}
 
 	if err := s.orderRepo.UpdateStatus(tx, order.ID, 1); err != nil {
-		return venuepage.OrderPending{}, err
+		return &venuepage.OrderPending{}, err
 	}
-	return venuepage.OrderPending{
+	return &venuepage.OrderPending{
 		IsCheckMacValueFail: true,
 		VenueId:             strconv.FormatUint(uint64(order.VenueID), 10),
 	}, nil

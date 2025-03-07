@@ -31,8 +31,8 @@ func NewSearchService(db *gorm.DB) serviceInterfaces.SearchPageService {
 }
 
 // 取得搜尋頁資料
-func (s *SearchService) GetSearchPage(filter searchpage.VenueFilter) searchpage.SearchPage {
-	return searchpage.SearchPage{
+func (s *SearchService) GetSearchPage(filter searchpage.VenueFilter) *searchpage.SearchPage {
+	return &searchpage.SearchPage{
 		ActivityList:    s.GetActivities(),
 		PeopleCountList: s.GetPeopleCounts(),
 		MaxPriceList:    s.GetSearchPrice(),

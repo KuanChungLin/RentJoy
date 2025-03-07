@@ -28,8 +28,8 @@ func NewHomeService(db *gorm.DB) serviceInterfaces.HomeService {
 }
 
 // 取得整個首頁所需的資料
-func (s *HomeService) GetHomePage() homepage.HomePage {
-	return homepage.HomePage{
+func (s *HomeService) GetHomePage() *homepage.HomePage {
+	return &homepage.HomePage{
 		ActivityList:           s.GetActivities(),
 		PeopleCountList:        s.GetPeopleCounts(),
 		GalleryList:            s.GetGalleries(),

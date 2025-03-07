@@ -6,7 +6,7 @@ import (
 )
 
 type SearchPageService interface {
-	GetSearchPage(searchpage.VenueFilter) searchpage.SearchPage
+	GetSearchPage(searchpage.VenueFilter) *searchpage.SearchPage
 	GetActivities() []homepage.Activity
 	GetPeopleCounts() []homepage.PeopleCount
 	GetSearchPrice() []int

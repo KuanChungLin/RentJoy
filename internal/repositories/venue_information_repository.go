@@ -1,7 +1,6 @@
 package repositories
 
 import (
-	"log"
 	"rentjoy/internal/dto/searchpage"
 	interfaces "rentjoy/internal/interfaces/repositories"
 	"rentjoy/internal/models"
@@ -65,8 +64,6 @@ func (r *VenueInformationRepository) FindExhibitDESC() ([]models.ActivityType, m
 
 func (r *VenueInformationRepository) FindSearchPageInfos(filter searchpage.VenueFilter) ([]models.VenueInformation, error) {
 	var venues []models.VenueInformation
-	log.Println("filter:")
-	log.Println(filter)
 
 	// 基本查詢 with preloads
 	query := r.DB.Distinct("VenueInformations.*").Where("status = ?", 1).

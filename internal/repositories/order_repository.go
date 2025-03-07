@@ -38,16 +38,25 @@ func (r *OrderRepository) FindConflictingOrders(venueID int, date time.Time) ([]
 
 func (r *OrderRepository) FindByUserAndStatus(userId uint, status order.OrderStatus, pageIndex int, pageSize int) ([]models.Order, error) {
 	var orders []models.Order
+	var err error
 
 	// 計算要跳過的記錄數
 	offset := (pageIndex - 1) * pageSize
 
 	// 執行查詢，包含分頁和降序排序
-	err := r.DB.Where("MemberId = ? AND OrderStatus = ?", userId, status).
-		Order("CreateAt DESC").
-		Offset(offset).
-		Limit(pageSize).
-		Find(&orders).Error
+	if status == 3 {
+		err = r.DB.Where("MemberId = ? AND OrderStatus = ?", userId, status).
+			Order("UnsubscribeTime DESC").
+			Offset(offset).
+			Limit(pageSize).
+			Find(&orders).Error
+	} else {
+		err = r.DB.Where("MemberId = ? AND OrderStatus = ?", userId, status).
+			Order("CreateAt DESC").
+			Offset(offset).
+			Limit(pageSize).
+			Find(&orders).Error
+	}
 
 	return orders, err
 }

@@ -5,7 +5,7 @@ import (
 )
 
 type HomeService interface {
-	GetHomePage() homepage.HomePage
+	GetHomePage() *homepage.HomePage
 	GetActivities() []homepage.Activity
 	GetPeopleCounts() []homepage.PeopleCount
 	GetGalleries() []homepage.Gallery
