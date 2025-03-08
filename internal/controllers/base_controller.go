@@ -55,6 +55,13 @@ func (c *BaseController) RenderTemplate(w http.ResponseWriter, r *http.Request, 
 	reflectType := reflect.TypeOf(venuepage.OrderPending{})
 	pageDataType := reflect.TypeOf(vm.PageData)
 
+	// 檢查是否為指標類型
+	if pageDataType != nil && pageDataType.Kind() == reflect.Ptr {
+		// 獲取指標指向的類型
+		pageDataType = pageDataType.Elem()
+		log.Println("pageDataType (after Elem()):", pageDataType)
+	}
+
 	// 依照不同的 PageData 顯示 layout
 	if pageDataType == reflectType {
 		vm.IsOrderPending = true
