@@ -12,6 +12,7 @@ import (
 	interfaces "rentjoy/internal/interfaces/services"
 	"rentjoy/internal/middleware"
 	"rentjoy/pkg/helper"
+	"strconv"
 	"time"
 
 	"github.com/go-redis/redis"
@@ -154,7 +155,7 @@ func (c *OrderController) OrderProcessing(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	c.RenderTemplate(w, r, "order_reserved", orderInfo)
+	c.RenderTemplate(w, r, "order_processing", orderInfo)
 }
 
 // 訂單退訂資料顯示
@@ -179,7 +180,7 @@ func (c *OrderController) OrderCancel(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	c.RenderTemplate(w, r, "order_reserved", orderInfo)
+	c.RenderTemplate(w, r, "order_canceled", orderInfo)
 }
 
 // 訂單已結束資料顯示
@@ -204,7 +205,7 @@ func (c *OrderController) OrderFinished(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	c.RenderTemplate(w, r, "order_reserved", orderInfo)
+	c.RenderTemplate(w, r, "order_finished", orderInfo)
 }
 
 // 取消預訂
@@ -233,4 +234,45 @@ func (c *OrderController) CancelReservation(w http.ResponseWriter, r *http.Reque
 	}
 
 	http.Redirect(w, r, "/Order/OrderReserved", http.StatusSeeOther)
+}
+
+// 儲存訂單評價
+func (c *OrderController) SaveEvaluate(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "無法解析表單數據", http.StatusBadRequest)
+		return
+	}
+
+	orderId, err := helper.StrToUint(r.FormValue("id"))
+	if err != nil {
+		log.Printf("無法解析 OrderId Error:%s", err)
+		return
+	}
+
+	rate, err := strconv.Atoi(r.FormValue("stars"))
+	if err != nil {
+		log.Printf("無法解析 Rate Error:%s", err)
+		return
+	}
+
+	content := r.FormValue("review")
+
+	err = c.orderService.UpdateEvaluate(orderId, uint(rate), content)
+	if err != nil {
+		log.Printf("Update Order Evaluate Error:%s", err)
+		http.Error(w, "更新評價失敗", http.StatusBadRequest)
+		return
+	}
+
+	// 設置響應頭為純文本
+	w.Header().Set("Content-Type", "text/plain")
+	// 設置狀態碼為 200 OK
+	w.WriteHeader(http.StatusOK)
+	// 寫入響應內容
+	w.Write([]byte("Success"))
 }

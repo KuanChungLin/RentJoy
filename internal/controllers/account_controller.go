@@ -34,7 +34,6 @@ func (c *AccountController) SignUp(w http.ResponseWriter, r *http.Request) {
 	}
 
 	c.RenderTemplate(w, r, "signup", nil)
-	return
 }
 
 // 註冊作業

@@ -1,4 +1,3 @@
-
 var currentOrderId; //填寫評價時對應的orderId
 $(document).ready(function () {
     $(".rating button").click(function () {
@@ -18,13 +17,14 @@ $(document).ready(function () {
         console.log(stars);
         $.ajax({
             type: "POST",
-            url: "/Order/SaveOrderEvaluateToDB",
+            url: "/Order/SaveEvaluate",
             data: {
                 id: currentOrderId,
                 stars: stars,
                 review: review
             },
             success: function (response) {
+                console.log(response)
                 if (response === "Success") {
                     swal({
                         title: '提交成功!',

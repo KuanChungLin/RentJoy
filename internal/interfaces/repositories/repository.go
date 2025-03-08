@@ -77,6 +77,7 @@ type OrderRepository interface {
 	FindByEcpayID(tx *gorm.DB, id uint) (*models.Order, error)
 	CountByUserAndStatus(userId uint, status order.OrderStatus) (int, error)
 	UpdateStatus(tx *gorm.DB, id uint, status int) error
+	FindOrdersByVenueId(tx *gorm.DB, venueId uint) ([]models.Order, error)
 }
 
 type OrderDetailRepository interface {
@@ -100,4 +101,5 @@ type VenueImgRepository interface {
 type VenueEvaluateRepository interface {
 	Repository[models.VenueEvaluate]
 	FindByOrderId(orderId uint) (*models.VenueEvaluate, error)
+	CreateByTx(tx *gorm.DB, evaluate models.VenueEvaluate) error
 }

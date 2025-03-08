@@ -59,7 +59,6 @@ func (c *BaseController) RenderTemplate(w http.ResponseWriter, r *http.Request, 
 	if pageDataType != nil && pageDataType.Kind() == reflect.Ptr {
 		// 獲取指標指向的類型
 		pageDataType = pageDataType.Elem()
-		log.Println("pageDataType (after Elem()):", pageDataType)
 	}
 
 	// 依照不同的 PageData 顯示 layout

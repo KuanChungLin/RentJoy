@@ -228,6 +228,9 @@ func (s *OrderService) CancelReservation(orderId uint) error {
 	if err != nil {
 		log.Printf("Get Order Error:%s", err)
 		return err
+	} else if order == nil {
+		log.Printf("Get Order nil By Id:%d", orderId)
+		return fmt.Errorf("get order nil by id:%d", orderId)
 	}
 
 	order.Status = 3
@@ -236,6 +239,94 @@ func (s *OrderService) CancelReservation(orderId uint) error {
 	err = s.orderRepo.Update(*order)
 	if err != nil {
 		log.Printf("Update Order to Cancel Reservation Error:%s", err)
+		return err
+	}
+
+	return nil
+}
+
+// 更新訂單及場地評論
+func (s *OrderService) UpdateEvaluate(orderId uint, rate uint, content string) error {
+	var err error
+	// 建立交易
+	tx := s.DB.Begin()
+	if tx.Error != nil {
+		return tx.Error
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		} else if err != nil {
+			tx.Rollback()
+		} else {
+			err = tx.Commit().Error
+		}
+	}()
+
+	// 建立訂單評論
+	evaluate := models.VenueEvaluate{
+		ID:              orderId,
+		EvaluateRate:    rate,
+		EvaluateComment: content,
+		CreatedAt:       time.Now(),
+	}
+
+	err = s.venueEvaluateRepo.CreateByTx(tx, evaluate)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	// 透過 OrderId 取得該訂單的場地Id
+	order, err := s.orderRepo.FindByID(orderId)
+	if err != nil {
+		log.Printf("Get Order By OrderId Error:%s", err)
+		return err
+	} else if order == nil {
+		log.Printf("Get Order nil By Id:%d", orderId)
+		return fmt.Errorf("get order nil by id:%d", orderId)
+	}
+
+	orders, err := s.orderRepo.FindOrdersByVenueId(tx, order.VenueID)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	// 計算評價總分及次數
+	sumEvalueateRate := 0
+	evaluateCount := 0
+	for _, o := range orders {
+		if o.VenueEvaluate == nil {
+			continue
+		}
+		sumEvalueateRate += int(o.VenueEvaluate.EvaluateRate)
+		evaluateCount++
+	}
+
+	// 計算評價平均值
+	var avgRating float32
+	if sumEvalueateRate > 0 {
+		avgRating = float32(sumEvalueateRate) / float32(evaluateCount)
+	} else {
+		avgRating = 0
+	}
+
+	// 取得場地資訊並更新 AvgEvaluateRating
+	venue, err := s.venueRepo.FindByID(order.VenueID)
+	if err != nil {
+		log.Printf("Find Venue By Id Error:%s", err)
+		return err
+	} else if venue == nil {
+		log.Printf("Get Venue nil By Id:%d", order.VenueID)
+		return fmt.Errorf("get Venue nil by id:%d", order.VenueID)
+	}
+
+	venue.EvaluateRate = avgRating
+
+	err = s.venueRepo.Update(*venue)
+	if err != nil {
+		log.Printf("Update Venue AvgEvaluateRate Error:%s", err)
 		return err
 	}
 
@@ -401,14 +492,21 @@ func (s *OrderService) convertToOrderVM(orders []models.Order) ([]order.OrderVM,
 		venue, err := s.venueRepo.FindByID(o.VenueID)
 		if err != nil {
 			log.Printf("Venue not found for order %d: %s", o.ID, err)
-			continue
+			return orderVMs, err
+		} else if venue == nil {
+			log.Printf("Get Venue nil By Id:%d", o.VenueID)
+			return orderVMs, fmt.Errorf("get venue nil by id:%d", o.VenueID)
 		}
 
 		// 獲取場地圖片
 		venueImg, err := s.venueImgRepo.FindFirstBySort(o.VenueID, 0)
 		if err != nil {
 			log.Printf("Venue image not found for venue %d: %s", o.VenueID, err)
-			continue
+			return orderVMs, err
+		} else if venueImg == nil {
+			venueImg = &models.VenueImg{
+				VenueImgPath: "",
+			}
 		}
 
 		// 獲取評價
@@ -434,9 +532,9 @@ func (s *OrderService) convertToOrderVM(orders []models.Order) ([]order.OrderVM,
 
 		// 獲取預訂時間
 		orderDetails, err := s.orderDetailRepo.FindByOrderID(o.ID)
-		if err != nil {
+		if orderDetails == nil || err != nil {
 			log.Printf("Order details not found for order %d: %s", o.ID, err)
-			continue
+			return orderVMs, err
 		}
 
 		// 創建預訂時間列表

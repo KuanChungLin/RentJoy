@@ -103,6 +103,7 @@ func main() {
 	http.HandleFunc("/Order/OrderCancel", middleware.AuthMiddleware(orderController.OrderCancel))
 	http.HandleFunc("/Order/OrderFinished", middleware.AuthMiddleware(orderController.OrderFinished))
 	http.HandleFunc("/Order/CancelReservation", middleware.AuthMiddleware(orderController.CancelReservation))
+	http.HandleFunc("/Order/SaveEvaluate", middleware.AuthMiddleware(orderController.SaveEvaluate))
 	http.HandleFunc("/Ecpay/Process", middleware.AuthMiddleware(ecpayController.Process))
 	http.HandleFunc("/Ecpay/ReceivePaymentResult", ecpayController.ReceivePaymentResult)
 

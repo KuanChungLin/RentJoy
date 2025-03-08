@@ -3,7 +3,7 @@ package models
 import "time"
 
 type VenueEvaluate struct {
-	ID              uint      `gorm:"primaryKey;column:Id"`
+	ID              uint      `gorm:"primaryKey;column:Id;autoIncrement:false"`
 	CreatedAt       time.Time `gorm:"column:CreateAt"`
 	EvaluateRate    uint      `gorm:"column:EvaluateRate"`
 	EvaluateComment string    `gorm:"column:EvaluateComment"`

@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"errors"
+	"log"
 	"rentjoy/internal/dto/order"
 	interfaces "rentjoy/internal/interfaces/repositories"
 	"rentjoy/internal/models"
@@ -96,4 +97,19 @@ func (r *OrderRepository) UpdateStatus(tx *gorm.DB, id uint, status int) error {
 	}
 
 	return nil
+}
+
+// 透過 VenueId 取得所有訂單
+func (r *OrderRepository) FindOrdersByVenueId(tx *gorm.DB, venueId uint) ([]models.Order, error) {
+	var orders []models.Order
+
+	err := tx.Where("VenueId = ?", venueId).
+		Preload("VenueEvaluate").
+		Find(&orders).Error
+	if err != nil {
+		log.Printf("Find Orders By VenueId Error:%s", err)
+		return orders, err
+	}
+
+	return orders, err
 }
