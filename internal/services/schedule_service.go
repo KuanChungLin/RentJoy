@@ -19,6 +19,7 @@ func NewScheduleService(db *gorm.DB) serviceInterfaces.ScheduleService {
 	}
 }
 
+// 執行排程作業
 func (s *ScheduleService) OrderSchedule() {
 	// 啟動未付款訂單檢查 (每小時檢查一次)
 	go s.runScheduler(time.Hour, func() {

@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"log"
 	"rentjoy/internal/dto/venuepage"
 	repoInterfaces "rentjoy/internal/interfaces/repositories"
@@ -29,6 +30,9 @@ func (s *PriceService) CalculatePeriodPrice(id int) (int, error) {
 	if err != nil {
 		log.Printf("Get Rate By Id Error: %s", err)
 		return 0, err
+	} else if rate == nil {
+		log.Printf("Get BillingRate nil By Id:%d", uint(id))
+		return 0, fmt.Errorf("get billingRate nil by id:%d", uint(id))
 	}
 
 	price := helper.DecimalToIntRounded(rate.Rate)
@@ -51,6 +55,9 @@ func (s *PriceService) CalculateTimePrices(detail *venuepage.ReservedDetail) (in
 	if err != nil {
 		log.Printf("Get Rate By Reserved Error: %s", err)
 		return 0, nil
+	} else if rate == nil {
+		log.Printf("Get BillingRate nil By VenueId:%d", uint(detail.VenueID))
+		return 0, fmt.Errorf("get billingRate nil by vneueId:%d", uint(detail.VenueID))
 	}
 
 	startTime, err := time.Parse(time.RFC3339, detail.StartTime)

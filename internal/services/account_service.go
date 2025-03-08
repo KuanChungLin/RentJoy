@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"regexp"
 	"rentjoy/configs"
@@ -63,14 +64,17 @@ func (s *AccountService) RegisterAccount(r account.RegisterRequest) (token strin
 
 	err = s.memberRepo.Create(newMember)
 	if err != nil {
-		log.Printf("Create Member Error:", err)
+		log.Printf("Create Member Error:%s", err)
 		return "", err
 	}
 
 	member, err = s.memberRepo.FindByAccount(r.Account)
 	if err != nil {
-		log.Printf("Find By Account Error:", err)
+		log.Printf("Find By Account Error:%s", err)
 		return "", err
+	} else if member == nil {
+		log.Printf("Get Member nil By Account:%s", r.Account)
+		return "", fmt.Errorf("get member nil by Account:%s", r.Account)
 	}
 
 	token, err = auth.GenerateToken(member.ID, member.Email, false)
@@ -261,6 +265,9 @@ func (s *AccountService) GetProfile(userID uint) (*account.ProfileResponse, erro
 	if err != nil {
 		log.Printf("Find By ID Error: %s", err)
 		return nil, err
+	} else if member == nil {
+		log.Printf("Get Member nil By Id:%d", userID)
+		return nil, fmt.Errorf("get member nil by id:%d", userID)
 	}
 
 	if len(member.FacebookLogins) > 0 || len(member.GoogleLogins) > 0 {
@@ -285,6 +292,9 @@ func (s *AccountService) UpdateName(r account.UpdateNameRequest, userID uint) (*
 	if err != nil {
 		log.Printf("Find By ID Error: %s", err)
 		return nil, err
+	} else if member == nil {
+		log.Printf("Get Member nil By Id:%d", userID)
+		return nil, fmt.Errorf("get member nil by id:%d", userID)
 	}
 
 	if len(member.FacebookLogins) > 0 || len(member.GoogleLogins) > 0 {
@@ -345,6 +355,9 @@ func (s *AccountService) UpdateEmail(r account.UpdateEmailRequest, userID uint) 
 	if err != nil {
 		log.Printf("Find By ID Error: %s", err)
 		return nil, err
+	} else if member == nil {
+		log.Printf("Get Member nil By Id:%d", userID)
+		return nil, fmt.Errorf("get member nil by id:%d", userID)
 	}
 
 	// 判斷帳號是否為第三方登入
@@ -403,6 +416,9 @@ func (s *AccountService) UpdatePhone(r account.UpdatePhoneRequest, userID uint) 
 	if err != nil {
 		log.Printf("Find By ID Error: %s", err)
 		return nil, err
+	} else if member == nil {
+		log.Printf("Get Member nil By Id:%d", userID)
+		return nil, fmt.Errorf("get member nil by id:%d", userID)
 	}
 
 	// 判斷帳號是否為第三方登入
@@ -459,6 +475,9 @@ func (s *AccountService) UpdatePassword(r account.UpdatePasswordRequest, userID 
 	if err != nil {
 		log.Printf("Find By ID Error: %s", err)
 		return nil, err
+	} else if member == nil {
+		log.Printf("Get Member nil By Id:%d", userID)
+		return nil, fmt.Errorf("get member nil by id:%d", userID)
 	}
 
 	// 判斷帳號是否為第三方登入

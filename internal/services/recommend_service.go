@@ -22,6 +22,7 @@ func NewRecommendedService(db *gorm.DB) serviceInterfaces.RecommendedService {
 	}
 }
 
+// 取得推薦場地資料
 func (s *RecommendedService) GetRecommended() ([]venuepage.Recommended, error) {
 	venues, err := s.venueInformationRepo.FindRecommended()
 	if err != nil {

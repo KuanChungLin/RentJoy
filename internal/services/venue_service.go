@@ -59,6 +59,10 @@ func (s *VenueService) GetVenuePage(venueID int) *venuepage.VenuePage {
 		if err != nil {
 			errorChan <- err
 			return
+		} else if venue == nil {
+			log.Printf("Get Venue nil By Id:%d", uint(venueID))
+			errorChan <- fmt.Errorf("get venue nil by id:%d", uint(venueID))
+			return
 		}
 		venueChan <- venue
 	}()
@@ -142,6 +146,10 @@ func (s *VenueService) GetReservedPage(detail *venuepage.ReservedDetail) (*venue
 		if err != nil {
 			errorChan <- err
 			return
+		} else if venue == nil {
+			log.Printf("Get Venue nil By Id:%d", uint(detail.VenueID))
+			errorChan <- fmt.Errorf("get venue nil by id:%d", uint(detail.VenueID))
+			return
 		}
 		venueChan <- venue
 	}()
@@ -151,6 +159,10 @@ func (s *VenueService) GetReservedPage(detail *venuepage.ReservedDetail) (*venue
 		img, err := s.venueImgRepo.FindFirstBySort(uint(detail.VenueID), 0)
 		if err != nil {
 			errorChan <- err
+			return
+		} else if img == nil {
+			log.Printf("Get VenueImg nil By VenueId:%d", uint(detail.VenueID))
+			errorChan <- fmt.Errorf("get venueImg nil by venueId:%d", uint(detail.VenueID))
 			return
 		}
 		imgChan <- img

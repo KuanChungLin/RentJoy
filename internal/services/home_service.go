@@ -93,6 +93,7 @@ func (s *HomeService) GetGalleries() []homepage.Gallery {
 	return galleryList
 }
 
+// 取得精選場地資料
 func (s *HomeService) GetExhibits() []homepage.Exhibit {
 	ranges, err := s.venueInformationRepo.FindExhibits()
 	if err != nil {
@@ -116,6 +117,7 @@ func (s *HomeService) GetExhibits() []homepage.Exhibit {
 	return exhibitList
 }
 
+// 取得活動類型推薦場地資料
 func (s *HomeService) GetExhibitDESC() []homepage.ExhibitDESC {
 	// 從 Repository 獲取資料
 	activityTypes, venueMap, err := s.venueInformationRepo.FindExhibitDESC()
