@@ -131,18 +131,18 @@
                 <nav aria-label="Page navigation example">
                     <ul class="pagination">
                         <li class="page-item">
-                            <a class="page-link text-secondary" href="?id=1" aria-label="Previous">
+                            <a class="page-link text-secondary" href="/Order/{{.CurrentAction}}?pageIndex=1" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
 
                         {{range $i := makeRange 1 .TotalPages}}
                             <li class="page-item ">
-                                <a class="page-link text-secondary {{if eq $i $.CurrentPage}}bg-body-secondary{{end}}" href="?id={{$i}}">{{$i}}</a>
+                                <a class="page-link text-secondary {{if eq $i $.CurrentPage}}bg-body-secondary{{end}}" href="/Order/{{$.CurrentAction}}?pageIndex={{$i}}">{{$i}}</a>
                             </li>
                         {{end}}
                         <li class="page-item">
-                            <a class="page-link text-secondary" href="?id={{.TotalPages}}" aria-label="Next">
+                            <a class="page-link text-secondary" href="/Order/{{.CurrentAction}}?pageIndex={{.TotalPages}}" aria-label="Next">
                                 <span a-hidden="true">&raquo;</span>
                             </a>
                         </li>

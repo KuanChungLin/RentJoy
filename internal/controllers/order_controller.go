@@ -116,19 +116,37 @@ func (c *OrderController) OrderReserved(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "無法解析表單數據", http.StatusBadRequest)
+		return
+	}
+
+	var pageIndex int = 1
+	var pageSize int = 5
+
+	pageIndexStr := r.FormValue("pageIndex")
+	if pageIndexStr != "" {
+		parsedIndex, err := strconv.Atoi(pageIndexStr)
+		if err == nil {
+			pageIndex = parsedIndex
+		}
+	}
+
 	userId, ok := middleware.GetUserIDFromContext(r.Context())
 	if !ok {
 		log.Println("Get userId Error")
 		http.Redirect(w, r, "/Login", http.StatusSeeOther)
 		return
 	}
-	pageIndex := 1
-	pageSize := 5
 
 	orderInfo, err := c.orderService.GetOrderPage(userId, order.Reserved, pageIndex, pageSize)
-	if err != nil {
+	if orderInfo == nil || err != nil {
 		log.Printf("Get OrderPage Error:%s", err)
+		c.RenderTemplate(w, r, "order_reserved", nil)
+		return
 	}
+
+	orderInfo.CurrentAction = "OrderReserved"
 
 	c.RenderTemplate(w, r, "order_reserved", orderInfo)
 }
@@ -140,20 +158,37 @@ func (c *OrderController) OrderProcessing(w http.ResponseWriter, r *http.Request
 		return
 	}
 
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "無法解析表單數據", http.StatusBadRequest)
+		return
+	}
+
+	var pageIndex int = 1
+	var pageSize int = 5
+
+	pageIndexStr := r.FormValue("pageIndex")
+	if pageIndexStr != "" {
+		parsedIndex, err := strconv.Atoi(pageIndexStr)
+		if err == nil {
+			pageIndex = parsedIndex
+		}
+	}
+
 	userId, ok := middleware.GetUserIDFromContext(r.Context())
 	if !ok {
 		log.Println("Get userId Error")
 		http.Redirect(w, r, "/Login", http.StatusSeeOther)
 		return
 	}
-	pageIndex := 1
-	pageSize := 5
 
 	orderInfo, err := c.orderService.GetOrderPage(userId, order.Processing, pageIndex, pageSize)
-	if err != nil {
+	if orderInfo == nil || err != nil {
 		log.Printf("Get OrderPage Error:%s", err)
+		c.RenderTemplate(w, r, "order_reserved", nil)
 		return
 	}
+
+	orderInfo.CurrentAction = "OrderProcessing"
 
 	c.RenderTemplate(w, r, "order_processing", orderInfo)
 }
@@ -165,20 +200,37 @@ func (c *OrderController) OrderCancel(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "無法解析表單數據", http.StatusBadRequest)
+		return
+	}
+
+	var pageIndex int = 1
+	var pageSize int = 5
+
+	pageIndexStr := r.FormValue("pageIndex")
+	if pageIndexStr != "" {
+		parsedIndex, err := strconv.Atoi(pageIndexStr)
+		if err == nil {
+			pageIndex = parsedIndex
+		}
+	}
+
 	userId, ok := middleware.GetUserIDFromContext(r.Context())
 	if !ok {
 		log.Println("Get userId Error")
 		http.Redirect(w, r, "/Login", http.StatusSeeOther)
 		return
 	}
-	pageIndex := 1
-	pageSize := 5
 
 	orderInfo, err := c.orderService.GetOrderPage(userId, order.Cancel, pageIndex, pageSize)
-	if err != nil {
+	if orderInfo == nil || err != nil {
 		log.Printf("Get OrderPage Error:%s", err)
+		c.RenderTemplate(w, r, "order_reserved", nil)
 		return
 	}
+
+	orderInfo.CurrentAction = "OrderCancel"
 
 	c.RenderTemplate(w, r, "order_canceled", orderInfo)
 }
@@ -190,20 +242,37 @@ func (c *OrderController) OrderFinished(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "無法解析表單數據", http.StatusBadRequest)
+		return
+	}
+
+	var pageIndex int = 1
+	var pageSize int = 5
+
+	pageIndexStr := r.FormValue("pageIndex")
+	if pageIndexStr != "" {
+		parsedIndex, err := strconv.Atoi(pageIndexStr)
+		if err == nil {
+			pageIndex = parsedIndex
+		}
+	}
+
 	userId, ok := middleware.GetUserIDFromContext(r.Context())
 	if !ok {
 		log.Println("Get userId Error")
 		http.Redirect(w, r, "/Login", http.StatusSeeOther)
 		return
 	}
-	pageIndex := 1
-	pageSize := 5
 
 	orderInfo, err := c.orderService.GetOrderPage(userId, order.Finished, pageIndex, pageSize)
-	if err != nil {
+	if orderInfo == nil || err != nil {
 		log.Printf("Get OrderPage Error:%s", err)
+		c.RenderTemplate(w, r, "order_reserved", nil)
 		return
 	}
+
+	orderInfo.CurrentAction = "OrderFinished"
 
 	c.RenderTemplate(w, r, "order_finished", orderInfo)
 }
@@ -231,6 +300,7 @@ func (c *OrderController) CancelReservation(w http.ResponseWriter, r *http.Reque
 	if err != nil {
 		log.Printf("Cancel Reservation Error:%s", err)
 		http.Redirect(w, r, "/Order/OrderReserved", http.StatusSeeOther)
+		return
 	}
 
 	http.Redirect(w, r, "/Order/OrderReserved", http.StatusSeeOther)

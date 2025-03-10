@@ -65,6 +65,7 @@ func (s *OrderService) SaveOrder(orderForm order.OrderForm, userID uint, r *http
 	}()
 
 	// 資料驗證和準備
+	// 解析預訂時間
 	timeDetail, err := s.parseAndValidateTimeDetail(orderForm)
 	if err != nil {
 		tx.Rollback()

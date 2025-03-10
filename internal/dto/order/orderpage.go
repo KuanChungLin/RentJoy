@@ -5,11 +5,12 @@ import (
 )
 
 type OrderPageInfo struct {
-	Orders      []OrderVM               `json:"orders"`
-	Recommend   []venuepage.Recommended `json:"recommend"`
-	OrderCount  int                     `json:"orderCount"`
-	TotalPages  int                     `json:"totalPages"`
-	CurrentPage int                     `json:"currentPage"`
+	Orders        []OrderVM               `json:"orders"`
+	Recommend     []venuepage.Recommended `json:"recommend"`
+	OrderCount    int                     `json:"orderCount"`
+	TotalPages    int                     `json:"totalPages"`
+	CurrentPage   int                     `json:"currentPage"`
+	CurrentAction string                  `json:"currentAction"`
 }
 
 type OrderVM struct {
