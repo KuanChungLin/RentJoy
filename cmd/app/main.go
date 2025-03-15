@@ -33,10 +33,10 @@ func main() {
 	searchService := services.NewSearchService(db)
 	venueService := services.NewVenueService(db)
 	orderService := services.NewOrderService(db)
+	manageService := services.NewManageService(db)
 
 	// 初始化排程
 	scheduleService := services.NewScheduleService(db)
-
 	// 啟動排程任務
 	scheduleService.OrderSchedule()
 
@@ -66,6 +66,10 @@ func main() {
 	ecpayController := controllers.NewEcpayController(
 		tmplManager.GetTemplates(),
 		redisClient,
+	)
+	manageController := controllers.NewManangeController(
+		manageService,
+		tmplManager.GetTemplates(),
 	)
 
 	// 配置靜態文件路徑
@@ -106,6 +110,10 @@ func main() {
 	http.HandleFunc("/Order/SaveEvaluate", middleware.AuthMiddleware(orderController.SaveEvaluate))
 	http.HandleFunc("/Ecpay/Process", middleware.AuthMiddleware(ecpayController.Process))
 	http.HandleFunc("/Ecpay/ReceivePaymentResult", ecpayController.ReceivePaymentResult)
+	http.HandleFunc("/Manage/ReservedManagement", middleware.AuthMiddleware(manageController.ReservedManagement))
+	http.HandleFunc("/Manage/VenueManagement", middleware.AuthMiddleware(manageController.VenueManagement))
+	http.HandleFunc("/Manage/ReservedAccept", middleware.AuthMiddleware(manageController.ReservedAccept))
+	http.HandleFunc("/Manage/ReservedReject", middleware.AuthMiddleware(manageController.ReservedReject))
 
 	log.Println("伺服器運行中：https://localhost:8080")
 	log.Fatal(http.ListenAndServeTLS(":8080", "../../cert.pem", "../../key.pem", nil))

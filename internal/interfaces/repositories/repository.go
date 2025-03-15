@@ -78,6 +78,7 @@ type OrderRepository interface {
 	CountByUserAndStatus(userId uint, status order.OrderStatus) (int, error)
 	UpdateStatus(tx *gorm.DB, id uint, status int) error
 	FindOrdersByVenueId(tx *gorm.DB, venueId uint) ([]models.Order, error)
+	FindManageOrderByUserId(userId uint) ([]models.Order, error)
 }
 
 type OrderDetailRepository interface {

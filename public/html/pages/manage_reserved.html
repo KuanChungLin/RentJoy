@@ -1,0 +1,111 @@
+{{define "css"}}
+    <link href="/static/css/managepage.css" rel="stylesheet" />
+    <link href="/static/css/manage_reserved.css" rel="stylesheet" />
+{{end}}
+
+{{define "content"}}
+<section class="content">
+    <div class="title">
+        <img src="/static/images/area-manage-icon.svg" alt="area">
+        <h2>預訂單管理</h2>
+    </div>
+    <div class="manage-list">
+        <ul>
+            <li class="order selected">
+                <a href="/Manage/ReservedManagement">預訂單</a>
+            </li>
+            <li class="my-space">
+                <a href="/Manage/VenueManagement">我的空間</a>
+            </li>
+        </ul>
+    </div>
+    <div class="order-status">
+        <div class="order-count-total status-count col-12 col-md-6 col-lg-3">
+            <div class="status-icon bg-warning">
+                <i class="fas fa-star fa-3x"></i>
+                <div class="txt">
+                    <div class="count-total">{{.OrderCount}}</div>
+                    <div class="count-description">所有筆數</div>
+                </div>
+            </div>
+        </div>
+        <div class="order-count-reservation status-count col-12 col-md-6 col-lg-3">
+            <div class="status-icon bg-success">
+                <i class="fas fa-thumbs-up fa-3x"></i>
+                <div class="txt">
+                    <div class="count-reservation">{{.AcceptCount}}</div>
+                    <div class="count-description">接受預訂</div>
+                    <div class="count-dollor">$ {{.BookingAmount}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="order-count-refuse status-count col-12 col-md-6 col-lg-3">
+            <div class="status-icon bg-info">
+                <i class="fas fa-thumbs-down fa-3x"></i>
+                <div class="txt">
+                    <div class="count-refuse">{{.RejectCount}}</div>
+                    <div class="count-description">取消預訂</div>
+                </div>
+            </div>
+        </div>
+        <div class="order-count-unhandled status-count col-12 col-md-6 col-lg-3">
+            <div class="status-icon bg-danger">
+                <i class="fas fa-question-circle fa-3x"></i>
+                <div class="txt">
+                    <div class="count-unhandled">{{.PendingCount}}</div>
+                    <div class="count-description">尚未處理</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="order-list">
+        <table class="table-list">
+            <thead>
+                <tr>
+                    <th scope="col" style="width: 60px;">訂單編號</th>
+                    <th scope="col" style="width: 190px;">訂單描述</th>
+                    <th scope="col" style="width: 90px;">場地</th>
+                    <th scope="col" style="width: 70px;">預訂人</th>
+                    <th scope="col" style="width: 110px;">活動時間</th>
+                    <th scope="col" style="width: 100px;">聯絡電話</th>
+                    <th scope="col" style="width: 90px;">訂單金額</th>
+                    <th scope="col" style="width: 70px;">狀態</th>
+                    <th scope="col" style="width: 110px;">下訂日期</th>
+                    <th scope="col" style="width: 140px;">處理</th>
+                </tr>
+            </thead>
+
+            {{range .Orders}}
+                <tr>
+                    <td>{{.OrderId}}</td>
+                    <td>{{.OrderDesc}}</td>
+                    <td>{{.VenueName}}</td>
+                    <td>{{.Booker}}</td>
+                    <td>{{.BookingTime}}</td>
+                    <td>{{.Phone}}</td>
+                    <td>{{.Amount}}</td>
+                    <td>{{.Status}}</td>
+                    <td>{{.OrderTime}}</td>
+                    <td>
+                        {{if eq .Status "處理中"}}
+                            <button class="accept-btn" data-order-id="{{.OrderId}}">接收</button>
+                            <button class="reject-btn" data-order-id="{{.OrderId}}">取消</button>
+                        {{end}}
+                    </td>
+                </tr>
+            {{end}}
+        </table>
+        {{if not .Orders}}
+            <div class="non-order">
+                <i class="fa-solid fa-box-open fa-3x"></i>
+                <p>無符合條件預訂單可顯示</p>
+            </div>
+        {{end}}
+    </div>
+</section>
+{{end}}
+{{define "js"}}
+    <script src="https://kit.fontawesome.com/46728f4ec5.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="/static/js/manage_reserved.js"></script>
+{{end}}

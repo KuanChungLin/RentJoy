@@ -49,7 +49,7 @@ const (
 	Reserved
 	// Processing 已預訂(已付款店家已確認)
 	Processing
-	// Cancel 退訂
+	// Cancel 取消預訂
 	Cancel
 	// Finished 已結束
 	Finished
@@ -66,7 +66,7 @@ func (s OrderStatus) String() string {
 	case Processing:
 		return "已預訂"
 	case Cancel:
-		return "退訂"
+		return "取消預訂"
 	case Finished:
 		return "已結束"
 	case Fail:

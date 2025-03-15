@@ -113,3 +113,20 @@ func (r *OrderRepository) FindOrdersByVenueId(tx *gorm.DB, venueId uint) ([]mode
 
 	return orders, err
 }
+
+// 透過 UserId 取得所有預訂單
+func (r *OrderRepository) FindManageOrderByUserId(userId uint) ([]models.Order, error) {
+	var orders []models.Order
+
+	err := r.DB.Where("VenueOwnerId = ?", userId).
+		Order("CreateAt Desc").
+		Preload("Venue").
+		Preload("Details").
+		Find(&orders).Error
+	if err != nil {
+		log.Printf("Find ManageOrders By UserId Error:%s", err)
+		return orders, err
+	}
+
+	return orders, err
+}

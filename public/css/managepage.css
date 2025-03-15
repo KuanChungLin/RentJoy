@@ -1,0 +1,40 @@
+body footer {
+    display: none;
+}
+
+a {
+    color: black;
+}
+
+.content {
+    max-width: 1120px;
+    display: flex;
+    flex-direction: column;
+    margin: 80px auto;
+    padding: 0 20px;
+}
+
+.title {
+    display: flex;
+    margin: 0 0 30px;
+}
+
+.title h2 {
+    margin: 5px 10px;
+}
+
+.manage-list ul {
+    display: flex;
+    font-size: 16px;
+    border-bottom: solid 1px #aaa;
+}
+
+.manage-list ul li {
+    display: inline-block;
+    margin: 0px 30px 0px 0px;
+    padding-bottom: 30px;
+}
+
+.manage-list ul .selected {
+    border-bottom: solid 3px #000;
+}
