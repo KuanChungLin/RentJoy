@@ -9,4 +9,6 @@ type ManageService interface {
 	GetVenueManagement(userId uint) (*manage.VenueManagement, error)
 	ReservedAccept(orderId uint) bool
 	ReservedReject(orderId uint) bool
+	DelistVenue(venueId uint) bool
+	DeleteVenue(venueId uint) bool
 }

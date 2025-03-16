@@ -114,6 +114,8 @@ func main() {
 	http.HandleFunc("/Manage/VenueManagement", middleware.AuthMiddleware(manageController.VenueManagement))
 	http.HandleFunc("/Manage/ReservedAccept", middleware.AuthMiddleware(manageController.ReservedAccept))
 	http.HandleFunc("/Manage/ReservedReject", middleware.AuthMiddleware(manageController.ReservedReject))
+	http.HandleFunc("/Manage/DelistVenue", middleware.AuthMiddleware(manageController.DelistVenue))
+	http.HandleFunc("/Manage/DeleteVenue", middleware.AuthMiddleware(manageController.DeleteVenue))
 
 	log.Println("伺服器運行中：https://localhost:8080")
 	log.Fatal(http.ListenAndServeTLS(":8080", "../../cert.pem", "../../key.pem", nil))

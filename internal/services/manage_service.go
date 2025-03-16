@@ -9,6 +9,7 @@ import (
 	"rentjoy/internal/repositories"
 	"rentjoy/pkg/helper"
 	"strconv"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -78,6 +79,7 @@ func (s *ManageService) GetReservedManagement(userId uint) (*manage.ReservedMana
 	return &reserved, nil
 }
 
+// 取得場地管理頁面資訊
 func (s *ManageService) GetVenueManagement(ownerId uint) (*manage.VenueManagement, error) {
 	venues, err := s.venueRepo.FindByOwnerId(ownerId)
 	if err != nil {
@@ -154,5 +156,45 @@ func (s *ManageService) ReservedReject(orderId uint) bool {
 		log.Printf("Update Order Error:%s", err)
 		return false
 	}
+	return true
+}
+
+// 下架場地作業
+func (s *ManageService) DelistVenue(venueId uint) bool {
+	venue, err := s.venueRepo.FindByID(venueId)
+	if err != nil {
+		log.Printf("Get Venue By Id Error:%s", err)
+		return false
+	}
+
+	venue.Status = 3
+	venue.UpdatedAt = time.Now()
+
+	err = s.venueRepo.Update(*venue)
+	if err != nil {
+		log.Printf("Update Venue Error:%s", err)
+		return false
+	}
+
+	return true
+}
+
+// 刪除場地作業
+func (s *ManageService) DeleteVenue(venueId uint) bool {
+	venue, err := s.venueRepo.FindByID(venueId)
+	if err != nil {
+		log.Printf("Get Venue By Id Error:%s", err)
+		return false
+	}
+
+	venue.Status = 0
+	venue.UpdatedAt = time.Now()
+
+	err = s.venueRepo.Update(*venue)
+	if err != nil {
+		log.Printf("Update Venue Error:%s", err)
+		return false
+	}
+
 	return true
 }
