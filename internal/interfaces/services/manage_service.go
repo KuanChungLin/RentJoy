@@ -6,6 +6,7 @@ import (
 
 type ManageService interface {
 	GetReservedManagement(userId uint) (*manage.ReservedManagement, error)
+	GetVenueManagement(userId uint) (*manage.VenueManagement, error)
 	ReservedAccept(orderId uint) bool
 	ReservedReject(orderId uint) bool
 }

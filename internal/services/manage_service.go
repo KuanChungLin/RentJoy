@@ -15,11 +15,13 @@ import (
 
 type ManageService struct {
 	orderRepo repoInterfaces.OrderRepository
+	venueRepo repoInterfaces.VenueInformationRepository
 }
 
 func NewManageService(db *gorm.DB) serviceInterfaces.ManageService {
 	return &ManageService{
 		orderRepo: repositories.NewOrderRepository(db),
+		venueRepo: repositories.NewVenueInformationRepository(db),
 	}
 }
 
@@ -74,6 +76,49 @@ func (s *ManageService) GetReservedManagement(userId uint) (*manage.ReservedMana
 	}
 
 	return &reserved, nil
+}
+
+func (s *ManageService) GetVenueManagement(ownerId uint) (*manage.VenueManagement, error) {
+	venues, err := s.venueRepo.FindByOwnerId(ownerId)
+	if err != nil {
+		log.Printf("Get Venue Management By OwnerId Error:%s", err)
+		return &manage.VenueManagement{}, err
+	}
+
+	var publishedVenues []manage.VenueInfo
+	var rejectedVenues []manage.VenueInfo
+	var processingVenues []manage.VenueInfo
+	var delistVenues []manage.VenueInfo
+
+	for _, venue := range venues {
+		venueinfo := manage.VenueInfo{
+			VenueId:      strconv.Itoa(int(venue.ID)),
+			VenueName:    venue.Name,
+			VenueManager: venue.Owner.LastName + venue.Owner.FirstName,
+			ImgUrl:       venue.Imgs[0].VenueImgPath,
+		}
+
+		switch venue.Status {
+		case 1:
+			publishedVenues = append(publishedVenues, venueinfo)
+		case 2:
+			processingVenues = append(processingVenues, venueinfo)
+		case 3:
+			delistVenues = append(delistVenues, venueinfo)
+		case 4:
+			rejectedVenues = append(rejectedVenues, venueinfo)
+
+		}
+	}
+
+	vm := manage.VenueManagement{
+		PublishedVenues:  publishedVenues,
+		RejectedVenues:   rejectedVenues,
+		ProcessingVenues: processingVenues,
+		DelistVenues:     delistVenues,
+	}
+
+	return &vm, nil
 }
 
 // 接受場地預訂作業

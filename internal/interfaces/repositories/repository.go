@@ -38,6 +38,7 @@ type VenueInformationRepository interface {
 	FindSearchPageInfos(filter searchpage.VenueFilter) ([]models.VenueInformation, error)
 	FindVenuePageByID(venueID uint) (*models.VenueInformation, error)
 	FindRecommended() ([]models.VenueInformation, error)
+	FindByOwnerId(ownerId uint) ([]models.VenueInformation, error)
 }
 
 type MemberRepository interface {

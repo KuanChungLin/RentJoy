@@ -1,0 +1,219 @@
+.space-add {
+    margin: 30px 0px;
+}
+
+.space-add a {
+    display: flex;
+    color: #53a385;
+    align-items: center;
+}
+
+.space-add a p {
+    padding-left: 10px;
+    margin: 0px;
+}
+
+.row .col {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 50px;
+}
+
+.card-item p{
+    color: #4a4a4a;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.card {
+    border:1px solid #d8d8d8;
+    width: 530px;
+}
+
+.card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.card-body {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.card-func {
+    align-self: center;
+}
+
+.func-nav-icon {
+    cursor: pointer;
+}
+
+.func-nav-icon img {
+    width: 30px;
+    height: 30px;
+}
+
+.func-list {
+    width: 100px;
+    border-radius: 5px;
+    text-align: center;
+    position: absolute;
+    background-color: #fff;
+    z-index: 1;
+    margin: 0 0 0 -80px;
+    box-shadow: 0 0 10px 0 #aaa;
+    display: none;
+}
+
+.func-list a {
+    padding: 10px 34px;
+    display: inline-block;
+    box-sizing: border-box;
+    margin: auto;
+}
+
+.func-list a:hover {
+    background-color: #d8f3e0;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1050;
+    display: none;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    outline: 0;
+}
+
+.modal-dialog {
+    position: relative;
+    width: auto;
+    margin: 0.5rem;
+    pointer-events: none;
+}
+
+.modal-content {
+    padding: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 0.3rem;
+    outline: 0;
+}
+
+.modal-header {
+    border-bottom: none;
+    padding: 9px 9px 20px 20px;
+    display: flex;
+    justify-content: space-between;
+    border-top-left-radius: 0.3rem;
+    border-top-right-radius: 0.3rem;
+}
+
+.modal-header .modal-title {
+    margin: 21px 0 0 10px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #4a4a4a;
+    line-height: 1.5;
+}
+
+.modal-header .close-btn {
+    background-image: url(../images/cross-black.svg);
+    width: 40px;
+    height: 40px;
+    background-repeat: no-repeat;
+    background-size: 17px 17px;
+    border-radius: 50%;
+    transition: .3s;
+}
+
+#area-delete-check .modal-body {
+    text-align: center;
+}
+
+.modal-body {
+    padding: 0 30px 30px 0;
+    position: relative;
+    flex: 1 1 auto;
+}
+
+#area-delete-check .modal-body img {
+    margin-bottom: 20px;
+}
+
+img {
+    vertical-align: middle;
+    border-style: none;
+}
+
+#area-delete-check .modal-body .bold-text {
+    font-size: 18px;
+    font-weight: 500;
+    color: #4a4a4a;
+}
+
+#area-delete-check .modal-body p {
+    margin: 0 0 20px 0;
+}
+
+#area-delete-check .modal-body .button-row {
+    display: flex;
+}
+
+#area-delete-check .modal-body .button-row .back-button {
+    width: 124px;
+    height: 44px;
+    border: 1px solid #53a385;
+    border-radius: 5px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+#area-delete-check .modal-body .button-row .back-button p {
+    color: #53a385;
+    margin: 0;
+}
+
+#area-delete-check .modal-body .button-row .delete-button {
+    width: 124px;
+    height: 44px;
+    border: 1px solid #53a385;
+    background-color: #53a385;
+    border-radius: 5px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+#area-delete-check .modal-body .button-row .delete-button p {
+    color: #fff;
+    margin: 0;
+}
+
+
+@media screen and (min-width:576px) {
+    .modal-dialog {
+        max-width: 500px;
+        margin: 1.75rem auto;
+    }
+}

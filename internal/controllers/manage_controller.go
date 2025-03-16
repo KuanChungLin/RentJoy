@@ -43,6 +43,27 @@ func (c *ManageController) ReservedManagement(w http.ResponseWriter, r *http.Req
 	c.RenderTemplate(w, r, "manage_reserved", vm)
 }
 
+// 場地管理頁面
+func (c *ManageController) VenueManagement(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	userId, ok := middleware.GetUserIDFromContext(r.Context())
+	if !ok {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	vm, err := c.manageService.GetVenueManagement(userId)
+	if err != nil {
+		http.Error(w, "Venue Managemant Get Error", http.StatusNotImplemented)
+	}
+
+	c.RenderTemplate(w, r, "manage_venues", vm)
+}
+
 // 預訂單接受預訂作業
 func (c *ManageController) ReservedAccept(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -115,9 +136,4 @@ func (c *ManageController) ReservedReject(w http.ResponseWriter, r *http.Request
 	w.WriteHeader(http.StatusOK)
 	// 寫入響應內容
 	w.Write([]byte("Success"))
-}
-
-// 場地管理頁面
-func (c *ManageController) VenueManagement(w http.ResponseWriter, r *http.Request) {
-	c.RenderTemplate(w, r, "manage_venue", nil)
 }

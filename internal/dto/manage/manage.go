@@ -1,5 +1,6 @@
 package manage
 
+// 預訂單管理頁面
 type ReservedManagement struct {
 	OrderCount    int         `json:"orderCount"`
 	AcceptCount   int         `json:"acceptCount"`
@@ -11,6 +12,7 @@ type ReservedManagement struct {
 	TotalPages    int         `json:"totalpages"`
 }
 
+// 訂單資訊
 type OrderInfo struct {
 	OrderId     string `json:"orderId"`
 	OrderDesc   string `json:"orderDesc"`
@@ -21,4 +23,19 @@ type OrderInfo struct {
 	Amount      int    `json:"amount"`
 	Status      string `json:"status"`
 	OrderTime   string `json:"orderTime"`
+}
+
+// 場地管理頁面
+type VenueManagement struct {
+	PublishedVenues  []VenueInfo `json:"publishedVenues"`
+	RejectedVenues   []VenueInfo `json:"rejectedVenues"`
+	ProcessingVenues []VenueInfo `json:"processingVenues"`
+	DelistVenues     []VenueInfo `json:"editingVenues"`
+}
+
+type VenueInfo struct {
+	VenueId      string `json:"venueId"`
+	VenueName    string `json:"venueName"`
+	VenueManager string `json:"venueManager"`
+	ImgUrl       string `json:"imgUrl"`
 }
