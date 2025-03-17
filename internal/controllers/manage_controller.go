@@ -140,7 +140,7 @@ func (c *ManageController) ReservedReject(w http.ResponseWriter, r *http.Request
 
 // 場地下架作業
 func (c *ManageController) DelistVenue(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
+	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
@@ -158,16 +158,23 @@ func (c *ManageController) DelistVenue(w http.ResponseWriter, r *http.Request) {
 
 	ok := c.manageService.DelistVenue(venueId)
 	if !ok {
-		http.Error(w, "下架場地失敗", http.StatusBadRequest)
+		w.Header().Set("Content-Type", "text/plain")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Fail"))
 		return
 	}
 
-	http.Redirect(w, r, "/Manage/VenueManagement", http.StatusSeeOther)
+	// 設置響應頭為純文本
+	w.Header().Set("Content-Type", "text/plain")
+	// 設置狀態碼為 200 OK
+	w.WriteHeader(http.StatusOK)
+	// 寫入響應內容
+	w.Write([]byte("Success"))
 }
 
 // 場地刪除作業
 func (c *ManageController) DeleteVenue(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
+	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
@@ -185,9 +192,16 @@ func (c *ManageController) DeleteVenue(w http.ResponseWriter, r *http.Request) {
 
 	ok := c.manageService.DeleteVenue(venueId)
 	if !ok {
-		http.Error(w, "刪除場地失敗", http.StatusBadRequest)
+		w.Header().Set("Content-Type", "text/plain")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Fail"))
 		return
 	}
 
-	http.Redirect(w, r, "/Manage/VenueManagement", http.StatusSeeOther)
+	// 設置響應頭為純文本
+	w.Header().Set("Content-Type", "text/plain")
+	// 設置狀態碼為 200 OK
+	w.WriteHeader(http.StatusOK)
+	// 寫入響應內容
+	w.Write([]byte("Success"))
 }

@@ -18,7 +18,7 @@ $(document).ready(function() {
                     location.reload();
                 });
             },
-            error: function() {
+            error: function(xhr, status, error) {
                 // 錯誤處理邏輯
                 swal({
                     title: "操作失敗，請重新操作或聯絡客服",
@@ -47,7 +47,7 @@ $(document).ready(function() {
                     location.reload();
                 });
             },
-            error: function() {
+            error: function(xhr, status, error) {
                 // 錯誤處理邏輯
                 swal({
                     title: "操作失敗，請重新操作或聯絡客服",

@@ -50,9 +50,7 @@
                                     <a href="/Manage/EditVenue?venueId={{.VenueId}}">
                                         <div class="func">編輯</div>
                                     </a>
-                                    <a href="/Manage/DelistVenue?venueId={{.VenueId}}">
-                                        <div class="func">下架</div>
-                                    </a>
+                                    <div class="func delist-venue" data-venue-id="{{.VenueId}}">下架</div>
                                 </div>
                             </div>
                         </div>
@@ -83,9 +81,7 @@
                                     <a href="/Manage/EditVenue?venueId={{.VenueId}}">
                                         <div class="func">編輯</div>
                                     </a>
-                                    <a href="/Manage/DeleteVenue?venueId={{.VenueId}}">
-                                        <div class="func">刪除</div>
-                                    </a>
+                                    <div class="func delete-venue" data-venue-id="{{.VenueId}}">刪除</div>
                                 </div>
                             </div>
                         </div>
@@ -116,9 +112,7 @@
                                     <a href="/Manage/EditVenue?venueId={{.VenueId}}">
                                         <div class="func">編輯</div>
                                     </a>
-                                    <a href="/Manage/DeleteVenue?venueId={{.VenueId}}">
-                                        <div class="func">刪除</div>
-                                    </a>
+                                    <div class="func delete-venue" data-venue-id="{{.VenueId}}">刪除</div>
                                 </div>
                             </div>
                         </div>
@@ -154,5 +148,6 @@
 {{end}}
 
 {{define "js"}}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="/static/js/manage_venues.js"></script>
 {{end}}

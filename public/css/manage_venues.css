@@ -71,14 +71,32 @@
     display: none;
 }
 
-.func-list a {
+.func-list .func {
     padding: 10px 34px;
-    display: inline-block;
+    display: block;
+    box-sizing: border-box;
+    margin: auto;
+    cursor: pointer;
+}
+
+.func-list .func:hover {
+    background-color: #d8f3e0;
+}
+
+.func-list a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.func-list a .func {
+    padding: 10px 34px;
+    display: block;
     box-sizing: border-box;
     margin: auto;
 }
 
-.func-list a:hover {
+.func-list a:hover .func {
     background-color: #d8f3e0;
 }
 
