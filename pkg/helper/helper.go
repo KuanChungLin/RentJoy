@@ -55,6 +55,25 @@ func StrToUint(str string) (uint, error) {
 	return uint(num), nil
 }
 
+// string 轉 int
+func StringToInt(str string) int {
+	num, err := strconv.Atoi(str)
+	if err != nil {
+		return 0
+	}
+
+	return num
+}
+
+// string slice 轉 int slice
+func StringSliceToIntSlice(strSlice []string) []int {
+	intSlice := make([]int, len(strSlice))
+	for i, str := range strSlice {
+		intSlice[i] = StringToInt(str)
+	}
+	return intSlice
+}
+
 // decimal 轉 int
 func DecimalToIntRounded(d decimal.Decimal) int {
 	return int(d.Round(0).IntPart())

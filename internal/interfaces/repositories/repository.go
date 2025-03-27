@@ -105,3 +105,18 @@ type VenueEvaluateRepository interface {
 	FindByOrderId(orderId uint) (*models.VenueEvaluate, error)
 	CreateByTx(tx *gorm.DB, evaluate models.VenueEvaluate) error
 }
+
+type SpaceTypeRepository interface {
+	Repository[models.SpaceType]
+	FindSpaceAndFacility() ([]models.SpaceType, error)
+}
+
+type DeviceTypeRepository interface {
+	Repository[models.DeviceType]
+	FindTypeAndItems() ([]models.DeviceType, error)
+}
+
+type ManagementRepository interface {
+	Repository[models.Management]
+	FindByUserId(userId uint) ([]models.Management, error)
+}

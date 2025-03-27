@@ -31,6 +31,9 @@ func NewManager() *Manager {
 			}
 			return a
 		},
+		"raw": func(s string) template.HTML {
+			return template.HTML(s)
+		},
 	}
 	return &Manager{
 		templates: make(map[string]*template.Template),

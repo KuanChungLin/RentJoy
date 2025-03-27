@@ -1,0 +1,1294 @@
+/* ********************** */
+/* header */
+#app {
+    overflow-y: auto;
+}
+
+header {
+    justify-content: unset;
+}
+
+nav {
+    margin-left: 0;
+}
+
+nav .nav-item a {
+    color: #9a9a9a;
+}
+
+nav .return {
+    position: absolute;
+    right: 5px;
+}
+
+nav .return button {
+    border: none;
+    background-color: #fff;
+    color: #53a385;
+    margin: 10px;
+}
+
+.active {
+    border-left: 0.5px solid #53a385;
+    border-right: 0.5px solid #53a385;
+}
+
+/* ********************** */
+/* 新增區塊 */
+.my-space-set {
+    box-sizing: border-box;
+}
+
+.my-space-set > div {
+    display: flex;
+    justify-content: center;
+    background-color: #fff;
+}
+
+.left {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #fff;
+    display: flex;
+}
+
+.left .container {
+    width: 500px;
+    padding-top: 30px;
+    margin: 0 auto;
+}
+
+.left h3 {
+    display: inline-block;
+    margin-bottom: 30px;
+    color: #000000;
+}
+
+.left span {
+    color: #919191;
+}
+
+/* ********************** */
+/* 基本資料 */
+.space-type-button {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: space-around;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 3px solid #f6f6f6;
+}
+
+.space-type-radio > div {
+    display: flex;
+    flex-wrap: wrap;
+    padding-bottom: 30px;
+    color: #666666;
+}
+
+.space-type-radio .radio-item {
+    width: 150px;
+    padding: 0 10px 10px 10px;
+}
+
+.space-type-radio .radio-item input {
+    width: 20px;
+    height: 20px;
+    vertical-align: sub;
+}
+
+.activity-checkbox .checkbox-item input {
+    width: 20px;
+    height: 20px;
+    vertical-align: sub;
+}
+
+.activity-checkbox .checkbox-item {
+    padding-bottom: 30px;
+    font-size: 18px;
+    color: #000000;
+}
+
+input[type=text] {
+    border: 1px solid #9b9b9b;
+    border-radius: 5px;
+    font-size: 16px;
+    height: 45px;
+    padding: 0 15px;
+    width: 100%;
+}
+
+.space-venue-rule textarea, .space-venue-unsubscribe-rule textarea {
+    border: 1px solid #9b9b9b;
+    border-radius: 5px;
+    font-size: 16px;
+    height: 8rem;
+    padding: 10px 15px;
+    width: 100%;
+}
+
+.space-button-clicked-style {
+    color: #fff;
+    background-color: #53a385;
+    border: 1px solid #53a385;
+}
+
+.space-venue-name, .space-venue-rule {
+    margin-bottom: 30px;
+}
+
+.space-venue-unsubscribe-rule {
+    margin-bottom: 100px;
+}
+
+
+/* ********************** */
+/* 上一步及下一步 */
+.btn-next {
+    position: fixed;
+    width: inherit;
+    bottom: 0;
+    background-color: #fff;
+    z-index: 2;
+    padding: 10px 0 10px;
+    border-top: 3px solid #f6f6f6;
+    text-align: end;
+}
+
+.btn-next button {
+    width: 100px;
+    background-color: #53a385;
+}
+
+.btn-back-next {
+    position: fixed;
+    width: inherit;
+    display: flex;
+    bottom: 0;
+    background-color: #fff;
+    z-index: 2;
+    padding: 10px 0 10px;
+    border-top: 3px solid #f6f6f6;
+    justify-content: space-between;
+}
+
+.btn-back-next button {
+    width: 100px;
+    background-color: #53a385;
+}
+
+
+/* ********************** */
+/* 位置 */
+.location-address h3 {
+    font-size: 24px;
+    color: #000000;
+    margin-bottom: 20px;
+}
+
+.location-address input {
+    padding: 5px;
+}
+
+.location-address select {
+    width: 100px;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.location-address {
+    margin-bottom: 30px;
+}
+
+.address-select input {
+    width: 100%;
+    height: 45px;
+    border-radius: 5px;
+    border: solid 1px #9b9b9b;
+    margin: 20px 0 20px;
+    display: block;
+    padding: 0 15px 0 15px;
+}
+
+#districtSelect {
+    margin-left: 10px;
+}
+
+.address-select {
+    display:flex;
+    flex-wrap:wrap;
+}
+
+.location-transportation h3 {
+    font-size: 24px;
+    color: #000000;
+    margin-bottom: 20px;
+}
+
+.location-transportation span {
+    font-size: 16px;
+}
+
+.transportation-row {
+    padding-bottom: 15px;
+}
+
+.transportation-row p {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.transportation-row input {
+    width: 100%;
+    height: 45px;
+    border-radius: 5px;
+    border: solid 1px #9b9b9b;
+    padding: 0 15px 0 15px;
+}
+
+/* 空間配置 */
+.spatialConfiguration h3 {
+    font-size: 24px;
+    color: #000000;
+    margin-bottom: 20px;
+}
+
+.spatialConfiguration p {
+    display: inline-block;
+    font-size: 14px;
+    color: #666;
+}
+
+.spatialConfiguration .space-square {
+    padding-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.spatialConfiguration .space-square input {
+    width: 64px;
+    margin: 0 10px;
+}
+
+.spatialConfiguration .space-people {
+    padding-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.spatialConfiguration .space-people input {
+    width: 64px;
+    margin: 0 10px;
+}
+
+.spatialConfiguration input {
+    width: 60px;
+    height: 45px;
+    margin: 0 10px;
+    padding: 0 15px;
+    border-radius: 5px;
+    border: solid 1px #9b9b9b;
+}
+
+
+/* ********************** */
+/* 設備 */
+.equipment-classification {
+    border-bottom: solid 1px #999;
+}
+
+.classification-item-title {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.expand-icon:hover,
+.collapse-icon:hover {
+    cursor: pointer;
+}
+
+.quantity-note {
+    display: none;
+}
+
+.quantity-note.show {
+    display: flex;
+}
+
+.cal-quantity {
+    display: flex;
+}
+
+.minus-button {
+    background-image: url(../images/minus-green.svg);
+    margin-right: 10px;
+}
+
+.plus-button {
+    background-image: url(../images/add-time-price-button.svg);
+    margin-left: 10px;
+}
+
+.minus-button,
+.plus-button{
+    height: 30px;
+    width: 30px;
+    margin-top: 5px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.equipment-option {
+    margin-bottom: 20px;
+}
+
+.equipment-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.equipment-title input {
+    width: 22px;
+    height: 22px;
+    margin-right: 10px;
+    border-radius: 5px;
+    border: solid 1px #999;
+}
+
+.quantity-note {
+    border-bottom: solid 1px #ccc;
+    padding-bottom: 20px;
+}
+
+.equipment-quantity {
+    margin-right: 20px;
+}
+
+.equipment-quantity p, .equipment-note p {
+    margin-bottom: 10px;
+    color: #999;
+}
+
+.cal-quantity input {
+    width: 80px;
+    height: 40px;
+    text-align: center;
+    border-radius: 5px;
+    border: solid 1px #999;
+}
+
+.equipment-note input {
+    width: 250px;
+    height: 40px;
+    border-radius: 5px;
+    border: solid 1px #999;
+}
+
+.pre-step {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.pre-step .back {
+    color: rgb(22, 145, 61);
+    background-color: #fff;
+    border: none;
+    padding-left: 0px;
+}
+
+.blank {
+    height: 100px;
+}
+
+/* ********************** */
+/* 相片 */
+#add-new-photo-file {
+    display: none;
+}
+
+h3 + p {
+    margin-bottom: 20px;
+}
+
+.photos-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.photos-area .empty {
+    width: 140px;
+    height: 140px;
+    margin: 0 0 30px 0;
+}
+
+.photo-pic {
+    width: 140px;
+    height: 140px;
+    background-size: cover;
+    display: flex;
+    align-items: flex-end;
+    vertical-align: top;
+}
+
+.photo-pic label {
+    background-color: rgba(150, 148, 147, 0.5)
+}
+
+.add-new-photo, .photo-item {
+    display: flex;
+    width: 140px;
+    height: 140px;
+    border: solid 1px #53a385;
+    justify-content: center;
+    align-items: center;
+    margin: 0 0 30px 0;
+    cursor: pointer;
+}
+
+.add-new-photo p {
+    margin-left: 10px;
+    font-size: 16px;
+    color: #53a385;
+}
+
+.photo-item .cross {
+    cursor: pointer;
+    position: absolute;
+    margin: -135px 0 0 135px;
+    border: none;
+    border-radius: 50%;
+}
+
+.black-section {
+    /* 隱藏input,自己做圓圈點選 */
+    display: none;
+}
+
+.black-section + label {
+    color: #fff;
+    height: 46px;
+    width: 100%;
+}
+
+.black-section + label .cover-content {
+    display: flex;
+    margin: 10px 0 0 10px;
+}
+
+.cover-content .outer-circle {
+    width: 24px;
+    height: 24px;
+    border: solid 1px #999;
+    border-radius: 50%;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 10px 0 0;
+}
+
+.cover-content .outer-circle .inner-circle {
+    width: 12px;
+    height: 12px;
+    border: solid 1px #53a385;
+    background-color: #53a385;
+    border-radius: 50%;
+}
+
+/* ************** */
+/* 定價 */
+.create-plan {
+    display: flex;
+    border: solid 1px #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    cursor: pointer;
+    margin: 0 0 20px 0;
+}
+
+.create-plan .create {
+    display: flex;
+    margin: 5px 20px 0 0;
+}
+
+.create-plan .create p {
+    color: #53a385;
+    margin-left: 10px;
+}
+
+.create-plan .create img {
+    width: 22px;
+    height: 22px;
+}
+
+.create-plan .text .title {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.create-plan .text .example {
+    flex: 12px;
+    color: #aaa;
+}
+
+.edit-plan {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+#hour-edit-plan {
+    border-bottom: solid 1px #ccc;
+}
+
+.edit-plan .switch-fn {
+    display: flex;
+}
+
+.edit-plan .switch-fn .checkbox-switch {
+    margin: 4px 20px 0 0;
+}
+
+.checkbox-switch input[type=checkbox] {
+    display: none;
+}
+
+.checkbox-switch input[type=checkbox] + label {
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-start;
+    margin: 0;
+}
+
+.checkbox-switch input[type=checkbox] + label .switch-background {
+    height: 22px;
+    border-radius: 10.5px;
+    background-color: #d8d8d8;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 3px;
+    transition: .4s;
+    margin: 0 10px 0 0;
+}
+
+#hour-edit-plan .checkbox-switch input[type=checkbox]:checked + label .switch-background {
+    background-color: #3d5d74;
+}
+
+#period-edit-plan .checkbox-switch input[type=checkbox]:checked + label .switch-background {
+    background-color: #2383c9;
+}
+
+.price-day-inactive {
+    pointer-events: none; /* 禁止點擊事件響應 */
+    background-color: #f8f8f8; /* 更改為你希望的非激活的背景顏色 */
+    color: #ccc; /* 更改為你希望的非激活時的文字顏色 */
+}
+
+.switch-background .close-text {
+    color: #9b9b9b;
+}
+
+.checkbox-switch input[type=checkbox]:checked + label .close-text {
+    display: none;
+}
+
+.switch-background .open-text {
+    color: #fff;
+}
+
+.checkbox-switch input[type=checkbox]:checked + label .open-text {
+    display: block;
+}
+
+.checkbox-switch input[type=checkbox] + label .open-text {
+    display: none;
+}
+
+.checkbox-switch input[type=checkbox] + label .switch-background .switch {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin: 0 1px;
+    background-color: #4a4a4a;
+}
+
+.checkbox-switch input[type=checkbox]:checked + label .switch-background .switch {
+    background-color: #fff;
+}
+
+.edit-plan .switch-fn .text .title {
+    font-size: 20px;
+}
+
+#hour-edit-plan .switch-fn .text .title {
+    color: #3d5d74;
+}
+
+#period-edit-plan .switch-fn .text .title {
+    color: #2383c9;
+}
+
+.edit-plan .switch-fn .text .detail {
+    font-size: 16px;
+}
+
+.edit-plan .switch-fn .text .detail span {
+    color: #000;
+}
+
+.edit {
+    width: 77px;
+    height: 45px;
+    border: solid 1px #53a385;
+    border-radius: 5px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    color: #53a385;
+}
+
+.specific-plan h3 {
+    font-size: 24px;
+}
+
+.open-day .checkbox-switch {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.open-day .checkbox-switch input[type=checkbox]:checked + label .switch-background {
+    background-color: #95bfaf;
+}
+
+.specific-plan .open-day .checkbox-switch label {
+    margin-top: 10px;
+}
+
+.weekday-text {
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.time-price-input-org {
+    display: none;
+}
+
+.time-price-input {
+    border-bottom: solid 1px #ccc;
+    margin-bottom: 5px;
+}
+
+.open-label .time-price-input .input-row {
+    width: 357.69px;
+    display: flex;
+    align-items: center;
+}
+
+.open-label .time-price-input .input-row .time {
+    display: flex;
+}
+
+.open-label .time-price-input .input-row .per-price {
+    display: flex;
+    margin: 0 0 0 20px;
+    align-items: center;
+}
+
+.open-label .time-price-input .input-row img {
+    margin: 0 0 0 10px;
+    cursor: pointer;
+}
+
+.open-label .time-price-input:first-child .input-row img {
+    display: none;
+}
+
+.open-label .time-price-input .input-row .time select {
+    border: none;
+    color: #4a4a4a;
+    appearance: none;
+    background-image: url(../images/double-arrow-hover.svg);
+    background-position: 100% 50%;
+    background-repeat: no-repeat;
+    background-size: 8px 18px;
+    padding: 0 14px 0 0;
+    cursor: pointer;
+}
+
+.open-label .time-price-input .input-row .time .dash {
+    margin: 0 10px;
+}
+
+.open-label .time-price-input .input-row p {
+    font-size: 16px;
+}
+
+.open-label .time-price-input .input-row input[type=number] {
+    width: 70px;
+    height: 40px;
+    border-radius: 5px;
+    margin: 0 7px;
+    border: solid 1px #9b9b9b;
+    text-align: center;
+    font-size: 16px;
+    padding: 0 10px;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.time-price-input-group {
+    padding-bottom: 30px;
+}
+
+.open-label .add-time-price-button {
+    display: flex;
+    align-items: center;
+    color: #53a385;
+    cursor: pointer;
+}
+
+.open-day {
+    border-bottom: solid 1px #ccc;
+}
+
+.least-time {
+    margin: 40px 0 0 0;
+    border-bottom: solid 1px #d8d8d8;
+}
+
+.least-time p {
+    margin: 0 0 20px 0;
+    font-size: 18px;
+}
+
+.number-input {
+    display: flex;
+    align-items: center;
+}
+
+.number-input .minus-button, .number-input .plus-button {
+    cursor: pointer;
+}
+
+.number-input input[type=number] {
+    width: 70px;
+    height: 45px;
+    border-radius: 5px;
+    border: solid 1px #9b9b9b;
+    text-align: center;
+    margin: 0 10px;
+}
+
+.back-area {
+    margin: 30px 0 80px 0;
+    padding: 20px 0 20px 0;
+    display: flex;
+    justify-content: end;
+}
+
+.back-area .back-button {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: #53a385;
+    font-size: 14px;
+}
+
+.back-area .back-button img {
+    margin: 0 10px 0 0;
+}
+
+/* ************** */
+/* 管理者 */
+.manager .left .container .area-manager {
+    padding-bottom: 80px;
+    width: 458px;
+}
+
+.area-manager h3 {
+    font-size: 24px;
+    margin: 0 0 10px 0;
+}
+
+.left .green {
+    font-size: 14px;
+    color: #95bfaf;
+}
+
+.select-box {
+    height: 60px;
+    border-radius: 5px;
+    border: solid 1px #9b9b9b;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    background-image: url(../images/double-arrow.svg);
+    background-repeat: no-repeat;
+    background-position: 98% 50%;
+    padding: 0 30px 0 15px;
+}
+
+.select-box .selected-manager-img {
+    margin: 0 10px 0 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    background-position: 50%;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.select-box .selected-manager {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.select-box p {
+    font-size: 16px;
+    color: #4a4a4a;
+    margin: 0;
+}
+
+img {
+    vertical-align: middle;
+}
+
+.select-box .selected-dropdown, .select-box .select-dropdown {
+    position: absolute;
+    min-height: 142px;
+    max-height: 300px;
+    overflow-y: scroll;
+    top: 270px;
+    width: 458px;
+    margin: 5px 0 0 -16px;
+    border-radius: 5px;
+    box-shadow: 0 0 7px 2px rgb(0, 0, 0, .2);
+    background-color: #fff;
+}
+
+.create-button, .edit-button {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0 20px;
+}
+
+.select-box .selected-dropdown .select-row .border-container {
+    width: 100%;
+    border-top: 1px solid #efefef;
+    display: flex;
+    padding: 20px 0;
+    align-items: center;
+}
+
+.select-box .selected-dropdown .select-row .border-container .img {
+    margin: 0 10px 0 0;
+    width: 30px;
+    height: 30px;
+    background-position: 50%;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.select-box .selected-dropdown .select-row .border-container p {
+    font-size: 16px;
+    color: #53a385;
+    margin: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.select-box .selected-dropdown .title {
+    font-size: 16px;
+    color: #9b9b9b;
+    margin: 20px 0;
+    padding: 0 15px;
+}
+
+.select-box .selected-dropdown .manager-option label {
+    width: 100%;
+    margin: 0;
+    cursor: pointer;
+}
+
+.select-box .selected-dropdown .manager-option-org label {
+    width: 100%;
+    margin: 0;
+    cursor: pointer;
+}
+
+.select-box .selected-dropdown .manager-option input[type=radio] {
+    display: none;
+}
+
+.select-box .selected-dropdown .manager-option-org input[type=radio] {
+    display: none;
+}
+
+.select-box .selected-dropdown .select-row {
+    padding: 0 15px;
+}
+
+.create-manager {
+    display: flex;
+    margin: 30px 0 0 0;
+}
+
+.create-manager .profile-pic {
+    width: 100px;
+    margin: 0 25px 0 0;
+}
+
+.create-manager .profile-pic .profile-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: 50%;
+    background-repeat: no-repeat;
+}
+
+input[type=file] {
+    display: none;
+}
+
+.create-manager .profile-pic .upload-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0 0 0;
+    cursor: pointer;
+}
+
+.create-manager .profile-pic .upload-button img {
+    margin: 0 10px 0 0;
+}
+
+.create-manager .profile-pic .upload-button p {
+    font-size: 16px;
+    color: #53a385;
+    margin: 0;
+}
+
+.create-manager .manager-form {
+    width: 332px;
+}
+
+.create-manager .manager-form .bold {
+    font-size: 18px;
+    margin: 0 0 26px 0;
+}
+
+.create-manager .manager-form .input-row {
+    margin: 0 0 30px 0;
+}
+
+.create-manager .manager-form .input-row p {
+    font-size: 16px;
+    color: #4a4a4a;
+    margin: 0 0 9px 0;
+}
+
+    .create-manager .manager-form .input-row p .required-star {
+        color: #95bfaf;
+    }
+
+.create-manager .manager-form .input-row input[type=text] {
+    font-size: 16px;
+    color: #4a4a4a;
+}
+
+input[type=text] {
+    width: 100%;
+    height: 45px;
+    border-radius: 5px;
+    border: solid 1px #9b9b9b;
+    padding: 0 15px;
+}
+
+.create-manager .manager-form .manager-bank-code-name .select-box .selected-bank {
+    font-size: 16px;
+    margin: 0;
+    color: #4a4a4a;
+    font-weight: 400;
+}
+
+.create-manager .manager-form .manager-bank-code-name .select-box .select-dropdown {
+    margin: 970px 0 0 -16px;
+    width: 332px;
+    height: 306px;
+    overflow: scroll;
+}
+
+.create-manager .manager-form .manager-bank-code-name .select-box .select-dropdown .title {
+    padding: 20px 0 20px 15px;
+    margin: 0;
+    color: #9b9b9b;
+}
+
+.create-manager .manager-form .manager-bank-code-name .select-box .select-dropdown .select-list .bank-row input[type=radio] {
+    display: none;
+}
+
+.create-manager .manager-form .manager-bank-code-name .select-box .select-dropdown .select-list .bank-row .select-row {
+    width: 100%;
+    margin: 0;
+    cursor: pointer;
+}
+
+.select-box .select-dropdown .select-row {
+    padding: 0 15px;
+}
+
+.select-box .select-dropdown .select-row .border-container {
+    width: 100%;
+    border-top: 1px solid #efefef;
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.manager-form .button-row {
+    display: flex;
+    justify-items: flex-end;
+}
+
+.manager-form .button-row .cancel {
+    width: 92px;
+    height: 45px;
+    border-radius: 5px;
+    border: 1px solid #53a385;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 20px 0 0;
+    cursor: pointer;
+}
+
+.manager-form .button-row .cancel p {
+    margin: 0;
+    font-size: 16px;
+    color: #53a385;
+}
+
+.manager-form .button-row .create {
+    width: 120px;
+    height: 45px;
+    border-radius: 5px;
+    border: 10px solid #53a385;
+    background-color: #53a385;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.manager-form .button-row .create p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.manager-detail .title {
+    font-size: 16px;
+    color: #4a4a4a;
+    margin: 20px 0;
+}
+
+.detail-text .detail-row {
+    display: flex;
+}
+
+.detail-text .detail-row .left-contact {
+    width: 56px;
+    margin: 0 30px 0 0;
+    font-size: 14px;
+    color: #9b9b9b;
+}
+
+.detail-text .detail-row .right-contact {
+    font-size: 14px;
+    color: #4a4a4a;
+    max-width: 340px;
+    margin-bottom: 1rem;
+}
+
+.detail-row .edit-button {
+    margin: 0 0 0 86px;
+}
+
+.edit-button img {
+    margin: 0 10px 0 0;
+}
+
+.edit-button p {
+    font-size: 16px;
+    color: #53a385;
+    margin: 0;
+}
+
+.delete-button {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    margin: 0 0 0 50px;
+}
+
+.delete-button .img {
+    width: 30px;
+    height: 30px;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-image: url(../images/cross-gray.svg);
+    margin: 0 10px 0 0;
+}
+
+.delete-button:hover .img {
+    background-image: url(../images/cross-orange-hover.svg);
+}
+
+.delete-button p {
+    font-size: 16px;
+    margin: 0;
+    color: #9b9b9b;
+}
+
+.delete-button:hover p {
+    color: #ee552a;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1050;
+    width: 100%;
+    height: 100%;
+    outline: 0;
+}
+
+.modal-dialog {
+    position: relative;
+    width: auto;
+    margin: 0.5rem;
+}
+
+.modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, .2);
+    border-radius: 0.3rem;
+    outline: 0;
+}
+
+.modal-header {
+    border-bottom: none;
+    padding: 9px 9px 20px 20px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    border-top-left-radius: 0.3rem;
+    border-top-left-radius: 0.3rem;
+}
+
+.modal-header .modal-title {
+    margin: 21px 0 0 10px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #4a4a4a;
+}
+
+.modal-header .close-btn {
+    background-image: url(../images/cross-black.svg);
+    width: 40px;
+    height: 40px;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: 17px 17px;
+    border-radius: 20px;
+    transition: .3s;
+}
+
+#admin-delete-check .modal-body {
+    text-align: center;
+}
+
+.modal-body {
+    padding: 0 30px 30px 0;
+    position: relative;
+    flex: 1 1 auto;
+}
+
+#admin-delete-check .modal-body img {
+    margin-bottom: 20px;
+}
+
+#admin-delete-check .modal-body .bold-text {
+    font-size: 18px;
+    font-weight: 500;
+    color: #4a4a4a;
+}
+
+#admin-delete-check .modal-body p {
+    margin: 0 0 20px 0;
+}
+
+#admin-delete-check .modal-body .button-row {
+    display: flex;
+}
+
+#admin-delete-check .modal-body .button-row .back-button {
+    width: 124px;
+    height: 44px;
+    border: 1px solid #53a385;
+    border-radius: 5px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+#admin-delete-check .modal-body .button-row .back-button p {
+    color: #53a385;
+    margin: 0;
+}
+
+#admin-delete-check .modal-body .button-row .delete-button {
+    width: 124px;
+    height: 44px;
+    border: 1px solid #53a385;
+    border-radius: 5px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background-color: #53a385;
+}
+
+#admin-delete-check .modal-body .button-row .delete-button p {
+    color: #fff;
+    margin: 0;
+}

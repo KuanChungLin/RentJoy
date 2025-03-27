@@ -1,0 +1,551 @@
+{{define "css"}}
+    <link href="/static/css/create_venue.css" rel="stylesheet" />
+{{end}}
+
+{{define "content"}}
+<div id="app">
+<form id="venueForm" action="/Manage/CreateVenues" method="POST" class="form-section" enctype="multipart/form-data">
+    <section class="my-space-set" id="id-my-space-set">
+        <!-- 基本資料 -->
+        <div class="basic-information" id="id-basic-information">
+            <div class="left">
+                <div class="container">
+                    <div class="space-type-button">
+                        <!-- 場地空間類型按鈕將由jQuery動態生成 -->
+                    </div>
+                    <div class="space-type-radio">
+                        <!-- 場地詳情將由jQuery動態生成 -->
+                    </div>
+                    <div class="space-type-activity">
+                        <h3>適合舉辦的活動</h3><span>可複選</span>
+                        <div class="activity-checkbox" id="activity-checkbox">
+                            <!-- 活動選項將由jQuery動態生成 -->
+                        </div>
+                    </div>
+                    <div class="space-venue-name">
+                        <h3>場地名稱</h3>
+                        <input type="text" id="area-info-name" name="VenueName" placeholder="例:中山捷運站步行5分鐘，大型陽光會議室">
+                    </div>
+                    <div class="space-venue-rule">
+                        <h3>場地規範</h3>
+                        <textarea name="VenueRule" id="area-info-rule" type="text" placeholder="例:禁帶寵物"></textarea>
+                    </div>
+                    <div class="space-venue-unsubscribe-rule">
+                        <h3>退訂政策</h3>
+                        <textarea name="UnsubscribeRule" id="area-info-unsubscribe-rule" type="text" placeholder="例:7天前可全額退費，3天內取消恕不退費"></textarea>
+                    </div>
+                    <div class="btn-next next-step" id="basic-info-next">
+                        <button type="button" class="btn btn-success" id="next-to-location">下一步</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 位置資訊 -->
+        <div class="location" id="id-location" style="display: none;">
+            <div class="left">
+                <div class="container">
+                    <div class="location-address">
+                        <h3>地址</h3>
+                        <div class="address-select">
+                            <select class="form-select" id="citySelect" name="citySelect">
+                                <option value="" selected disabled>縣市</option>
+                            </select>
+                            <select class="form-select" id="districtSelect" name="districtSelect">
+                                <option value="">請先選擇縣市</option>
+                            </select>
+                            <input id="addressDetail" name="areaInfoStreetAddress" type="text"
+                                placeholder="街道路名、門牌號及樓層資訊請詳細填於此處" value="">
+                        </div>
+                    </div>
+                    <div class="location-transportation">
+                        <h3>提供交通方式 <span>選填</span></h3>
+                    </div>
+                    <div class="transportation-row">
+                        <p>搭乘捷運</p>
+                        <input type="text" id="area-transportation-mrt" name="transportInfoMRT" placeholder="例：大安站1號出口步行三分鐘" value="">
+                    </div>
+                    <div class="transportation-row">
+                        <p>搭乘公車</p>
+                        <input type="text" id="area-transportation-bus" name="transportInfoBus" placeholder="例：200號公車站大安站步行5分鐘" value="">
+                    </div>
+                    <div class="transportation-row">
+                        <p>開車或停車資訊</p>
+                        <input type="text" id="area-transportation-car" name="transportInfoParking" placeholder="例：於145巷右轉有專屬停車場" value="">
+                    </div>
+                    <div class="btn-back-next">
+                        <div class="pre-step">
+                            <div class="back-img">
+                                <svg width="29px" height="30px" viewBox="0 0 29 30" version="1.1"
+                                    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                    <g id="Welcome" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <g id="上架wireframe-v1-copy-20"
+                                            transform="translate(-348.000000, -552.000000)" stroke="#53A385">
+                                            <g id="Group-7" transform="translate(348.000000, 552.000000)">
+                                                <path
+                                                    d="M14.5,0.5001 C6.768,0.5001 0.5,6.7681 0.5,14.5001 C0.5,22.2321 6.768,28.5001 14.5,28.5001 C22.232,28.5001 28.5,22.2321 28.5,14.5001 C28.5,6.7681 22.232,0.5001 14.5,0.5001 Z"
+                                                    id="Stroke-1"></path>
+                                                <path d="M20.2334,14.5001 L10.4754,14.5001" id="Stroke-3">
+                                                </path>
+                                                <polyline id="Stroke-5"
+                                                    points="14.2695 10.4 10.1685 14.5 14.2695 18.6">
+                                                </polyline>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                            <button type="button" class="btn btn-success back" id="back-to-basic">上一步</button>
+                        </div>
+                        <div class="next-step" id="location-next">
+                            <button type="button" class="btn btn-success next" id="next-to-spatial-configuration">下一步</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 場地配置 -->
+        <div class="spatialConfiguration" id="id-spatialConfiguration" style="display: none;">
+            <div class="left">
+                <div class="container">
+                    <h3>場地配置</h3>
+                    <div class="space-square">
+                        <p>場地大小</p>
+                        <input type="number" id="area-info-space-square" name="spaceSize">
+                        <p>坪</p>
+                    </div>
+                    <div class="space-people">
+                        <p>場地人數</p>
+                        <input type="number" id="area-info-space-people" name="numberOfSpace">
+                        <p>人</p>
+                    </div>
+                    <div class="btn-back-next">
+                        <div class="pre-step">
+                            <div class="back-img">
+                                <svg width="29px" height="30px" viewBox="0 0 29 30" version="1.1"
+                                    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                    <g id="Welcome" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <g id="上架wireframe-v1-copy-20"
+                                            transform="translate(-348.000000, -552.000000)" stroke="#53A385">
+                                            <g id="Group-7" transform="translate(348.000000, 552.000000)">
+                                                <path
+                                                    d="M14.5,0.5001 C6.768,0.5001 0.5,6.7681 0.5,14.5001 C0.5,22.2321 6.768,28.5001 14.5,28.5001 C22.232,28.5001 28.5,22.2321 28.5,14.5001 C28.5,6.7681 22.232,0.5001 14.5,0.5001 Z"
+                                                    id="Stroke-1"></path>
+                                                <path d="M20.2334,14.5001 L10.4754,14.5001" id="Stroke-3">
+                                                </path>
+                                                <polyline id="Stroke-5"
+                                                    points="14.2695 10.4 10.1685 14.5 14.2695 18.6">
+                                                </polyline>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                            <button type="button" class="btn btn-success back" id="back-to-location">上一步</button>
+                        </div>
+                        <div class="next-step" id="spatial-config-next">
+                            <button type="button" class="btn btn-success next" id="next-to-equipment">下一步</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 設備 -->
+        <div class="equipment" id="id-equipment" style="display: none;">
+            <div class="left">
+                <div class="container">
+                    <h3>設備</h3><span>選填</span>
+                    <div class="blank"></div>
+                    <div class="btn-back-next">
+                        <div class="pre-step">
+                            <div class="back-img">
+                                <svg width="29px" height="30px" viewBox="0 0 29 30" version="1.1"
+                                    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                    <g id="Welcome" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <g id="上架wireframe-v1-copy-20"
+                                            transform="translate(-348.000000, -552.000000)" stroke="#53A385">
+                                            <g id="Group-7" transform="translate(348.000000, 552.000000)">
+                                                <path
+                                                    d="M14.5,0.5001 C6.768,0.5001 0.5,6.7681 0.5,14.5001 C0.5,22.2321 6.768,28.5001 14.5,28.5001 C22.232,28.5001 28.5,22.2321 28.5,14.5001 C28.5,6.7681 22.232,0.5001 14.5,0.5001 Z"
+                                                    id="Stroke-1"></path>
+                                                <path d="M20.2334,14.5001 L10.4754,14.5001" id="Stroke-3">
+                                                </path>
+                                                <polyline id="Stroke-5"
+                                                    points="14.2695 10.4 10.1685 14.5 14.2695 18.6">
+                                                </polyline>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                            <button type="button" class="btn btn-success back" id="back-to-spatial">上一步</button>
+                        </div>
+                        <div class="next-step" id="equipment-next">
+                            <button type="button" class="btn btn-success next" id="next-to-photo">下一步</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 相片 -->
+        <div class="photo" id="id-photo" style="display: none;">
+            <div class="left">
+                <div class="container">
+                    <h3>上傳空間相片</h3>
+                    <p>上傳至少3張不同角度的相片</p>
+                    <div class="photos-area">
+                        <input type="file" id="add-new-photo-file" accept="image/png, image/jpeg, image/jpg, image/bmp"
+                            style="display: none;" name="venueImgs">
+                        <div class="add-new-photo" id="click-file-input">
+                            <img src="/static/images/add-time-price-button.svg" alt="新增照片">
+                            <p>新增</p>
+                        </div>
+                        <!-- 照片預覽將由jQuery動態生成 -->
+                    </div>
+                    <div class="btn-back-next">
+                        <div class="pre-step">
+                            <div class="back-img">
+                                <svg width="29px" height="30px" viewBox="0 0 29 30" version="1.1"
+                                    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                    <g id="Welcome" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <g id="上架wireframe-v1-copy-20"
+                                            transform="translate(-348.000000, -552.000000)" stroke="#53A385">
+                                            <g id="Group-7" transform="translate(348.000000, 552.000000)">
+                                                <path
+                                                    d="M14.5,0.5001 C6.768,0.5001 0.5,6.7681 0.5,14.5001 C0.5,22.2321 6.768,28.5001 14.5,28.5001 C22.232,28.5001 28.5,22.2321 28.5,14.5001 C28.5,6.7681 22.232,0.5001 14.5,0.5001 Z"
+                                                    id="Stroke-1"></path>
+                                                <path d="M20.2334,14.5001 L10.4754,14.5001" id="Stroke-3">
+                                                </path>
+                                                <polyline id="Stroke-5"
+                                                    points="14.2695 10.4 10.1685 14.5 14.2695 18.6">
+                                                </polyline>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                            <button type="button" class="btn btn-success back" id="back-to-equipment">上一步</button>
+                        </div>
+                        <div class="next-step" id="photo-next">
+                            <button type="button" class="btn btn-success next" id="next-to-price">下一步</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 價格 -->
+        <div class="price" id="id-price" style="display: none;">
+            <div class="left">
+                <div class="container">
+                    <div class="billing-plan">
+                        <h3>請問您的場地計費方式</h3>
+                        <div class="create-hour-plan-wrapper" id="create-hour-plan-wrapper">
+                            <div class="create-hour-plan" id="create-hour-plan">
+                                <div class="create-plan hour-plan-button">
+                                    <div class="create">
+                                        <img src="/static/images/add-time-price-button.svg" alt="">
+                                        <p>新增</p>
+                                    </div>
+                                    <div class="text">
+                                        <p class="title">小時計費</p>
+                                        <p class="example">例：200元/小時、8:00-12:00 150元/小時</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="edit-hour-plan-wrapper" id="edit-hour-plan" style="display: none;">
+                            <div class="edit-plan" id="hour-edit-plan">
+                                <div class="switch-fn">
+                                    <div class="open-close">
+                                        <div class="checkbox-switch">
+                                            <input type="checkbox" id="hour-switch" name="hourSwitch" checked>
+                                            <label for="hour-switch">
+                                                <div class="switch-background">
+                                                    <p class="close-text">關閉</p>
+                                                    <div class="switch"></div>
+                                                    <p class="open-text">開啟</p>
+                                                </div>
+                                                <div class="close-text"></div>
+                                                <div class="open-text"></div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="text">
+                                        <p class="title">小時計費</p>
+                                        <p class="detail">
+                                            小時計費:
+                                            <span class="money-range" id="hour-price-range">未設定</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="edit hour-plan-button" id="edit-hour-plan-btn">
+                                    <p>編輯</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="create-period-plan-wrapper" id="create-period-plan-wrapper">
+                            <div class="create-period-plan" id="create-period-plan">
+                                <div class="create-plan period-plan-button">
+                                    <div class="create">
+                                        <img src="/static/images/add-time-price-button.svg" alt="">
+                                        <p>新增</p>
+                                    </div>
+                                    <div class="text">
+                                        <p class="title">時段計費</p>
+                                        <p class="example">例：上午包場 4000元、下午整場5000元</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="edit-period-plan-wrapper" id="edit-period-plan" style="display: none;">
+                            <div class="edit-plan" id="period-edit-plan">
+                                <div class="switch-fn">
+                                    <div class="open-close">
+                                        <div class="checkbox-switch">
+                                            <input type="checkbox" id="period-switch" name="periodSwitch" checked>
+                                            <label for="period-switch">
+                                                <div class="switch-background">
+                                                    <p class="close-text">關閉</p>
+                                                    <div class="switch"></div>
+                                                    <p class="open-text">開啟</p>
+                                                </div>
+                                                <div class="close-text"></div>
+                                                <div class="open-text"></div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="text">
+                                        <p class="title">時段計費</p>
+                                        <p class="detail">
+                                            時段計費:
+                                            <span class="money-range" id="period-price-range">未設定</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="edit hour-plan-button" id="edit-period-plan-btn">
+                                    <p>編輯</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hour-plan specific-plan" id="hour-plan-setting" style="display: none;">
+                        <h3>小時計費設定</h3>
+                            <!-- 日期設定將由 jQuery 動態生成 -->
+                        <div class="least-time">
+                            <p class="input-title">最少租借小時</p>
+                            <div class="number-input">
+                                <div class="minus-button" id="decrement-least-hours"></div>
+                                <input type="number" name="leastHourNumberInput" id="least-rent-hours" value="0.5" min="0.5" step="0.5" readonly required>
+                                <div class="plus-button" id="increment-least-hours"></div>
+                            </div>
+                        </div>
+                        <div class="back-area back-to-create-plan">
+                            <div class="back-button" data-plan="hour" id="back-to-hour-plan">
+                                <img src="/static/images/back-arrow.svg" alt="">
+                                <p>儲存並返回計費模式</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="period-plan specific-plan" id="period-plan-setting" style="display: none;">
+                        <h3>時段計費設定</h3>
+                            <!-- 日期設定將由 jQuery 動態生成 -->
+                        <div class="back-area back-to-create-plan">
+                            <div class="back-button" data-plan="period" id="back-to-period-plan">
+                                <img src="/static/images/back-arrow.svg" alt="">
+                                <p>儲存並返回計費模式</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-back-next">
+                        <div class="pre-step">
+                            <div class="back-img">
+                                <svg width="29px" height="30px" viewBox="0 0 29 30" version="1.1"
+                                    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                    <title>Group 7@1x</title>
+                                    <desc>Created with Sketch.</desc>
+                                    <g id="Welcome" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <g id="上架wireframe-v1-copy-20"
+                                            transform="translate(-348.000000, -552.000000)" stroke="#53A385">
+                                            <g id="Group-7" transform="translate(348.000000, 552.000000)">
+                                                <path
+                                                    d="M14.5,0.5001 C6.768,0.5001 0.5,6.7681 0.5,14.5001 C0.5,22.2321 6.768,28.5001 14.5,28.5001 C22.232,28.5001 28.5,22.2321 28.5,14.5001 C28.5,6.7681 22.232,0.5001 14.5,0.5001 Z"
+                                                    id="Stroke-1"></path>
+                                                <path d="M20.2334,14.5001 L10.4754,14.5001" id="Stroke-3">
+                                                </path>
+                                                <polyline id="Stroke-5"
+                                                    points="14.2695 10.4 10.1685 14.5 14.2695 18.6">
+                                                </polyline>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                            <button type="button" class="btn btn-success back" id="back-to-photo">上一步</button>
+                        </div>
+                        <div class="next-step">
+                            <button type="button" class="btn btn-success next" id="next-to-manager">下一步</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 管理者 -->
+        <div class="manager" id="id-manager" style="display: none;">
+            <div class="left">
+                <div class="container">
+                    <div class="area-manager" id="area-manager">
+                        <h3>管理者資訊</h3>
+                        <p>
+                            空間皆需要一個管理者，讓客戶了解管理者是誰，並代表空間接收並支付款項。
+                            <span class="green">*星號為必填</span>
+                        </p>
+                        <!-- 選擇管理者區塊 -->
+                        <div class="select-box" id="manager-select-box">
+                            <input type="hidden" id="area-merchant-id" name="areaMerchantId">
+                            <input type="hidden" name="bankCode" value="">
+
+                            <img src="/static/images/areaManager_profile.svg" alt="" class="selected-manager-img" id="selected-manager-img">
+                            <p class="selected-manager" id="selected-manager-name">請選擇管理者</p>
+                            <!-- 選單 -->
+                            <div class="selected-dropdown" id="manager-dropdown" style="display: none;">
+                                <div class="create-button select-row" id="create-manager-btn">
+                                    <div class="border-container">
+                                        <div class="img">
+                                            <img src="/static/images/add-time-price-button.svg" alt="">
+                                        </div>
+                                        <p>新增管理者</p>
+                                    </div>
+                                </div>
+                                <p class="title">請選擇管理者</p>
+                                <div class="select-list" id="manager-list">
+                                    <!-- 管理者列表將由jQuery動態生成 -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 新增管理者表單區塊 -->
+                        <div class="create-manager" id="create-manager-form" style="display: none;">
+                            <div class="profile-pic">
+                                <img src="/static/images/areaManager_profile.svg" alt="" class="profile-image" id="manager-profile-img">
+                                <input type="file" id="add-new-manager-photo-file" accept="image/png, image/jpeg, image/jpg, image/bmp"
+                                            style="display: none;">
+                                <div class="upload-button" id="upload-manager-photo">
+                                    <img src="/static/images/upload.svg" alt="">
+                                    <p>上傳頭像</p>
+                                </div>
+                            </div>
+                            <div class="manager-form">
+                                <p class="bold">公開基本資訊</p>
+                                <div class="input-row">
+                                    <p>
+                                        管理單位名稱
+                                        <span class="required-star"></span>
+                                    </p>
+                                    <input type="text" name="managerTitle" id="manager-title" placeholder="例:滿客連鎖出租空間" value="">
+                                </div>
+                                <div class="input-row">
+                                    <p>
+                                        管理單位介紹
+                                    </p>
+                                    <input type="text" name="manager-description" id="manager-description" placeholder="例:我們是經營2年的連鎖空間，專門提......"
+                                        value="">
+                                </div>
+                                <p class="bold">保密資訊</p>
+                                <div class="input-row">
+                                    <p>
+                                        聯絡人
+                                        <span class="required-star">*</span>
+                                    </p>
+                                    <input type="text" name="manager-contact" id="manager-contact" placeholder="請填寫真實姓名" value="">
+                                </div>
+                                <div class="input-row">
+                                    <p>
+                                        活動主聯繫電話
+                                        <span class="required-star">*</span>
+                                        <span class="gray-text">(將公開於訂單資訊內)</span>
+                                    </p>
+                                    <input type="text" name="manager-phone" id="manager-public-phone" 
+                                        placeholder="例 : 0212345678" value="">
+                                </div>
+                                <div class="input-row">
+                                    <p>
+                                        官方聯繫電話
+                                        <span class="required-star">*</span>
+                                        <span class="gray-text">(不公開)</span>
+                                    </p>
+                                    <input type="text" name="manager-mobile" id="manager-private-phone" 
+                                        placeholder="例 : 0912345678" value="">
+                                </div>
+                                <div class="button-row">
+                                    <div class="cancel" id="cancel-create-manager">
+                                        <p>取消</p>
+                                    </div>
+                                    <div class="create" id="submit-create-manager">
+                                        <p>新增管理者</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 管理者資訊 -->
+                        <div class="manager-detail" id="manager-detail" style="display: none;">
+                            <p class="title">管理者內容</p>
+                            <div class="detail-text">
+                                <div class="detail-row">
+                                    <p class="left-contact">聯絡人</p>
+                                    <p class="right-contact manager-detail-contact"></p>
+                                </div>
+                                <div class="detail-row">
+                                    <p class="left-contact">手機</p>
+                                    <p class="right-contact manager-detail-mobile"></p>
+                                </div>
+                                <div class="detail-row">
+                                    <p class="left-contact">電話</p>
+                                    <p class="right-contact manager-detail-phone"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-back-next">
+                        <div class="pre-step">
+                            <div class="back-img">
+                                <svg width="29px" height="30px" viewBox="0 0 29 30" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                                    <g id="Welcome" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <g id="上架wireframe-v1-copy-20" transform="translate(-348.000000, -552.000000)" stroke="#53A385">
+                                            <g id="Group-7" transform="translate(348.000000, 552.000000)">
+                                                <path
+                                                    d="M14.5,0.5001 C6.768,0.5001 0.5,6.7681 0.5,14.5001 C0.5,22.2321 6.768,28.5001 14.5,28.5001 C22.232,28.5001 28.5,22.2321 28.5,14.5001 C28.5,6.7681 22.232,0.5001 14.5,0.5001 Z"
+                                                    id="Stroke-1"></path>
+                                                <path d="M20.2334,14.5001 L10.4754,14.5001" id="Stroke-3">
+                                                </path>
+                                                <polyline id="Stroke-5" points="14.2695 10.4 10.1685 14.5 14.2695 18.6">
+                                                </polyline>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                            <button type="button" class="btn btn-success back" id="back-to-price">上一步</button>
+                        </div>
+                        <div class="next-step">
+                            <button type="submit" class="btn btn-success next" id="next-to-review">進行審核</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+</div>
+{{end}}
+
+{{define "js"}}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/static/js/taiwancity.js"></script>
+    <script src="/static/js/create_venue_jquery.js"></script>
+{{end}} 

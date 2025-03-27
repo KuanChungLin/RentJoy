@@ -14,10 +14,10 @@ type ManageController struct {
 	manageService interfaces.ManageService
 }
 
-func NewManangeController(manageSerivce interfaces.ManageService, templates map[string]*template.Template) *ManageController {
+func NewManageController(manageService interfaces.ManageService, templates map[string]*template.Template) *ManageController {
 	return &ManageController{
 		BaseController: NewBaseController(templates),
-		manageService:  manageSerivce,
+		manageService:  manageService,
 	}
 }
 

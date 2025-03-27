@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"reflect"
+	"rentjoy/internal/dto/create"
 	"rentjoy/internal/dto/venuepage"
 	"rentjoy/pkg/auth"
 )
@@ -15,6 +16,7 @@ type BaseController struct {
 
 type BaseViewModel struct {
 	IsOrderPending bool
+	IsCreateVenue  bool
 	IsLoggedIn     bool
 	UserEmail      string
 	PageData       interface{}
@@ -37,6 +39,7 @@ func (c *BaseController) RenderTemplate(w http.ResponseWriter, r *http.Request, 
 	// 創建基礎 layout 結構
 	vm := BaseViewModel{
 		IsOrderPending: false,
+		IsCreateVenue:  false,
 		IsLoggedIn:     false,
 		UserEmail:      "",
 		PageData:       data,
@@ -52,7 +55,8 @@ func (c *BaseController) RenderTemplate(w http.ResponseWriter, r *http.Request, 
 		}
 	}
 
-	reflectType := reflect.TypeOf(venuepage.OrderPending{})
+	reflectOrderPendingType := reflect.TypeOf(venuepage.OrderPending{})
+	reflectCreateVenueType := reflect.TypeOf(create.CreateForm{})
 	pageDataType := reflect.TypeOf(vm.PageData)
 
 	// 檢查是否為指標類型
@@ -62,8 +66,10 @@ func (c *BaseController) RenderTemplate(w http.ResponseWriter, r *http.Request, 
 	}
 
 	// 依照不同的 PageData 顯示 layout
-	if pageDataType == reflectType {
+	if pageDataType == reflectOrderPendingType {
 		vm.IsOrderPending = true
+	} else if pageDataType == reflectCreateVenueType {
+		vm.IsCreateVenue = true
 	}
 
 	err = template.ExecuteTemplate(w, "layout", vm)

@@ -29,6 +29,46 @@
                 </p>
             </div>
         </header>
+    {{else if .IsCreateVenue}}
+        <header>
+            <div class="logo-area">
+                <h1 class="logo-image">
+                    <a href="/">
+                        <img src="/static/images/RentJoy_Logo.jpeg" alt="">
+                    </a>
+                </h1>
+            </div>
+            <nav class="nav">
+                <div class="nav-list">
+                    <ul class="nav-menu">
+                        <li class="nav-item header-basic-information">
+                            <a href="#" data-tab="basic-information">基本資料</a>
+                        </li>
+                        <li class="nav-item header-location">
+                            <a href="#" data-tab="location">位置</a>
+                        </li>
+                        <li class="nav-item header-spatial-configuration">
+                            <a href="#" data-tab="spatialConfiguration">場地配置</a>
+                        </li>
+                        <li class="nav-item header-equipment">
+                            <a href="#" data-tab="equipment">設備</a>
+                        </li>
+                        <li class="nav-item header-photo">
+                            <a href="#" data-tab="photo">相片</a>
+                        </li>
+                        <li class="nav-item header-price">
+                            <a href="#" data-tab="price">定價</a>
+                        </li>
+                        <li class="nav-item header-manager">
+                            <a href="#" data-tab="manager">管理者</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="return">
+                    <button type="button" id="return-to-previous-page">返回上一頁</button>
+                </div>
+            </nav>
+        </header>
     {{else if .IsLoggedIn}}
         <input type="checkbox" id="menu-switch">
         <header>
@@ -342,7 +382,7 @@
     </main>
 
     <!-- footer -->
-    {{if .IsOrderPending}}
+    {{if or .IsOrderPending .IsCreateVenue}}
     {{else}}
         <footer>
             <div class="footer-container">
@@ -429,7 +469,8 @@
     <!-- vue3 -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
-    {{if .IsLoggedIn}}
+    {{if .IsCreateVenue}}
+    {{else if .IsLoggedIn}}
         <script src="/static/js/header_footer_Login.js"></script>
     {{end}}
     {{template "js" .}}

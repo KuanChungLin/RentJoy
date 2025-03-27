@@ -1,7 +1,12 @@
 package helper
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
+	"net/http"
+	"net/url"
+	"os"
 	"rentjoy/internal/dto/venuepage"
 	"rentjoy/internal/models"
 	"sort"
@@ -240,4 +245,89 @@ func GetDayOfWeekInChinese(date time.Time) string {
 	default:
 		return ""
 	}
+}
+
+// FormatAddress 格式化地址
+func FormatAddress(city, district, address string) string {
+	// 移除多餘的空格
+	city = strings.TrimSpace(city)
+	district = strings.TrimSpace(district)
+	address = strings.TrimSpace(address)
+	log.Println("city", city)
+	log.Println("district", district)
+	log.Println("address", address)
+
+	// 按照正确的顺序组合地址
+	fullAddress := fmt.Sprintf("%s%s%s", city, district, address)
+	log.Println("fullAddress", fullAddress)
+
+	// 移除可能存在的重複空格
+	fullAddress = strings.Join(strings.Fields(fullAddress), " ")
+	log.Println("fullAddress after trim", fullAddress)
+	return fullAddress
+}
+
+// GetCoordinates 取得地址的經緯度
+func GetCoordinates(city, district, address string) (string, string) {
+	// 格式化地址
+	fullAddress := FormatAddress(city, district, address)
+
+	// 從環境變量獲取 Google Maps API Key
+	apiKey := os.Getenv("GOOGLE_MAPS_API_KEY")
+	if apiKey == "" {
+		log.Println("Error: GOOGLE_MAPS_API_KEY is not set")
+		return "", ""
+	}
+
+	// 構建請求 URL
+	baseURL := "https://maps.googleapis.com/maps/api/geocode/json"
+	params := url.Values{}
+	params.Add("address", fullAddress)
+	params.Add("key", apiKey)
+	params.Add("region", "tw")      // 指定台灣地區
+	params.Add("language", "zh-TW") // 指定語言為繁體中文
+
+	requestURL := baseURL + "?" + params.Encode()
+
+	// 發送請求
+	resp, err := http.Get(requestURL)
+	if err != nil {
+		log.Printf("Error getting coordinates: %v\n", err)
+		return "", ""
+	}
+	defer resp.Body.Close()
+
+	// 解析響應
+	var result struct {
+		Status  string
+		Results []struct {
+			Geometry struct {
+				Location struct {
+					Lat float64
+					Lng float64
+				}
+			}
+		}
+		ErrorMessage string `json:"error_message,omitempty"`
+	}
+
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		log.Printf("Error decoding response: %v\n", err)
+		return "", ""
+	}
+
+	// 檢查響應狀態
+	if result.Status != "OK" {
+		log.Printf("Geocoding failed with status: %s, error message: %s\n", result.Status, result.ErrorMessage)
+		return "", ""
+	}
+
+	if len(result.Results) == 0 {
+		log.Println("No results found for the given address")
+		return "", ""
+	}
+
+	// 取得經緯度
+	location := result.Results[0].Geometry.Location
+	return fmt.Sprintf("%f", location.Lat), fmt.Sprintf("%f", location.Lng)
 }

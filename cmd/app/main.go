@@ -34,6 +34,11 @@ func main() {
 	venueService := services.NewVenueService(db)
 	orderService := services.NewOrderService(db)
 	manageService := services.NewManageService(db)
+	cloudinaryService, err := services.NewCloudinaryService()
+	if err != nil {
+		log.Fatal("Failed to initialize cloudinary service: ", err)
+	}
+	createService := services.NewCreateService(db, cloudinaryService)
 
 	// 初始化排程
 	scheduleService := services.NewScheduleService(db)
@@ -67,8 +72,12 @@ func main() {
 		tmplManager.GetTemplates(),
 		redisClient,
 	)
-	manageController := controllers.NewManangeController(
+	manageController := controllers.NewManageController(
 		manageService,
+		tmplManager.GetTemplates(),
+	)
+	createController := controllers.NewCreateController(
+		createService,
 		tmplManager.GetTemplates(),
 	)
 
@@ -116,6 +125,11 @@ func main() {
 	http.HandleFunc("/Manage/ReservedReject", middleware.AuthMiddleware(manageController.ReservedReject))
 	http.HandleFunc("/Manage/DelistVenue", middleware.AuthMiddleware(manageController.DelistVenue))
 	http.HandleFunc("/Manage/DeleteVenue", middleware.AuthMiddleware(manageController.DeleteVenue))
+	http.HandleFunc("/Create/GetSpaceTypesData", middleware.AuthMiddleware(createController.GetSpaceTypesData))
+	http.HandleFunc("/Create/GetActivitiesData", middleware.AuthMiddleware(createController.GetActivitiesData))
+	http.HandleFunc("/Create/GetEquipmentTypesData", middleware.AuthMiddleware(createController.GetEquipmentTypesData))
+	http.HandleFunc("/Create/GetManagersInfoData", middleware.AuthMiddleware(createController.GetManagersInfoData))
+	http.HandleFunc("/Create/CreateVenue", middleware.AuthMiddleware(createController.CreateVenue))
 
 	log.Println("伺服器運行中：https://localhost:8080")
 	log.Fatal(http.ListenAndServeTLS(":8080", "../../cert.pem", "../../key.pem", nil))
